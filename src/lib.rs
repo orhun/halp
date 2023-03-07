@@ -61,6 +61,10 @@ pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<
     } else {
         None
     };
+    if let Some(args) = cli_args.check_args {
+        check_argument(&cli_args.bin, args.iter().map(|v| v.as_str()), output)?;
+        return Ok(());
+    }
     for arg_variants in [
         (!cli_args.no_version).then(VersionArg::variants),
         (!cli_args.no_help).then(HelpArg::variants),
