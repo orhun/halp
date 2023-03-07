@@ -50,7 +50,7 @@ fn check_argument<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
 
 /// Runs `halp`.
 pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<()> {
-    if let Some(config_file) = cli_args
+    let config = if let Some(config_file) = cli_args
         .config
         .to_owned()
         .or_else(Config::get_default_location)
@@ -61,6 +61,12 @@ pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<
     } else {
         None
     };
+    if let Some(config_args) = config.and_then(|v| v.check_args) {
+        for args in config_args {
+            check_argument(&cli_args.bin, args.iter().map(|v| v.as_str()), output)?;
+        }
+        return Ok(());
+    }
     if let Some(args) = cli_args.check_args {
         check_argument(&cli_args.bin, args.iter().map(|v| v.as_str()), output)?;
         return Ok(());

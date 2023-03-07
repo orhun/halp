@@ -1,4 +1,6 @@
 # check the version flag
-check_version = true
+check_version = false
 # check the help flag
-check_help = true
+check_help = false
+# arguments to check
+check = [ [ "-v", "-V", "--version" ], [ "-h", "--help", "-H" ] ]

@@ -36,15 +36,15 @@ macro_rules! generate_argument {
 }
 
 generate_argument!(
-    HelpArg,
-    Help => "-h",
-    LongHelp => "--help",
-    CapitalHelp => "-H",
-);
-
-generate_argument!(
     VersionArg,
     Version => "-v",
     CapitalVersion => "-V",
     LongVersion => "--version",
+);
+
+generate_argument!(
+    HelpArg,
+    Help => "-h",
+    LongHelp => "--help",
+    CapitalHelp => "-H",
 );

@@ -13,6 +13,9 @@ pub struct Config {
     pub check_version: bool,
     /// Check the help flag.
     pub check_help: bool,
+    /// Arguments to check.
+    #[serde(rename = "check")]
+    pub check_args: Option<Vec<Vec<String>>>,
 }
 
 impl Config {
