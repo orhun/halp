@@ -1,7 +1,7 @@
 [package]
 name = "halp"
 version = "0.1.0"
-description = "A CLI tool get help for CLI tools"
+description = "A CLI tool to get help for CLI tools"
 authors = ["Orhun Parmaksız <orhunparmaksiz@gmail.com>"]
 edition = "2021"
 
