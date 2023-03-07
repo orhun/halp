@@ -1,33 +1,50 @@
-use std::fmt::Display;
-
-/// Flag for the help information.
-#[derive(Debug)]
-pub enum HelpArg {
-    /// Default help.
-    Help,
-    /// Long help.
-    LongHelp,
-    /// Capital help.
-    CapitalHelp,
+/// Display trait for an argument.
+pub trait ArgDisplay {
+    /// Returns the string representation.
+    fn as_str(&self) -> &'static str;
 }
 
-impl HelpArg {
-    /// Returns the available variants.
-    pub fn variants() -> &'static [Self] {
-        &[Self::Help, Self::LongHelp, Self::CapitalHelp]
-    }
-}
+macro_rules! generate_argument {
+    ($name: ident,
+     $($variant: ident => $str_repr: expr,)+
+    ) => {
+        /// Argument.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+        pub enum $name {
+            $(
+                /// Variant of the argument.
+                $variant
+            ),+
+        }
 
-impl Display for HelpArg {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                HelpArg::Help => "-h",
-                HelpArg::LongHelp => "--help",
-                HelpArg::CapitalHelp => "-H",
+        impl $name {
+            /// Returns the variants.
+            pub fn variants() -> Vec<Box<dyn ArgDisplay>> {
+                vec![$(Box::new(Self::$variant),)+]
             }
-        )
-    }
+
+        }
+
+        impl ArgDisplay for $name {
+            fn as_str(&self) -> &'static str {
+                match self {
+                    $(Self::$variant => $str_repr,)+
+                }
+            }
+        }
+    };
 }
+
+generate_argument!(
+    HelpArg,
+    Help => "-h",
+    LongHelp => "--help",
+    CapitalHelp => "-H",
+);
+
+generate_argument!(
+    VersionArg,
+    Version => "-v",
+    CapitalVersion => "-V",
+    LongVersion => "--version",
+);

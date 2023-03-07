@@ -11,22 +11,24 @@ pub mod cli;
 /// Error handling implementation.
 pub mod error;
 
-use args::HelpArg;
-
+use crate::args::{HelpArg, VersionArg};
 use crate::cli::CliArgs;
 use crate::error::Result;
 use std::io::Write;
 use std::process::Command;
 
-/// Runs `halp`.
-pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> {
-    for arg in HelpArg::variants() {
+fn check_argument<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
+    bin: &str,
+    args: ArgsIter,
+    output: &mut Output,
+) -> Result<()> {
+    for arg in args {
         let cmd_out = Command::new("script")
             .args(&[
                 String::from("-q"),
                 String::from("-e"),
                 String::from("-c"),
-                format!("{} {}", cli_args.bin, arg),
+                format!("{} {}", bin, arg),
                 String::from("/dev/null"),
             ])
             .output()?;
@@ -38,6 +40,17 @@ pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> 
             writeln!(output, "Argument not found.")?;
         }
     }
+    Ok(())
+}
 
+/// Runs `halp`.
+pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> {
+    for arg_variants in [VersionArg::variants(), HelpArg::variants()] {
+        check_argument(
+            &cli_args.bin,
+            arg_variants.iter().map(|v| v.as_str()),
+            output,
+        )?;
+    }
     Ok(())
 }
