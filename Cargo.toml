@@ -4,6 +4,10 @@ version = "0.1.0"
 description = "A CLI tool to get help with CLI tools"
 authors = ["Orhun Parmaksız <orhunparmaksiz@gmail.com>"]
 license = "MIT OR Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/orhun/halp"
+repository = "https://github.com/orhun/halp"
+categories = ["command-line-utilities"]
 edition = "2021"
 
 [dependencies]
