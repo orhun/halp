@@ -45,7 +45,13 @@ fn check_argument<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
 
 /// Runs `halp`.
 pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> {
-    for arg_variants in [VersionArg::variants(), HelpArg::variants()] {
+    for arg_variants in [
+        (!cli_args.no_version).then(|| VersionArg::variants()),
+        (!cli_args.no_help).then(|| HelpArg::variants()),
+    ]
+    .iter()
+    .flatten()
+    {
         check_argument(
             &cli_args.bin,
             arg_variants.iter().map(|v| v.as_str()),
