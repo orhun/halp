@@ -42,7 +42,7 @@ pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<
         ref man_cmd,
     }) = cli_args.command
     {
-        get_docs_help(config, bin, man_cmd, output)?;
+        get_docs_help(bin, man_cmd, output)?;
     }
     Ok(())
 }

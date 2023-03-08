@@ -1,16 +1,17 @@
-use crate::config::Config;
+/// Man page helper.
+pub mod man;
+
+/// Cheat sheet helper.
+pub mod cheat;
+
 use crate::error::Result;
+use crate::helper::docs::cheat::show_cheat_sheet;
+use crate::helper::docs::man::show_man_page;
 use std::io::Write;
-use std::process::Command;
 
 /// Shows documentation/usage help about the given binary.
-pub fn get_docs_help<Output: Write>(
-    _config: Option<Config>,
-    bin: &str,
-    man_cmd: &str,
-    _output: &mut Output,
-) -> Result<()> {
-    let mut process = Command::new(man_cmd).arg(bin).spawn()?;
-    process.wait()?;
+pub fn get_docs_help<Output: Write>(bin: &str, man_cmd: &str, output: &mut Output) -> Result<()> {
+    show_man_page(man_cmd, bin)?;
+    show_cheat_sheet(bin, output)?;
     Ok(())
 }
