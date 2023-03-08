@@ -1,0 +1,84 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 0 * * 0"
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        if: github.event_name != 'pull_request'
+        uses: actions/checkout@v3
+      - name: Checkout the repository
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          components: rustfmt, clippy
+
+      - name: Check formatting
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+      - name: Run clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --tests -- -D warnings
+
+      - name: Run cargo-deny
+        uses: EmbarkStudios/cargo-deny-action@v1
+        with:
+          command: check licenses sources
+
+      - name: Run cargo-audit
+        uses: actions-rs/audit-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check conventional commits
+        uses: crate-ci/committed@master
+        with:
+          args: "-vv"
+          commits: "HEAD"
+
+      - name: Run lychee
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: -v *.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check spelling mistakes
+        uses: codespell-project/actions-codespell@master
+        with:
+          check_filenames: true
+          check_hidden: true
+          ignore_words_file: .codespellignore
+
+      - name: Run cargo-msrv
+        shell: bash
+        run: |
+          curl -s 'https://api.github.com/repos/foresterre/cargo-msrv/releases' | \
+            jq -r "[.[] | select(.prerelease == false)][0].assets[] | \
+            select(.name | ascii_downcase | test(\"linux.*x86_64|x86_64.*linux\")).browser_download_url" | \
+            wget -qi -
+          tar -xvf cargo-msrv*.tar* -C  ~/.cargo/bin/ cargo-msrv
+          printf "%s" "Checking MSRV for $package..."
+          cargo msrv --output-format json verify | tail -n 1 | jq --exit-status '.success'
