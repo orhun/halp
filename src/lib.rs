@@ -17,32 +17,71 @@ pub mod config;
 use crate::args::{HelpArg, VersionArg};
 use crate::cli::CliArgs;
 use crate::error::Result;
+use colored::*;
 use config::Config;
 use std::io::Write;
-use std::process::Command;
+use std::process::{Command, Stdio};
 
-/// Check if the argument exists.
-fn check_argument<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
+/// Checks if the given arguments exist.
+fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
     bin: &str,
     args: ArgsIter,
+    verbose: bool,
     output: &mut Output,
 ) -> Result<()> {
     for arg in args {
+        let command = format!("{} {}", bin, arg);
+        writeln!(
+            output,
+            "{}  {} '{}'",
+            "(°ロ°)".magenta(),
+            "checking".green().bold(),
+            command.white().italic()
+        )?;
         let cmd_out = Command::new("script")
             .args(&[
                 String::from("-q"),
                 String::from("-e"),
                 String::from("-c"),
-                format!("{} {}", bin, arg),
+                command,
                 String::from("/dev/null"),
             ])
+            .stderr(Stdio::inherit())
             .output()?;
         if cmd_out.status.success() {
-            writeln!(output, "Argument found.")?;
+            writeln!(
+                output,
+                "{} {} '{}' argument found!",
+                "\\(^ヮ^)/".magenta(),
+                "success".cyan().bold(),
+                arg.white().italic()
+            )?;
             output.write_all(&cmd_out.stdout)?;
             break;
         } else {
-            writeln!(output, "Argument not found.")?;
+            writeln!(
+                output,
+                "{}     {} '{}' argument not found.",
+                "(×﹏×)".magenta(),
+                "error".red().bold(),
+                arg.white().italic()
+            )?;
+            if verbose {
+                writeln!(
+                    output,
+                    "{}      {}",
+                    "(o_O)".magenta(),
+                    "debug".yellow().bold(),
+                )?;
+                if !cmd_out.stdout.is_empty() {
+                    writeln!(output, "{}:", "stdout".white().italic())?;
+                    output.write_all(&cmd_out.stdout)?;
+                }
+                if !cmd_out.stderr.is_empty() {
+                    writeln!(output, "{}:", "stderr".white().italic())?;
+                    output.write_all(&cmd_out.stderr)?;
+                }
+            }
         }
     }
     Ok(())
@@ -63,12 +102,22 @@ pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<
     };
     if let Some(config_args) = config.and_then(|v| v.check_args) {
         for args in config_args {
-            check_argument(&cli_args.bin, args.iter().map(|v| v.as_str()), output)?;
+            check_args(
+                &cli_args.bin,
+                args.iter().map(|v| v.as_str()),
+                cli_args.verbose,
+                output,
+            )?;
         }
         return Ok(());
     }
     if let Some(args) = cli_args.check_args {
-        check_argument(&cli_args.bin, args.iter().map(|v| v.as_str()), output)?;
+        check_args(
+            &cli_args.bin,
+            args.iter().map(|v| v.as_str()),
+            cli_args.verbose,
+            output,
+        )?;
         return Ok(());
     }
     for arg_variants in [
@@ -78,9 +127,10 @@ pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<
     .iter()
     .flatten()
     {
-        check_argument(
+        check_args(
             &cli_args.bin,
             arg_variants.iter().map(|v| v.as_str()),
+            cli_args.verbose,
             output,
         )?;
     }

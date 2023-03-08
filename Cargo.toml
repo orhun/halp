@@ -24,6 +24,7 @@ path = "src/bin/mangen.rs"
 clap = { version = "4.1.8", features =["derive", "env", "wrap_help"] }
 clap_complete = "4.1.4"
 clap_mangen = "0.2.9"
+colored = "2.0.0"
 dirs = "4.0.0"
 serde = { version = "1.0.153", features = ["derive"] }
 thiserror = "1.0.39"

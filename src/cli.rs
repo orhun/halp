@@ -19,6 +19,9 @@ pub struct CliArgs {
     /// Sets the configuration file.
     #[arg(short, long, env = "HALP_CONFIG", value_name = "PATH")]
     pub config: Option<PathBuf>,
+    /// Enables verbose logging.
+    #[arg(short, long)]
+    pub verbose: bool,
 }
 
 impl CliArgs {
