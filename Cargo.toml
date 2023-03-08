@@ -9,6 +9,7 @@ homepage = "https://github.com/orhun/halp"
 repository = "https://github.com/orhun/halp"
 categories = ["command-line-utilities"]
 edition = "2021"
+rust-version = "1.64.0"
 
 [dependencies]
 clap = { version = "4.1.8", features =["derive", "env", "wrap_help"] }
