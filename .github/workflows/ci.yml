@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      - staging # for bors
+      - trying # for bors
   schedule:
     - cron: "0 0 * * 0"
 
