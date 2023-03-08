@@ -30,7 +30,7 @@ jobs:
           override: true
           components: rustfmt, clippy
 
-      - name: Check formatting
+      - name: Run rustfmt
         uses: actions-rs/cargo@v1
         with:
           command: fmt
@@ -52,7 +52,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Check conventional commits
+      - name: Run committed
         uses: crate-ci/committed@master
         with:
           args: "-vv"
@@ -65,7 +65,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Check spelling mistakes
+      - name: Run codespell
         uses: codespell-project/actions-codespell@master
         with:
           check_filenames: true
