@@ -1,0 +1,15 @@
+[licenses]
+default = "deny"
+unlicensed = "deny"
+copyleft = "deny"
+confidence-threshold = 0.8
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Unicode-DFS-2016"
+]
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "warn"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
