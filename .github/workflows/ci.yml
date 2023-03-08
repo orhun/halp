@@ -29,7 +29,6 @@ jobs:
           - armv7-unknown-linux-gnueabihf
           - arm-unknown-linux-gnueabi
           - arm-unknown-linux-gnueabihf
-          - riscv64gc-unknown-linux-gnu
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
