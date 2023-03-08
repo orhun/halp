@@ -17,6 +17,7 @@ pub mod config;
 use crate::args::{HelpArg, VersionArg};
 use crate::cli::CliArgs;
 use crate::error::Result;
+use cli::Commands;
 use colored::*;
 use config::Config;
 use std::io::Write;
@@ -87,23 +88,17 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
     Ok(())
 }
 
-/// Runs `halp`.
-pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<()> {
-    let config = if let Some(config_file) = cli_args
-        .config
-        .to_owned()
-        .or_else(Config::get_default_location)
-    {
-        let config = Config::parse(&config_file)?;
-        config.update_args(&mut cli_args);
-        Some(config)
-    } else {
-        None
-    };
+/// Shows command-line help about the given binary.
+pub fn get_help<Output: Write>(
+    config: Option<Config>,
+    bin: &str,
+    cli_args: &CliArgs,
+    output: &mut Output,
+) -> Result<()> {
     if let Some(config_args) = config.and_then(|v| v.check_args) {
         for args in config_args {
             check_args(
-                &cli_args.bin,
+                bin,
                 args.iter().map(|v| v.as_str()),
                 cli_args.verbose,
                 output,
@@ -111,9 +106,9 @@ pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<
         }
         return Ok(());
     }
-    if let Some(args) = cli_args.check_args {
+    if let Some(ref args) = cli_args.check_args {
         check_args(
-            &cli_args.bin,
+            bin,
             args.iter().map(|v| v.as_str()),
             cli_args.verbose,
             output,
@@ -128,11 +123,32 @@ pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<
     .flatten()
     {
         check_args(
-            &cli_args.bin,
+            bin,
             arg_variants.iter().map(|v| v.as_str()),
             cli_args.verbose,
             output,
         )?;
+    }
+    Ok(())
+}
+
+/// Runs `halp`.
+pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<()> {
+    let config = if let Some(config_file) = cli_args
+        .config
+        .to_owned()
+        .or_else(Config::get_default_location)
+    {
+        let config = Config::parse(&config_file)?;
+        config.update_args(&mut cli_args);
+        Some(config)
+    } else {
+        None
+    };
+    if let Some(ref bin) = cli_args.bin {
+        get_help(config, bin, &cli_args, output)?;
+    } else if let Some(Commands::Plz { bin: _ }) = cli_args.command {
+        todo!();
     }
     Ok(())
 }

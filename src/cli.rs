@@ -1,12 +1,19 @@
-use clap::Parser;
+use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
 /// Command-line arguments.
 #[derive(Debug, Parser)]
-#[command(version, author, about)]
+#[command(
+    version,
+    author,
+    about,
+    subcommand_negates_reqs = true,
+    disable_help_subcommand = true
+)]
 pub struct CliArgs {
     /// Binary name.
-    pub bin: String,
+    #[arg(required = true)]
+    pub bin: Option<String>,
     /// Sets the argument to check.
     #[arg(long = "check", value_name = "ARG", value_parser = CliArgs::parse_arg)]
     pub check_args: Option<Vec<String>>,
@@ -22,6 +29,19 @@ pub struct CliArgs {
     /// Enables verbose logging.
     #[arg(short, long)]
     pub verbose: bool,
+    /// Subcommands.
+    #[command(subcommand)]
+    pub command: Option<Commands>,
+}
+
+/// Subcommands.
+#[derive(Debug, Subcommand)]
+pub enum Commands {
+    /// Get additional help.
+    Plz {
+        /// Binary name.
+        bin: String,
+    },
 }
 
 impl CliArgs {

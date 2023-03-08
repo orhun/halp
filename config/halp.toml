@@ -5,4 +5,4 @@ check_version = false
 # check the help flag
 check_help = false
 # arguments to check
-check = [ [ "-v", "-V", "--version" ], [ "-h", "--help", "-H" ] ]
+check = [ [ "-v", "-V", "--version" ], [ "-h", "--help", "-H", "help" ] ]
