@@ -14,14 +14,17 @@ use std::io::Write;
 
 /// Shows documentation/usage help about the given binary.
 pub fn get_docs_help<Output: Write>(bin: &str, man_cmd: &str, output: &mut Output) -> Result<()> {
-    let operation = Select::with_theme(&ColorfulTheme::default())
-        .with_prompt("Select operation")
-        .default(0)
-        .items(&["Show man page", "Show cheat sheet"])
-        .interact_on_opt(&Term::stderr())?;
-    match operation {
-        Some(0) => show_man_page(man_cmd, bin),
-        Some(1) => show_cheat_sheet(bin, output),
-        _ => Ok(()),
+    let mut selection = Some(0);
+    loop {
+        selection = Select::with_theme(&ColorfulTheme::default())
+            .with_prompt("Select operation")
+            .default(selection.unwrap_or_default())
+            .items(&["Show man page", "Show cheat sheet", "Exit"])
+            .interact_on_opt(&Term::stderr())?;
+        match selection {
+            Some(0) => show_man_page(man_cmd, bin)?,
+            Some(1) => show_cheat_sheet(bin, output)?,
+            _ => return Ok(()),
+        };
     }
 }
