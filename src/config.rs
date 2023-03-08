@@ -85,8 +85,10 @@ mod tests {
         assert!(!config.check_help);
         config.check_help = true;
         config.man_command = Some(String::from("tldr"));
-        let mut args = CliArgs::default();
-        args.command = Some(CliCommands::default());
+        let mut args = CliArgs {
+            command: Some(CliCommands::default()),
+            ..Default::default()
+        };
         config.update_args(&mut args);
         assert!(!args.no_help);
         assert_eq!(
