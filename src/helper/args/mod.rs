@@ -20,7 +20,7 @@ const FAIL_EMOTICON: &str = "(×﹏×)";
 const DEBUG_EMOTICON: &str = "(o_O)";
 
 /// Checks if the given arguments exist.
-pub(crate) fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
+fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
     bin: &str,
     args: ArgsIter,
     verbose: bool,

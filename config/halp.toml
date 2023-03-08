@@ -8,3 +8,5 @@ check_help = false
 check = [ [ "-v", "-V", "--version" ], [ "-h", "--help", "help", "-H" ] ]
 # command to run for manual pages
 man_command = "man"
+# pager to use for command outputs
+pager_command = "less -R"

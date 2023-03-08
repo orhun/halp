@@ -13,7 +13,12 @@ use dialoguer::Select;
 use std::io::Write;
 
 /// Shows documentation/usage help about the given binary.
-pub fn get_docs_help<Output: Write>(bin: &str, man_cmd: &str, output: &mut Output) -> Result<()> {
+pub fn get_docs_help<Output: Write>(
+    bin: &str,
+    man_cmd: &str,
+    pager: Option<String>,
+    output: &mut Output,
+) -> Result<()> {
     let mut selection = Some(0);
     loop {
         selection = Select::with_theme(&get_selection_theme())
@@ -23,7 +28,7 @@ pub fn get_docs_help<Output: Write>(bin: &str, man_cmd: &str, output: &mut Outpu
             .interact_on_opt(&Term::stderr())?;
         match selection {
             Some(0) => show_man_page(man_cmd, bin)?,
-            Some(1) => show_cheat_sheet(bin, output)?,
+            Some(1) => show_cheat_sheet(bin, &pager, output)?,
             _ => return Ok(()),
         };
     }

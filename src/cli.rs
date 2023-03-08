@@ -1,3 +1,4 @@
+use clap::builder::ArgPredicate;
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
@@ -41,9 +42,20 @@ pub enum CliCommands {
     Plz {
         /// Binary name.
         bin: String,
-        /// Manual page command to run.
+        /// Sets the manual page command to run.
         #[arg(short, long, default_value = "man")]
         man_cmd: String,
+        /// Sets the pager to use.
+        #[arg(
+            short,
+            long,
+            default_value = "less -R",
+            default_value_if("no_pager", ArgPredicate::IsPresent, None)
+        )]
+        pager: Option<String>,
+        /// Disables the pager.
+        #[arg(long)]
+        no_pager: bool,
     },
 }
 
@@ -52,6 +64,8 @@ impl Default for CliCommands {
         CliCommands::Plz {
             bin: String::new(),
             man_cmd: String::from("man"),
+            pager: Some(String::from("less")),
+            no_pager: false,
         }
     }
 }

@@ -40,9 +40,11 @@ pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<
     } else if let Some(CliCommands::Plz {
         ref bin,
         ref man_cmd,
+        pager,
+        ..
     }) = cli_args.command
     {
-        get_docs_help(bin, man_cmd, output)?;
+        get_docs_help(bin, man_cmd, pager, output)?;
     }
     Ok(())
 }

@@ -18,6 +18,8 @@ pub struct Config {
     pub check_args: Option<Vec<Vec<String>>>,
     /// Command to run for manual pages.
     pub man_command: Option<String>,
+    /// Pager to use for command outputs.
+    pub pager_command: Option<String>,
 }
 
 impl Config {
@@ -57,11 +59,15 @@ impl Config {
         cli_args.no_version = !self.check_version;
         if let Some(man_command) = &self.man_command {
             if let Some(CliCommands::Plz {
-                bin: _,
-                ref mut man_cmd,
+                ref mut man_cmd, ..
             }) = cli_args.command
             {
                 *man_cmd = man_command.clone();
+            }
+        }
+        if let Some(pager_command) = &self.pager_command {
+            if let Some(CliCommands::Plz { ref mut pager, .. }) = cli_args.command {
+                *pager = Some(pager_command.clone());
             }
         }
     }
@@ -94,7 +100,7 @@ mod tests {
         assert_eq!(
             "tldr",
             match args.command {
-                Some(CliCommands::Plz { bin: _, man_cmd }) => {
+                Some(CliCommands::Plz { man_cmd, .. }) => {
                     man_cmd
                 }
                 _ => unreachable!(),
