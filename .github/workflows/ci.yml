@@ -142,7 +142,7 @@ jobs:
           check_filenames: true
           check_hidden: true
           ignore_words_file: .codespellignore
-          skip: target
+          skip: target,.git
 
       - name: Run cargo-msrv
         shell: bash
