@@ -55,3 +55,26 @@ impl Config {
         cli_args.no_version = !self.check_version;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::PathBuf;
+
+    #[test]
+    fn test_parse_config() -> Result<()> {
+        let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("config")
+            .join(format!("{}.toml", env!("CARGO_PKG_NAME")));
+        if let Some(global_path) = Config::get_default_location() {
+            path = global_path;
+        }
+        let mut config = Config::parse(&path)?;
+        assert!(!config.check_help);
+        config.check_help = true;
+        let mut args = CliArgs::default();
+        config.update_args(&mut args);
+        assert!(!args.no_help);
+        Ok(())
+    }
+}

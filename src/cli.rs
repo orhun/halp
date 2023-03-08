@@ -2,7 +2,7 @@ use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
 /// Command-line arguments.
-#[derive(Debug, Parser)]
+#[derive(Debug, Default, Parser)]
 #[command(
     version,
     author,
@@ -48,5 +48,16 @@ impl CliArgs {
     /// Custom argument parser for escaping the '-' character.
     fn parse_arg(arg: &str) -> Result<String, String> {
         Ok(arg.replace("\\-", "-"))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use clap::CommandFactory;
+
+    #[test]
+    fn test_cli_args() {
+        CliArgs::command().debug_assert()
     }
 }
