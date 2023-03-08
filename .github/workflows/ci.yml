@@ -42,9 +42,6 @@ jobs:
           profile: minimal
           override: true
 
-      - name: Cache Cargo dependencies
-        uses: Swatinem/rust-cache@v2
-
       - name: Build
         uses: actions-rs/cargo@v1
         with:
