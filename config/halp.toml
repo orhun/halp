@@ -1,3 +1,5 @@
+# configuration for https://github.com/orhun/halp
+
 # check the version flag
 check_version = false
 # check the help flag
