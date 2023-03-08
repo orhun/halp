@@ -6,3 +6,5 @@ check_version = false
 check_help = false
 # arguments to check
 check = [ [ "-v", "-V", "--version" ], [ "-h", "--help", "-H", "help" ] ]
+# command to run for manual pages
+man_command = "man"

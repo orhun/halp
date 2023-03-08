@@ -31,17 +31,29 @@ pub struct CliArgs {
     pub verbose: bool,
     /// Subcommands.
     #[command(subcommand)]
-    pub command: Option<Commands>,
+    pub command: Option<CliCommands>,
 }
 
 /// Subcommands.
 #[derive(Debug, Subcommand)]
-pub enum Commands {
+pub enum CliCommands {
     /// Get additional help.
     Plz {
         /// Binary name.
         bin: String,
+        /// Manual page command to run.
+        #[arg(short, long, default_value = "man")]
+        man_cmd: String,
     },
+}
+
+impl Default for CliCommands {
+    fn default() -> Self {
+        CliCommands::Plz {
+            bin: String::new(),
+            man_cmd: String::from("man"),
+        }
+    }
 }
 
 impl CliArgs {

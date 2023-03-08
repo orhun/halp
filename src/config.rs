@@ -1,4 +1,4 @@
-use crate::cli::CliArgs;
+use crate::cli::{CliArgs, CliCommands};
 use crate::error::Result;
 use serde::{Deserialize, Serialize};
 use std::env;
@@ -16,6 +16,8 @@ pub struct Config {
     /// Arguments to check.
     #[serde(rename = "check")]
     pub check_args: Option<Vec<Vec<String>>>,
+    /// Command to run for manual pages.
+    pub man_command: Option<String>,
 }
 
 impl Config {
@@ -53,12 +55,22 @@ impl Config {
     pub fn update_args(&self, cli_args: &mut CliArgs) {
         cli_args.no_help = !self.check_help;
         cli_args.no_version = !self.check_version;
+        if let Some(man_command) = &self.man_command {
+            if let Some(CliCommands::Plz {
+                bin: _,
+                ref mut man_cmd,
+            }) = cli_args.command
+            {
+                *man_cmd = man_command.clone();
+            }
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use pretty_assertions::assert_eq;
     use std::path::PathBuf;
 
     #[test]
@@ -72,9 +84,20 @@ mod tests {
         let mut config = Config::parse(&path)?;
         assert!(!config.check_help);
         config.check_help = true;
+        config.man_command = Some(String::from("tldr"));
         let mut args = CliArgs::default();
+        args.command = Some(CliCommands::default());
         config.update_args(&mut args);
         assert!(!args.no_help);
+        assert_eq!(
+            "tldr",
+            match args.command {
+                Some(CliCommands::Plz { bin: _, man_cmd }) => {
+                    man_cmd
+                }
+                _ => unreachable!(),
+            }
+        );
         Ok(())
     }
 }

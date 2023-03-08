@@ -16,7 +16,7 @@ pub mod config;
 
 use crate::cli::CliArgs;
 use crate::error::Result;
-use cli::Commands;
+use cli::CliCommands;
 use config::Config;
 use helper::args::get_args_help;
 use helper::docs::get_docs_help;
@@ -37,8 +37,12 @@ pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<
     };
     if let Some(ref bin) = cli_args.bin {
         get_args_help(config, bin, &cli_args, output)?;
-    } else if let Some(Commands::Plz { ref bin }) = cli_args.command {
-        get_docs_help(config, bin, &cli_args, output)?;
+    } else if let Some(CliCommands::Plz {
+        ref bin,
+        ref man_cmd,
+    }) = cli_args.command
+    {
+        get_docs_help(config, bin, man_cmd, output)?;
     }
     Ok(())
 }
