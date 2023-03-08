@@ -46,5 +46,6 @@ generate_argument!(
     HelpArg,
     Help => "-h",
     LongHelp => "--help",
+    SubcommandHelp => "help",
     CapitalHelp => "-H",
 );
