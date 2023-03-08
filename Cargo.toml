@@ -25,6 +25,8 @@ clap = { version = "4.1.8", features =["derive", "env", "wrap_help"] }
 clap_complete = "4.1.4"
 clap_mangen = "0.2.9"
 colored = "2.0.0"
+console = "0.15.5"
+dialoguer = { version = "0.10.3", no-default-features = true }
 dirs = "4.0.0"
 serde = { version = "1.0.153", features = ["derive"] }
 thiserror = "1.0.39"
