@@ -10,6 +10,7 @@ status = [
     "Build (arm-unknown-linux-gnueabi)",
     "Build (arm-unknown-linux-gnueabihf)",
     "Build (riscv64gc-unknown-linux-gnu)",
+    "Test",
     "Lint",
 ]
 required_approvals = 1
