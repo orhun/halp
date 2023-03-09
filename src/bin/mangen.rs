@@ -25,3 +25,12 @@ fn main() -> Result<()> {
     println!("Man page is generated at {out_path:?}");
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn generate_manpage() -> Result<()> {
+        main()
+    }
+}

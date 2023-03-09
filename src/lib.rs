@@ -36,7 +36,7 @@ pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<
         None
     };
     if let Some(ref bin) = cli_args.bin {
-        get_args_help(config, bin, &cli_args, output)?;
+        get_args_help(bin, &cli_args, config, output)?;
     } else if let Some(CliCommands::Plz {
         ref bin,
         ref man_cmd,
