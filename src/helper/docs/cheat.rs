@@ -46,3 +46,22 @@ pub fn show_cheat_sheet<Output: Write>(
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_fetch_cheat_sheet() -> Result<()> {
+        let mut output = Vec::new();
+        show_cheat_sheet("ls", &None, &mut output)?;
+        let output = String::from_utf8_lossy(&output);
+        assert!(output.contains(
+            "# To display all files, along with the size (with unit suffixes) and timestamp:"
+        ));
+        assert!(output.contains(
+            "# Long format list with size displayed using human-readable units (KiB, MiB, GiB):"
+        ));
+        Ok(())
+    }
+}
