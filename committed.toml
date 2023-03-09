@@ -10,3 +10,7 @@ subject_capitalized = false
 imperative_subject = true
 # subject should not end with a punctuation
 subject_not_punctuated = true
+# disable line length
+line_length = 0
+# disable subject length
+subject_length = 0
