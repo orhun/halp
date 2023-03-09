@@ -86,9 +86,9 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
 
 /// Shows command-line help about the given binary.
 pub fn get_args_help<Output: Write>(
-    config: Option<Config>,
     bin: &str,
     cli_args: &CliArgs,
+    config: Option<Config>,
     output: &mut Output,
 ) -> Result<()> {
     if let Some(config_args) = config.and_then(|v| v.check_args) {
@@ -163,6 +163,7 @@ halp 0.1.0"#,
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
+                .replace("0.1.0", env!("CARGO_PKG_VERSION"))
                 .trim()
         );
 
@@ -210,6 +211,99 @@ Options:
                 .trim()
         );
 
+        Ok(())
+    }
+
+    #[test]
+    fn test_get_default_help() -> Result<()> {
+        let args = CliArgs::default();
+        let mut output = Vec::new();
+        get_args_help(&get_test_bin(), &args, None, &mut output)?;
+        println!("{}", String::from_utf8_lossy(&output));
+        assert_eq!(
+            r#"(°ロ°)  checking 'test -v'
+(×﹏×)      fail '-v' argument not found.
+(°ロ°)  checking 'test -V'
+\(^ヮ^)/ success '-V' argument found!
+halp 0.1.0
+(°ロ°)  checking 'test -h'
+\(^ヮ^)/ success '-h' argument found!
+Usage: test
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version"#,
+            String::from_utf8_lossy(&output)
+                .replace('\r', "")
+                .replace(&get_test_bin(), "test")
+                .replace("0.1.0", env!("CARGO_PKG_VERSION"))
+                .trim()
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn test_get_args_help() -> Result<()> {
+        let args = CliArgs {
+            check_args: Some(vec![String::from("-x"), String::from("-V")]),
+            ..Default::default()
+        };
+        let mut output = Vec::new();
+        get_args_help(&get_test_bin(), &args, None, &mut output)?;
+        println!("{}", String::from_utf8_lossy(&output));
+        assert_eq!(
+            r#"(°ロ°)  checking 'test -x'
+(×﹏×)      fail '-x' argument not found.
+(°ロ°)  checking 'test -V'
+\(^ヮ^)/ success '-V' argument found!
+halp 0.1.0"#,
+            String::from_utf8_lossy(&output)
+                .replace('\r', "")
+                .replace(&get_test_bin(), "test")
+                .replace("0.1.0", env!("CARGO_PKG_VERSION"))
+                .trim()
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn test_get_config_help() -> Result<()> {
+        let args = CliArgs::default();
+        let config = Config {
+            check_args: Some(vec![vec![String::from("-y"), String::from("--help")]]),
+            ..Default::default()
+        };
+        let mut output = Vec::new();
+        get_args_help(&get_test_bin(), &args, Some(config), &mut output)?;
+        println!("{}", String::from_utf8_lossy(&output));
+        assert_eq!(
+            r#"(°ロ°)  checking 'test -y'
+(×﹏×)      fail '-y' argument not found.
+(°ロ°)  checking 'test --help'
+\(^ヮ^)/ success '--help' argument found!
+Usage: test
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version"#,
+            String::from_utf8_lossy(&output)
+                .replace('\r', "")
+                .replace(&get_test_bin(), "test")
+                .trim()
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn test_do_nothing() -> Result<()> {
+        let args = CliArgs {
+            no_version: true,
+            no_help: true,
+            ..Default::default()
+        };
+        let mut output = Vec::new();
+        get_args_help("", &args, None, &mut output)?;
+        assert!(String::from_utf8_lossy(&output).is_empty());
         Ok(())
     }
 }
