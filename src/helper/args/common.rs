@@ -49,3 +49,27 @@ generate_argument!(
     SubcommandHelp => "help",
     CapitalHelp => "-H",
 );
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    generate_argument!(
+        Test,
+        One => "one",
+        Two => "two",
+        Three => "three",
+    );
+
+    #[test]
+    fn test_enum_generation() {
+        assert_eq!(
+            vec!["one", "two", "three"],
+            Test::variants()
+                .iter()
+                .map(|v| v.as_str())
+                .collect::<Vec<_>>()
+        );
+    }
+}
