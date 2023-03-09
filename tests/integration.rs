@@ -1,6 +1,7 @@
 use halp::cli::CliArgs;
 use halp::error::Result;
 use pretty_assertions::assert_eq;
+use std::path::PathBuf;
 
 /// Test binary.
 const BIN: &str = env!("CARGO_BIN_EXE_halp-test");
@@ -9,6 +10,11 @@ const BIN: &str = env!("CARGO_BIN_EXE_halp-test");
 fn get_argument_help() -> Result<()> {
     let args = CliArgs {
         bin: Some(BIN.to_string()),
+        config: Some(
+            PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                .join("config")
+                .join(format!("{}.toml", env!("CARGO_PKG_NAME"))),
+        ),
         ..Default::default()
     };
     let mut output = Vec::new();
