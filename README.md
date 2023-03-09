@@ -1,7 +1,7 @@
 <div align="center">
 
   <a href="https://lospec.com/gallery/orhun/octopus">
-    <img src="assets/halp-logo.png" width="300">
+    <img src="assets/halp-logo.png" >
   </a>
 
 <h4>A CLI tool to get help with CLI tools 🐙</h4>
