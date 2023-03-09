@@ -20,6 +20,10 @@ path = "src/bin/completions.rs"
 name = "halp-mangen"
 path = "src/bin/mangen.rs"
 
+[[bin]]
+name = "halp-test"
+path = "src/bin/test.rs"
+
 [dependencies]
 clap = { version = "4.1.8", features =["derive", "env", "wrap_help"] }
 clap_complete = "4.1.4"

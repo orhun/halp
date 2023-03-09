@@ -132,31 +132,38 @@ pub fn get_args_help<Output: Write>(
 mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
+    use std::path::PathBuf;
+
+    /// Returns the path of the test binary.
+    fn get_test_bin() -> String {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("target")
+            .join("debug")
+            .join(format!("{}-test", env!("CARGO_PKG_NAME")))
+            .to_string_lossy()
+            .to_string()
+    }
 
     #[test]
     fn test_check_version_args() -> Result<()> {
         let mut output = Vec::new();
         check_args(
-            "whoami",
+            &get_test_bin(),
             VersionArg::variants().iter().map(|v| v.as_str()),
             false,
             &mut output,
         )?;
+        println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
-            r#"(°ロ°)  checking 'whoami -v'
+            r#"(°ロ°)  checking 'test -v'
 (×﹏×)      fail '-v' argument not found.
-(°ロ°)  checking 'whoami -V'
-(×﹏×)      fail '-V' argument not found.
-(°ロ°)  checking 'whoami --version'
-\(^ヮ^)/ success '--version' argument found!
-whoami (GNU coreutils) 9.1
-Copyright (C) 2022 Free Software Foundation, Inc.
-License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
-
-Written by Richard Mlynarik."#,
-            String::from_utf8_lossy(&output).replace('\r', "").trim()
+(°ロ°)  checking 'test -V'
+\(^ヮ^)/ success '-V' argument found!
+halp 0.1.0"#,
+            String::from_utf8_lossy(&output)
+                .replace('\r', "")
+                .replace(&get_test_bin(), "test")
+                .trim()
         );
 
         Ok(())
@@ -166,31 +173,41 @@ Written by Richard Mlynarik."#,
     fn test_check_help_args() -> Result<()> {
         let mut output = Vec::new();
         check_args(
-            "whoami",
-            HelpArg::variants().iter().map(|v| v.as_str()),
+            &get_test_bin(),
+            HelpArg::variants().iter().rev().map(|v| v.as_str()),
             true,
             &mut output,
         )?;
         assert_eq!(
-            r#"(°ロ°)  checking 'whoami -h'
-(×﹏×)      fail '-h' argument not found.
+            r#"(°ロ°)  checking 'test -H'
+(×﹏×)      fail '-H' argument not found.
 (o_O)      debug
 stdout:
-whoami: invalid option -- 'h'
-Try 'whoami --help' for more information.
-(°ロ°)  checking 'whoami --help'
+error: unexpected argument '-H' found
+
+Usage: test
+
+For more information, try '--help'.
+(°ロ°)  checking 'test help'
+(×﹏×)      fail 'help' argument not found.
+(o_O)      debug
+stdout:
+error: unexpected argument 'help' found
+
+Usage: test
+
+For more information, try '--help'.
+(°ロ°)  checking 'test --help'
 \(^ヮ^)/ success '--help' argument found!
-Usage: whoami [OPTION]...
-Print the user name associated with the current effective user ID.
-Same as id -un.
+Usage: test
 
-      --help        display this help and exit
-      --version     output version information and exit
-
-GNU coreutils online help: <https://www.gnu.org/software/coreutils/>
-Full documentation <https://www.gnu.org/software/coreutils/whoami>
-or available locally via: info '(coreutils) whoami invocation'"#,
-            String::from_utf8_lossy(&output).replace('\r', "").trim()
+Options:
+  -h, --help     Print help
+  -V, --version  Print version"#,
+            String::from_utf8_lossy(&output)
+                .replace('\r', "")
+                .replace(&get_test_bin(), "test")
+                .trim()
         );
 
         Ok(())
