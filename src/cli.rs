@@ -81,9 +81,11 @@ impl CliArgs {
 mod tests {
     use super::*;
     use clap::CommandFactory;
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn test_cli_args() {
-        CliArgs::command().debug_assert()
+        CliArgs::command().debug_assert();
+        assert_eq!(Ok("--help"), CliArgs::parse_arg("\\--help").as_deref());
     }
 }
