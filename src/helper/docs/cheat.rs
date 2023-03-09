@@ -26,10 +26,17 @@ pub fn show_cheat_sheet<Output: Write>(
         .map_err(|e| Error::from(Box::new(e)))?
         .into_string()?;
     if let Some(pager) = pager {
-        let mut process = Command::new("sh")
-            .args(["-c", pager])
-            .stdin(Stdio::piped())
-            .spawn()?;
+        let mut process = if cfg!(target_os = "windows") {
+            Command::new("cmd")
+                .args(["/C", pager])
+                .stdin(Stdio::piped())
+                .spawn()
+        } else {
+            Command::new("sh")
+                .args(["-c", pager])
+                .stdin(Stdio::piped())
+                .spawn()
+        }?;
         if let Some(stdin) = process.stdin.as_mut() {
             writeln!(stdin, "{}", cheat_sheet)?;
             process.wait()?;
