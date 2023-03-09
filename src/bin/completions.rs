@@ -21,3 +21,12 @@ fn main() -> Result<()> {
     println!("Completion scripts are generated in {out_dir:?}");
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn generate_completions() -> Result<()> {
+        main()
+    }
+}
