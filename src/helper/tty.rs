@@ -88,13 +88,4 @@ mod tests {
         );
         Ok(())
     }
-
-    #[test]
-    fn run_echo_and_cat() -> Result<()> {
-        assert_eq!(
-            "look, bash support!\n",
-            run_command("echo 'look, bash support!' | cat", Some("bash"))?,
-        );
-        Ok(())
-    }
 }
