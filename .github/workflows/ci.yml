@@ -12,23 +12,74 @@ on:
 
 jobs:
   build:
-    name: Build (${{ matrix.TARGET }})
-    runs-on: ubuntu-22.04
+    name: Build on ${{ matrix.build.OS }} (${{ matrix.build.TARGET }})
+    runs-on: ${{ matrix.build.OS }}
     strategy:
       fail-fast: false
       matrix:
-        TOOLCHAIN: [stable]
-        TARGET:
-          - x86_64-unknown-linux-gnu
-          - x86_64-unknown-linux-musl
-          - i686-unknown-linux-gnu
-          - i686-unknown-linux-musl
-          - aarch64-unknown-linux-gnu
-          - aarch64-unknown-linux-musl
-          - armv5te-unknown-linux-gnueabi
-          - armv7-unknown-linux-gnueabihf
-          - arm-unknown-linux-gnueabi
-          - arm-unknown-linux-gnueabihf
+        build:
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: x86_64-unknown-linux-gnu,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: x86_64-unknown-linux-musl,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: i686-unknown-linux-gnu,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: i686-unknown-linux-musl,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: aarch64-unknown-linux-gnu,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: aarch64-unknown-linux-musl,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: armv5te-unknown-linux-gnueabi,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: armv7-unknown-linux-gnueabihf,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: arm-unknown-linux-gnueabi,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: arm-unknown-linux-gnueabihf,
+            }
+          - {
+              OS: windows-2022,
+              TOOLCHAIN: stable,
+              TARGET: x86_64-pc-windows-msvc,
+            }
+          - {
+              OS: windows-2022,
+              TOOLCHAIN: stable,
+              TARGET: aarch64-pc-windows-msvc,
+            }
+          - { OS: macos-11, TOOLCHAIN: stable, TARGET: x86_64-apple-darwin }
+          - { OS: macos-11, TOOLCHAIN: stable, TARGET: aarch64-apple-darwin }
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
@@ -36,17 +87,17 @@ jobs:
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: ${{ matrix.TOOLCHAIN }}
-          target: ${{ matrix.TARGET }}
+          toolchain: ${{ matrix.build.TOOLCHAIN }}
+          target: ${{ matrix.build.TARGET }}
           profile: minimal
           override: true
 
       - name: Build
         uses: actions-rs/cargo@v1
         with:
-          use-cross: true
           command: build
-          args: --locked --target ${{ matrix.TARGET }}
+          args: --locked --target ${{ matrix.build.TARGET }}
+          use-cross: ${{ matrix.build.OS == 'ubuntu-22.04' }}
 
   test:
     name: Test
