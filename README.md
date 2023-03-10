@@ -7,6 +7,7 @@
 <h4>A CLI tool to get help with CLI tools 🐙</h4>
 
 <!--
+TODO: Uncomment these
 <a href="https://github.com/orhun/halp/releases"><img src="https://img.shields.io/github/v/release/orhun/halp?style=flat&amp;labelColor=342a5e&amp;color=684d81&amp;logo=GitHub&amp;logoColor=white" alt="GitHub Release"></a>
 <a href="https://crates.io/crates/halp/"><img src="https://img.shields.io/crates/v/halp?style=flat&amp;labelColor=342a5e&amp;color=684d81&amp;logo=Rust&amp;logoColor=white" alt="Crate Release"></a>
 <a href="https://codecov.io/gh/orhun/halp"><img src="https://img.shields.io/codecov/c/gh/orhun/halp?style=flat&amp;labelColor=342a5e&amp;color=684d81&amp;logo=Codecov&amp;logoColor=white" alt="Coverage"></a>
@@ -18,6 +19,8 @@
 -->
 
 </div>
+
+<!-- TODO: Add GIF -->
 
 Have you ever experienced this:
 
@@ -44,7 +47,13 @@ Usage:
 
 `halp` aims to help with this and other different cases.
 
-#### License
+### Installation
+
+### Usage
+
+### Configuration
+
+### License
 
 <sup>
 Licensed under either of <a href="LICENSE-APACHE">Apache License, Version
