@@ -12,6 +12,7 @@ committed.toml
 cliff.toml
 deny.toml
 rustfmt.toml
+_config.yml
 .editorconfig
 .codespellignore
 .gitignore
