@@ -10,4 +10,4 @@ The following versions are supported with security updates:
 
 ## Reporting a Vulnerability
 
-Please use the [GitHub Security Advisories](https://github.com/orhun/halp/security/advisories/new) feature to report vulnerabilies.
+Please use the [GitHub Security Advisories](https://github.com/orhun/halp/security/advisories/new) feature to report vulnerabilities.
