@@ -30,7 +30,7 @@ impl TtyCommand {
     pub fn new_with_shell(cmd: &str, shell: &str) -> Result<OsCommand> {
         if cfg!(any(target_os = "linux", target_os = "android")) {
             let mut command = OsCommand::new("script");
-            command.args(["-qec", cmd, "/dev/null"]);
+            command.args(["-q", "-e", "-c", cmd, "/dev/null"]);
             command.env("SHELL", shell.trim());
             Ok(command)
         } else if cfg!(any(target_os = "macos", target_os = "freebsd")) {
