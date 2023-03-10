@@ -72,6 +72,7 @@ jobs:
         run: cargo build --bin halp-test
 
       - name: Generate code coverage
+        shell: bash
         run: cargo llvm-cov --lcov --output-path lcov.info
         env:
           NO_COLOR: 1
