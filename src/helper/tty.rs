@@ -32,10 +32,12 @@ impl TtyCommand {
             let mut command = OsCommand::new("script");
             command.args(["-q", "-e", "-c", cmd, "/dev/null"]);
             command.env("SHELL", shell.trim());
+            println!("1: {:?}", command);
             Ok(command)
         } else if cfg!(any(target_os = "macos", target_os = "freebsd")) {
             let mut command = OsCommand::new("script");
             command.args(["-q", "/dev/null", shell.trim(), "-c", cmd]);
+            println!("2: {:?}", command);
             Ok(command)
         } else if cfg!(target_os = "windows") {
             let mut command = OsCommand::new("cmd");
