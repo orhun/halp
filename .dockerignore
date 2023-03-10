@@ -11,6 +11,7 @@ LICENSE-*
 committed.toml
 cliff.toml
 deny.toml
+CNAME
 rustfmt.toml
 _config.yml
 .editorconfig
