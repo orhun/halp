@@ -47,7 +47,38 @@ Usage:
 
 `halp` aims to help with this and other different cases.
 
-### Installation
+## Installation
+
+<details>
+  <summary>Packaging status</summary>
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/halp.svg)](https://repology.org/project/halp/versions)
+
+</details>
+
+### Cargo
+
+`halp` can be installed from [crates.io](https://crates.io/crates/halp):
+
+```sh
+cargo install halp
+```
+
+The minimum supported Rust version is `1.64.0`.
+
+### Arch Linux
+
+`halp` can be installed from available [AUR packages](https://aur.archlinux.org/packages/?O=0&SeB=b&K=halp&outdated=&SB=n&SO=a&PP=50&do_Search=Go) using an [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers). For example,
+
+```sh
+paru -S halp
+```
+
+If you prefer, you can clone the package and then build it with [makepkg](https://wiki.archlinux.org/index.php/Makepkg). For example,
+
+```sh
+git clone https://aur.archlinux.org/halp.git && cd halp && makepkg -si
+```
 
 ### Docker
 
@@ -81,11 +112,33 @@ Custom Docker images can be built from the [Dockerfile](./Dockerfile):
 docker build -t halp .
 ```
 
-### Usage
+### Binary releases
 
-### Configuration
+See the available binaries for different targets from the [releases page](https://github.com/orhun/halp/releases). They are are automated via [Continuous Deployment](.github/workflows/cd.yml) workflow
 
-### License
+Release tarballs are signed with the following PGP key: [0xFB41AE0358378256](https://keyserver.ubuntu.com/pks/lookup?search=0xFB41AE0358378256&op=vindex)
+
+### Build from source
+
+1. Clone the repository.
+
+```sh
+git clone https://github.com/orhun/halp && cd halp/
+```
+
+2. Build.
+
+```sh
+CARGO_TARGET_DIR=target cargo build --release
+```
+
+Binary will be located at `target/release/halp`.
+
+## Usage
+
+## Configuration
+
+## License
 
 <sup>
 Licensed under either of <a href="LICENSE-APACHE">Apache License, Version
