@@ -1,4 +1,5 @@
 status = [
+    "Docker Build and Push",
     "Build on ubuntu-22.04 (x86_64-unknown-linux-gnu)",
     "Build on ubuntu-22.04 (x86_64-unknown-linux-musl)",
     "Build on ubuntu-22.04 (i686-unknown-linux-gnu)",
