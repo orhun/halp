@@ -12,6 +12,9 @@ pub enum Error {
     /// Error that might occur while processing/sending requests.
     #[error("Request error: `{0}`")]
     RequestError(#[from] Box<ureq::Error>),
+    /// Error that might occur when running on unsupported platforms.
+    #[error("Unsupported platform.")]
+    UnsupportedPlatformError,
 }
 
 /// Type alias for the standard [`Result`] type.

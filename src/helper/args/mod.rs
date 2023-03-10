@@ -5,9 +5,9 @@ use crate::cli::CliArgs;
 use crate::config::Config;
 use crate::error::Result;
 use crate::helper::args::common::{HelpArg, VersionArg};
+use crate::helper::tty::TtyCommand;
 use colored::*;
 use std::io::Write;
-use std::process::Command;
 use std::process::Stdio;
 
 /// Emoticon for "checking" message.
@@ -35,14 +35,7 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
             "checking".green().bold(),
             command.white().italic()
         )?;
-        let cmd_out = Command::new("script")
-            .args(&[
-                String::from("-q"),
-                String::from("-e"),
-                String::from("-c"),
-                command,
-                String::from("/dev/null"),
-            ])
+        let cmd_out = TtyCommand::new(&command)?
             .stderr(Stdio::inherit())
             .output()?;
         if cmd_out.status.success() {
