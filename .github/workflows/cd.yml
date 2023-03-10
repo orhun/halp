@@ -1,0 +1,178 @@
+name: Continuous Deployment
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  changelog:
+    name: Generate changelog
+    runs-on: ubuntu-latest
+    outputs:
+      release_body: ${{ steps.git-cliff.outputs.content }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v2
+        id: git-cliff
+        with:
+          config: cliff.toml
+          args: --latest --strip header
+
+  publish-github:
+    name: Publish on GitHub
+    needs: changelog
+    runs-on: ${{ matrix.build.OS }}
+    strategy:
+      fail-fast: false
+      matrix:
+        build:
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: x86_64-unknown-linux-gnu,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: x86_64-unknown-linux-musl,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: i686-unknown-linux-gnu,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: i686-unknown-linux-musl,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: aarch64-unknown-linux-gnu,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: aarch64-unknown-linux-musl,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: armv5te-unknown-linux-gnueabi,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: armv7-unknown-linux-gnueabihf,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: arm-unknown-linux-gnueabi,
+            }
+          - {
+              OS: ubuntu-22.04,
+              TOOLCHAIN: stable,
+              TARGET: arm-unknown-linux-gnueabihf,
+            }
+          - {
+              OS: windows-2022,
+              TOOLCHAIN: stable,
+              TARGET: x86_64-pc-windows-msvc,
+            }
+          - { OS: macos-11, TOOLCHAIN: stable, TARGET: x86_64-apple-darwin }
+          - { OS: macos-11, TOOLCHAIN: stable, TARGET: aarch64-apple-darwin }
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Set the release version
+        run: echo "RELEASE_VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.build.TOOLCHAIN }}
+          target: ${{ matrix.build.TARGET }}
+          profile: minimal
+          override: true
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --locked --target ${{ matrix.build.TARGET }}
+          use-cross: ${{ matrix.build.OS == 'ubuntu-22.04' }}
+
+      - name: Prepare release assets
+        shell: bash
+        run: |
+          mkdir -p release/{man,completions}
+          cp {LICENSE,README.md,CHANGELOG.md} release/
+          OUT_DIR=release/completions/ cargo run --release --bin halp-completions
+          OUT_DIR=release/man/ cargo run --release --bin halp-mangen
+          for bin in 'halp' 'halp-completions' 'halp-mangen'; do
+            if [ "${{ matrix.build.OS }}" = "windows-2022" ]; then
+              bin="${bin}.exe"
+            fi
+            cp "target/${{ matrix.build.TARGET }}/release/${bin}" release/
+          done
+          mv release/ halp-${{ env.RELEASE_VERSION }}/
+
+      - name: Create release artifacts
+        shell: bash
+        run: |
+          if [ "${{ matrix.build.OS }}" = "windows-2022" ]; then
+            7z a -tzip "halp-${{ env.RELEASE_VERSION }}-${{ matrix.build.TARGET }}.zip" \
+              halp-${{ env.RELEASE_VERSION }}/
+          else
+            tar -czvf halp-${{ env.RELEASE_VERSION }}-${{ matrix.build.TARGET }}.tar.gz \
+              halp-${{ env.RELEASE_VERSION }}/
+            shasum -a 512 halp-${{ env.RELEASE_VERSION }}-${{ matrix.build.TARGET }}.tar.gz \
+              > halp-${{ env.RELEASE_VERSION }}-${{ matrix.build.TARGET }}.tar.gz.sha512
+          fi
+
+      - name: Sign the release
+        if: matrix.build.OS != 'windows-2022'
+        run: |
+          echo "${{ secrets.GPG_RELEASE_KEY }}" | base64 --decode > private.key
+          echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --pinentry-mode=loopback \
+            --passphrase-fd 0 --import private.key
+          echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --pinentry-mode=loopback \
+            --passphrase-fd 0 --detach-sign \
+            halp-${{ env.RELEASE_VERSION }}-${{ matrix.build.TARGET }}.tar.gz
+
+      - name: Upload the binary releases
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: halp-${{ env.RELEASE_VERSION }}-${{ matrix.build.TARGET }}*
+          file_glob: true
+          overwrite: true
+          tag: ${{ github.ref }}
+          release_name: "Release v${{ env.RELEASE_VERSION }}"
+          body: ${{ needs.changelog.outputs.release_body }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-crates-io:
+    name: Publish on crates.io
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-unknown-linux-gnu
+          override: true
+
+      - name: Publish
+        run: cargo publish --locked --token ${{ secrets.CARGO_TOKEN }}
