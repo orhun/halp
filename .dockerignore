@@ -9,6 +9,7 @@
 *.md
 LICENSE-*
 committed.toml
+cliff.toml
 deny.toml
 rustfmt.toml
 .editorconfig
