@@ -1,0 +1,17 @@
+# Directories
+/.git/
+/.github/
+/target/
+/assets/
+/config/
+
+# Files
+.gitignore
+*.md
+LICENSE-*
+committed.toml
+deny.toml
+rustfmt.toml
+.editorconfig
+.codespellignore
+.gitignore

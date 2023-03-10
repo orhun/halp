@@ -49,6 +49,38 @@ Usage:
 
 ### Installation
 
+### Docker
+
+#### Images
+
+Docker builds are [automated](./.github/workflows/docker.yml) and images are available in the following registries:
+
+- [Docker Hub](https://hub.docker.com/r/orhunp/halp)
+- [GitHub Container Registry](https://github.com/orhun/halp/pkgs/container/halp)
+
+#### Usage
+
+The following commands can be used to get help for a binary inside the container:
+
+```sh
+docker run --rm -it "orhunp/halp:${TAG:-latest}" whoami
+docker run --rm -it "orhunp/halp:${TAG:-latest}" plz whoami
+```
+
+Or you can provide a custom binary as follows (please note that you might get shared library errors):
+
+```sh
+docker run -v "bin:/app/bin:rw" --rm -it "orhunp/halp:${TAG:-latest}" -v ./bin
+```
+
+#### Building
+
+Custom Docker images can be built from the [Dockerfile](./Dockerfile):
+
+```sh
+docker build -t halp .
+```
+
 ### Usage
 
 ### Configuration
