@@ -73,11 +73,6 @@ jobs:
               TOOLCHAIN: stable,
               TARGET: x86_64-pc-windows-msvc,
             }
-          - {
-              OS: windows-2022,
-              TOOLCHAIN: stable,
-              TARGET: aarch64-pc-windows-msvc,
-            }
           - { OS: macos-11, TOOLCHAIN: stable, TARGET: x86_64-apple-darwin }
           - { OS: macos-11, TOOLCHAIN: stable, TARGET: aarch64-apple-darwin }
     steps:
