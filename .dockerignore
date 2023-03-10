@@ -3,6 +3,7 @@
 /.github/
 /assets/
 /config/
+/scripts/
 
 # Files
 .gitignore
