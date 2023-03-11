@@ -289,17 +289,22 @@ halp plz --no-pager bat vim
 
 See [halp.toml](config/halp.toml) for the default configuration values.
 
+### Funding
+
+If you find `halp` and/or other projects on my [GitHub profile](https://github.com/orhun/) useful, consider supporting me on [GitHub Sponsors](https://github.com/sponsors/orhun) or [becoming a patron](https://www.patreon.com/join/orhunp)!
+
+[![Support me on GitHub Sponsors](https://img.shields.io/github/sponsors/orhun?style=flat&logo=GitHub&labelColor=342a5e&color=684d81&logoColor=white)](https://github.com/sponsors/orhun)
+[![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dorhunp%26type%3Dpatrons&style=flat&logo=Patreon&labelColor=342a5e&color=684d81&logoColor=white)](https://patreon.com/join/orhunp)
+[![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dorhunp%26type%3Dpledges&style=flat&logo=Patreon&labelColor=342a5e&color=684d81&logoColor=white&label=)](https://patreon.com/join/orhunp)
+
+## Contributing
+
+See our [Contribution Guide](./CONTRIBUTING.md) and please follow the [Code of Conduct](./CODE_OF_CONDUCT.md) in all your interactions with the project.
+
 ## License
 
-<sup>
-Licensed under either of <a href="LICENSE-APACHE">Apache License, Version
-2.0</a> or <a href="LICENSE-MIT">MIT license</a> at your option.
-</sup>
+Licensed under either of [Apache License Version 2.0](./LICENSE-APACHE) or [The MIT License](./LICENSE-MIT) at your option.
 
-<br>
+## Copyright
 
-<sub>
-Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in this program by you, as defined in the Apache-2.0 license,
-shall be dual licensed as above, without any additional terms or conditions.
-</sub>
+Copyright © 2023, [Orhun Parmaksız](mailto:orhunparmaksiz@gmail.com)
