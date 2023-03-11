@@ -12,9 +12,9 @@ use std::path::PathBuf;
     disable_help_subcommand = true
 )]
 pub struct CliArgs {
-    /// Binary name.
+    /// Command or binary name.
     #[arg(required = true)]
-    pub bin: Option<String>,
+    pub cmd: Option<String>,
     /// Sets the argument to check.
     #[arg(long = "check", value_name = "ARG", value_parser = CliArgs::parse_arg)]
     pub check_args: Option<Vec<String>>,
@@ -32,7 +32,7 @@ pub struct CliArgs {
     pub verbose: bool,
     /// Subcommands.
     #[command(subcommand)]
-    pub command: Option<CliCommands>,
+    pub subcommand: Option<CliCommands>,
 }
 
 /// Subcommands.
@@ -40,8 +40,8 @@ pub struct CliArgs {
 pub enum CliCommands {
     /// Get additional help.
     Plz {
-        /// Binary name.
-        bin: String,
+        /// Command or binary name.
+        cmd: String,
         /// Sets the manual page command to run.
         #[arg(short, long, default_value = "man")]
         man_cmd: String,
@@ -62,7 +62,7 @@ pub enum CliCommands {
 impl Default for CliCommands {
     fn default() -> Self {
         CliCommands::Plz {
-            bin: String::new(),
+            cmd: String::new(),
             man_cmd: String::from("man"),
             pager: Some(String::from("less")),
             no_pager: false,

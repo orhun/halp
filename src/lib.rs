@@ -35,16 +35,16 @@ pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<
     } else {
         None
     };
-    if let Some(ref bin) = cli_args.bin {
-        get_args_help(bin, &cli_args, config, output)?;
+    if let Some(ref cmd) = cli_args.cmd {
+        get_args_help(cmd, &cli_args, config, output)?;
     } else if let Some(CliCommands::Plz {
-        ref bin,
+        ref cmd,
         ref man_cmd,
         pager,
         ..
-    }) = cli_args.command
+    }) = cli_args.subcommand
     {
-        get_docs_help(bin, man_cmd, pager, output)?;
+        get_docs_help(cmd, man_cmd, pager, output)?;
     }
     Ok(())
 }

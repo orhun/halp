@@ -60,13 +60,13 @@ impl Config {
         if let Some(man_command) = &self.man_command {
             if let Some(CliCommands::Plz {
                 ref mut man_cmd, ..
-            }) = cli_args.command
+            }) = cli_args.subcommand
             {
                 *man_cmd = man_command.clone();
             }
         }
         if let Some(pager_command) = &self.pager_command {
-            if let Some(CliCommands::Plz { ref mut pager, .. }) = cli_args.command {
+            if let Some(CliCommands::Plz { ref mut pager, .. }) = cli_args.subcommand {
                 *pager = Some(pager_command.clone());
             }
         }
@@ -92,14 +92,14 @@ mod tests {
         config.check_help = true;
         config.man_command = Some(String::from("tldr"));
         let mut args = CliArgs {
-            command: Some(CliCommands::default()),
+            subcommand: Some(CliCommands::default()),
             ..Default::default()
         };
         config.update_args(&mut args);
         assert!(!args.no_help);
         assert_eq!(
             "tldr",
-            match args.command {
+            match args.subcommand {
                 Some(CliCommands::Plz { man_cmd, .. }) => {
                     man_cmd
                 }

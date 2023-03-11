@@ -21,13 +21,13 @@ const DEBUG_EMOTICON: &str = "(o_O)";
 
 /// Checks if the given arguments exist.
 fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
-    bin: &str,
+    cmd: &str,
     args: ArgsIter,
     verbose: bool,
     output: &mut Output,
 ) -> Result<()> {
     for arg in args {
-        let command = format!("{} {}", bin, arg);
+        let command = format!("{} {}", cmd, arg);
         writeln!(
             output,
             "{}  {} '{}'",
@@ -77,9 +77,9 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
     Ok(())
 }
 
-/// Shows command-line help about the given binary.
+/// Shows command-line help about the given command.
 pub fn get_args_help<Output: Write>(
-    bin: &str,
+    cmd: &str,
     cli_args: &CliArgs,
     config: Option<Config>,
     output: &mut Output,
@@ -87,7 +87,7 @@ pub fn get_args_help<Output: Write>(
     if let Some(config_args) = config.and_then(|v| v.check_args) {
         for args in config_args {
             check_args(
-                bin,
+                cmd,
                 args.iter().map(|v| v.as_str()),
                 cli_args.verbose,
                 output,
@@ -97,7 +97,7 @@ pub fn get_args_help<Output: Write>(
     }
     if let Some(ref args) = cli_args.check_args {
         check_args(
-            bin,
+            cmd,
             args.iter().map(|v| v.as_str()),
             cli_args.verbose,
             output,
@@ -112,7 +112,7 @@ pub fn get_args_help<Output: Write>(
     .flatten()
     {
         check_args(
-            bin,
+            cmd,
             arg_variants.iter().map(|v| v.as_str()),
             cli_args.verbose,
             output,

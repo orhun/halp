@@ -12,9 +12,9 @@ use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
 use std::io::Write;
 
-/// Shows documentation/usage help about the given binary.
+/// Shows documentation/usage help about the given command.
 pub fn get_docs_help<Output: Write>(
-    bin: &str,
+    cmd: &str,
     man_cmd: &str,
     pager: Option<String>,
     output: &mut Output,
@@ -27,8 +27,8 @@ pub fn get_docs_help<Output: Write>(
             .items(&["Show man page", "Show cheat sheet", "Exit"])
             .interact_on_opt(&Term::stderr())?;
         match selection {
-            Some(0) => show_man_page(man_cmd, bin)?,
-            Some(1) => show_cheat_sheet(bin, &pager, output)?,
+            Some(0) => show_man_page(man_cmd, cmd)?,
+            Some(1) => show_cheat_sheet(cmd, &pager, output)?,
             _ => return Ok(()),
         };
     }
