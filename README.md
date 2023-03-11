@@ -19,30 +19,69 @@
 
 </div>
 
+`halp` aims to help find the **correct arguments** for command-line tools by checking the predefined list of commonly used options/flags. Additionally, it provides a prompt for quick access to the **manual page** or **cheat sheet** of the given command.
+
+If you deal with command-line tools often, it might take some time to figure out how to get help or check the version of a particular command (especially when shell completions are not available). In that case, you might try the most-known flags such as `-h` and `-v` but unfortunately not all the command-line tools follow these conventions (either due to conflicts with other flags or they just use another form). Instead of _brute-forcing_ manually into getting help, you can run `halp <command>` and it will check the following arguments for you:
+
+- for **help**: `-v`, `-V`, `--version`
+- for **version info**: `-h`, `--help`, `help`, `-H`
+
+If one of these arguments succeeds, it prints the output and exits. This way, you can get informed about the version and help in one single command. You can also customize this list with a configuration file or provide a list of arguments via command-line arguments.
+
+On the other hand, if you _really_ need help, you can use the `plz` subcommand which will prompt a selection for:
+
+1. Show the **manpage** (runs [`man(1)`](https://man7.org/linux/man-pages/man1/man.1.html))
+2. Show the **cheat sheet** (via [`cheat.sh`](http://cheat.sh))
+
+## TL;DR
+
 Have you ever experienced this:
 
 ```sh
-$ some_tool -v
+$ cli_tool -v
 unknown flag -v
-
-$ some_tool -V
-unknown flag -V
-
-$ some_tool -h
-unknown flag -h
-
-$ asdjw1jwhdajh1idojad # frustration
-bash: asdjw1jwhdajh1idojad: command not found
-
-$ some_tool --help
-Some CLI Tool Version 1.42.69
-Usage:
-  some_tool <flags> <args> [--parameter1 value1 --parameter2 value2 ...]
-
-# f*cking finally!
 ```
 
-`halp` aims to help with this and other different cases.
+```sh
+$ cli_tool -V
+unknown flag -V
+```
+
+```sh
+$ cli_tool -h
+unknown flag -h
+```
+
+```sh
+$ asdjw1jwhdajh1idojad # frustration
+bash: asdjw1jwhdajh1idojad: command not found
+```
+
+```sh
+$ cli_tool --help # f*cking finally!
+Some CLI Tool Version 1.42.69
+Usage:
+  cli_tool <flags> <args> [--parameter1 value1 --parameter2 value2 ...]
+```
+
+Whereas, with `halp`:
+
+```
+$ halp cli_tool
+
+(°ロ°)  checking 'cli_tool -v'
+(×﹏×)      fail '-v' argument not found.
+(°ロ°)  checking 'cli_tool -V'
+(×﹏×)      fail '-V' argument not found.
+(°ロ°)  checking 'cli_tool -h'
+(×﹏×)      fail '-h' argument not found.
+(°ロ°)  checking 'cli_tool --help'
+\(^ヮ^)/ success '--help' argument found!
+
+Some CLI Tool Version 1.42.69
+Usage:
+  cli_tool <flags> <args> [--parameter1 value1 --parameter2 value2 ...]
+```
 
 ## Installation
 
