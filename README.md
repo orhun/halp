@@ -33,6 +33,40 @@ On the other hand, if you _really_ need help, you can use the `plz` subcommand w
 1. show the **man page** (runs [`man(1)`](https://man7.org/linux/man-pages/man1/man.1.html))
 2. show the **cheat sheet** (via [`cheat.sh`](http://cheat.sh))
 
+<details>
+  <summary>Table of Contents</summary>
+
+<!-- vim-markdown-toc GFM -->
+
+- [Example](#example)
+- [Installation](#installation)
+  - [Cargo](#cargo)
+  - [Arch Linux](#arch-linux)
+  - [Docker](#docker)
+    - [Images](#images)
+    - [Usage](#usage)
+    - [Building](#building)
+  - [Binary releases](#binary-releases)
+  - [Build from source](#build-from-source)
+- [Usage](#usage-1)
+  - [`plz`](#plz)
+- [Examples](#examples)
+  - [Check `help` and `version` (default)](#check-help-and-version-default)
+  - [Check a custom argument](#check-a-custom-argument)
+  - [Disable defaults](#disable-defaults)
+  - [Verbose logging](#verbose-logging)
+  - [Get additional help (via `plz`)](#get-additional-help-via-plz)
+    - [Custom pager](#custom-pager)
+- [Configuration](#configuration)
+- [Funding](#funding)
+- [Contributing](#contributing)
+- [License](#license)
+- [Copyright](#copyright)
+
+<!-- vim-markdown-toc -->
+
+</details>
+
 ### Example
 
 Have you ever experienced this:
@@ -289,7 +323,7 @@ halp plz --no-pager bat vim
 
 See [halp.toml](config/halp.toml) for the default configuration values.
 
-### Funding
+## Funding
 
 If you find `halp` and/or other projects on my [GitHub profile](https://github.com/orhun/) useful, consider supporting me on [GitHub Sponsors](https://github.com/sponsors/orhun) or [becoming a patron](https://www.patreon.com/join/orhunp)!
 
