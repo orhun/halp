@@ -64,7 +64,7 @@ Usage:
   cli_tool <flags> <args> [--parameter1 value1 --parameter2 value2 ...]
 ```
 
-Whereas, with `halp`:
+Whereas with `halp`:
 
 ```
 $ halp cli_tool
@@ -150,7 +150,7 @@ docker build -t halp .
 
 ### Binary releases
 
-See the available binaries for different targets from the [releases page](https://github.com/orhun/halp/releases). They are are automated via [Continuous Deployment](.github/workflows/cd.yml) workflow
+See the available binaries for different targets from the [releases page](https://github.com/orhun/halp/releases). They are automated via [Continuous Deployment](.github/workflows/cd.yml) workflow
 
 Release tarballs are signed with the following PGP key: [0xFB41AE0358378256](https://keyserver.ubuntu.com/pks/lookup?search=0xFB41AE0358378256&op=vindex)
 
@@ -171,6 +171,105 @@ CARGO_TARGET_DIR=target cargo build --release
 Binary will be located at `target/release/halp`.
 
 ## Usage
+
+```
+halp [OPTIONS] <CMD>
+```
+
+```
+Options:
+      --check <ARG>    Sets the argument to check
+      --no-version     Disable checking the version information
+      --no-help        Disable checking the help information
+  -c, --config <PATH>  Sets the configuration file [env: HALP_CONFIG=]
+  -v, --verbose        Enables verbose logging
+  -h, --help           Print help
+  -V, --version        Print version
+```
+
+### `plz`
+
+```
+halp [OPTIONS] plz <CMD>
+```
+
+```
+Options:
+  -m, --man-cmd <MAN_CMD>  Sets the manual page command to run [default: man]
+  -p, --pager <PAGER>      Sets the pager to use [default: "less -R"]
+      --no-pager           Disables the pager
+```
+
+## Examples
+
+#### Check `help` and `version` (default)
+
+```sh
+halp whoami
+```
+
+![halp example I](./assets/halp-example1.gif)
+
+#### Check a custom argument
+
+```sh
+halp --check "\--silent" zps
+```
+
+(You can escape `-` with using `\-`.)
+
+You can also provide multiple arguments as follows:
+
+```sh
+halp --check "help" --check "test" menyoki
+```
+
+#### Disable defaults
+
+```sh
+halp --no-version sha512sum
+```
+
+```sh
+halp --no-help sha512sum
+```
+
+#### Verbose logging
+
+```sh
+halp --verbose git-cliff
+```
+
+This will result in `stderr`/`stdout` being printed if there was an error. For example:
+
+```sh
+(°ロ°)  checking 'git-cliff -v'
+(×﹏×)      fail '-v' argument not found.
+(o_O)      debug
+stdout:
+ WARN  git_cliff > "cliff.toml" is not found, using the default configuration.
+ ERROR git_cliff > Git error: `could not find repository from '.'; class=Repository (6); code=NotFound (-3)`
+```
+
+#### Get additional help (via `plz`)
+
+```sh
+halp plz vim
+```
+
+![halp example II](./assets/halp-example2.gif)
+
+##### Custom pager
+
+```sh
+halp plz --pager bat vim
+```
+
+To disable the pager:
+
+```sh
+halp plz --no-pager bat vim
+```
 
 ## Configuration
 
