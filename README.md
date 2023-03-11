@@ -26,7 +26,7 @@ If you deal with command-line tools often, it might take some time to figure out
 - for **help**: `-v`, `-V`, `--version`
 - for **version info**: `-h`, `--help`, `help`, `-H`
 
-If one of these arguments succeeds, it prints the output and exits. This way, you can get informed about the version and help in one single command. You can also customize this list with a configuration file or provide a list of arguments via command-line arguments.
+If one of these arguments succeeds (with exit code 0), it prints the output and exits. This way, you can get informed about the version and help in one single command. You can also customize this list with a configuration file or provide a list of arguments via command-line arguments.
 
 On the other hand, if you _really_ need help, you can use the `plz` subcommand which will prompt a selection for:
 
