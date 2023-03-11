@@ -33,7 +33,7 @@ On the other hand, if you _really_ need help, you can use the `plz` subcommand w
 1. show the **man page** (runs [`man(1)`](https://man7.org/linux/man-pages/man1/man.1.html))
 2. show the **cheat sheet** (via [`cheat.sh`](http://cheat.sh))
 
-## TL;DR
+### Example
 
 Have you ever experienced this:
 
