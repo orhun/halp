@@ -36,7 +36,7 @@ Options:
         String::from_utf8_lossy(&output)
             .replace('\r', "")
             .replace(BIN, "test")
-            .replace("0.1.0", env!("CARGO_PKG_VERSION"))
+            .replace(env!("CARGO_PKG_VERSION"), "0.1.0")
             .trim()
     );
     Ok(())

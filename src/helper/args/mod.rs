@@ -156,7 +156,7 @@ halp 0.1.0"#,
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
-                .replace("0.1.0", env!("CARGO_PKG_VERSION"))
+                .replace(env!("CARGO_PKG_VERSION"), "0.1.0")
                 .trim()
         );
 
@@ -229,7 +229,7 @@ Options:
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
-                .replace("0.1.0", env!("CARGO_PKG_VERSION"))
+                .replace(env!("CARGO_PKG_VERSION"), "0.1.0")
                 .trim()
         );
         Ok(())
@@ -253,7 +253,7 @@ halp 0.1.0"#,
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
-                .replace("0.1.0", env!("CARGO_PKG_VERSION"))
+                .replace(env!("CARGO_PKG_VERSION"), "0.1.0")
                 .trim()
         );
         Ok(())
