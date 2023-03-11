@@ -273,6 +273,22 @@ halp plz --no-pager bat vim
 
 ## Configuration
 
+`halp` can be configured with a configuration file that uses the [TOML](https://en.wikipedia.org/wiki/INI_file) format. It can be specified via `--config` or `HALP_CONFIG` environment variable. It can also be placed in one of the following global locations:
+
+- `<config_dir>` `/` `halp.toml`
+- `<config_dir>` `/` `halp/halp.toml`
+- `<config_dir>` `/` `halp/config`
+
+`<config_dir>` depends on the platform as shown in the following table:
+
+| Platform | Value                                 | Example                                  |
+| -------- | ------------------------------------- | ---------------------------------------- |
+| Linux    | `$XDG_CONFIG_HOME` or `$HOME`/.config | /home/orhun/.config                      |
+| macOS    | `$HOME`/Library/Application Support   | /Users/Orhun/Library/Application Support |
+| Windows  | `{FOLDERID_RoamingAppData}`           | C:\Users\Orhun\AppData\Roaming           |
+
+See [halp.toml](config/halp.toml) for the default configuration values.
+
 ## License
 
 <sup>
