@@ -1,4 +1,4 @@
-//! A CLI tool to get help with CLI tools.
+//! A CLI tool to get help with CLI tools 🐙
 
 #![warn(missing_docs, clippy::unwrap_used)]
 
