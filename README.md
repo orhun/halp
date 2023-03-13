@@ -138,16 +138,22 @@ The minimum supported Rust version is `1.64.0`.
 
 ### Arch Linux
 
-`halp` can be installed from available [AUR packages](https://aur.archlinux.org/packages/?O=0&SeB=b&K=halp&outdated=&SB=n&SO=a&PP=50&do_Search=Go) using an [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers). For example,
+`halp` can be installed from the [community repository](https://archlinux.org/packages/community/x86_64/halp/) using [pacman](https://wiki.archlinux.org/title/Pacman):
 
 ```sh
-paru -S halp
+pacman -S halp
 ```
 
-If you prefer, you can clone the package and then build it with [makepkg](https://wiki.archlinux.org/index.php/Makepkg). For example,
+Or you can install the available [AUR packages](https://aur.archlinux.org/packages/?O=0&SeB=b&K=halp&outdated=&SB=n&SO=a&PP=50&do_Search=Go) using an [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers). For example,
 
 ```sh
-git clone https://aur.archlinux.org/halp.git && cd halp && makepkg -si
+paru -S halp-git
+```
+
+Alternatively, you can clone the AUR package and then build it with [makepkg](https://wiki.archlinux.org/index.php/Makepkg). For example,
+
+```sh
+git clone https://aur.archlinux.org/halp-git.git && cd halp-git && makepkg -si
 ```
 
 ### Docker
