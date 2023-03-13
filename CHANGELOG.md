@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2023-03-13
+
+### 📚 Documentation
+
+- *(readme)* Match up common "help" and "version" arguments ([#3](https://github.com/orhun/halp/issues/3))
+
+### ⚙️ Miscellaneous Tasks
+
+- *(deps)* Bump transitive dependencies
+- *(deps)* Bump serde from 1.0.154 to 1.0.155
+
 ## [0.1.0] - 2023-03-12
 
 ### 📚 Documentation
