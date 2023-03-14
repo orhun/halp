@@ -17,6 +17,5 @@ status = [
 ]
 delete_merged_branches = true
 update_base_for_deletes = true
-use_codeowners = true
 cut_body_after = "<details>"
 commit_title = "chore(pull): merge ${PR_REFS}"
