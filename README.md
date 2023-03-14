@@ -24,7 +24,7 @@
 If you deal with command-line tools often, it might take some time to figure out how to get help or check the version of a particular command (especially when shell completions are not available). In that case, you might try the most-known flags such as `-h` and `-v` but unfortunately not all the command-line tools follow these conventions (either due to conflicts with other flags or they just use another form). Instead of _brute-forcing_ manually into getting help, you can run `halp <command>` and it will check the following arguments for you:
 
 - for **help**: `-h`, `--help`, `help`, `-H`
-- for **version info**: `-v`, `-V`, `--version`
+- for **version info**: `-v`, `-V`, `--version`, `version`
 
 If one of these arguments succeeds (with exit code 0), it prints the output and exits. This way, you can get informed about the version and help in one single command. You can also customize this list with a configuration file or provide a list of arguments via command-line arguments.
 

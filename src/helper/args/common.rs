@@ -40,6 +40,7 @@ generate_argument!(
     Version => "-v",
     CapitalVersion => "-V",
     LongVersion => "--version",
+    SubcommandVersion => "version",
 );
 
 generate_argument!(
