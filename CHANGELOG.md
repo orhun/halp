@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.2] - 2023-03-14
+
+### 🐙 Features
+
+- *(args)* Check `version` subcommand for version info
+
+### 📚 Documentation
+
+- *(readme)* Update installation instructions for Arch Linux
+
+### ⚙️ Miscellaneous Tasks
+
+- *(changelog)* Skip PR related commits for changelog
+- *(deps)* Update serde dependency
+- *(deps)* Bump toml from 0.7.2 to 0.7.3
+- *(github)* Remove codeowner approval requirement from bors
+- *(github)* Remove approval requirement from bors config
+- *(github)* Remove docker status check from bors config
+
 ## [0.1.1] - 2023-03-13
 
 ### 📚 Documentation
