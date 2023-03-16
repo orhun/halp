@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.3] - 2023-03-16
+
+### 🐛 Bug Fixes
+
+- *(args)* Unset pager for command output ([#9](https://github.com/orhun/halp/issues/9))
+
+### ⚙️ Miscellaneous Tasks
+
+- *(deps)* Bump transitive dependencies
+
 ## [0.1.2] - 2023-03-14
 
 ### 🐙 Features
