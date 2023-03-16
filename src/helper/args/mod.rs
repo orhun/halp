@@ -36,6 +36,7 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
             command.white().italic()
         )?;
         let cmd_out = TtyCommand::new(&command)?
+            .env("PAGER", "")
             .stderr(Stdio::inherit())
             .output()?;
         if cmd_out.status.success() {
