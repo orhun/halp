@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.4] - 2023-03-17
+
+### 🐛 Bug Fixes
+
+- *(cheat)* Don't use a pager when no cheat sheet found for the command
+
+### ⚙️ Miscellaneous Tasks
+
+- *(ci)* Specify token for codecov uploads
+- *(deps)* Bump transitive dependencies
+- *(deps)* Bump clap from 4.1.8 to 4.1.9
+- *(deps)* Bump clap_complete from 4.1.4 to 4.1.5
+- *(deps)* Bump clap_mangen from 0.2.9 to 0.2.10
+
 ## [0.1.3] - 2023-03-16
 
 ### 🐛 Bug Fixes
