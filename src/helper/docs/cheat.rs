@@ -25,7 +25,11 @@ pub fn show_cheat_sheet<Output: Write>(
         .call()
         .map_err(|e| Error::from(Box::new(e)))?
         .into_string()?;
-    if let Some(pager) = pager {
+    // Don't use a pager when the topic is not found.
+    if let Some(pager) = pager
+        .as_ref()
+        .filter(|_| !cheat_sheet.starts_with("Unknown topic."))
+    {
         let mut process = if cfg!(target_os = "windows") {
             Command::new("cmd")
                 .args(["/C", pager])
