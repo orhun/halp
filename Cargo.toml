@@ -31,7 +31,7 @@ clap_mangen = "0.2.10"
 colored = "2.0.0"
 console = "0.15.5"
 dialoguer = { version = "0.10.3", default-features = false }
-dirs = "4.0.0"
+dirs = "5.0.0"
 serde = { version = "1.0.156", features = ["derive"] }
 thiserror = "1.0.39"
 toml = "0.7.3"
