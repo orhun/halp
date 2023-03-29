@@ -26,13 +26,13 @@ path = "src/bin/test.rs"
 
 [dependencies]
 clap = { version = "4.1.11", features =["derive", "env", "wrap_help"] }
-clap_complete = "4.1.5"
+clap_complete = "4.2.0"
 clap_mangen = "0.2.10"
 colored = "2.0.0"
 console = "0.15.5"
 dialoguer = { version = "0.10.3", default-features = false }
 dirs = "5.0.0"
-serde = { version = "1.0.158", features = ["derive"] }
+serde = { version = "1.0.159", features = ["derive"] }
 thiserror = "1.0.40"
 toml = "0.7.3"
 ureq = "2.6.2"
