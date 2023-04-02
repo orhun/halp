@@ -19,21 +19,15 @@ body = """
     {% for commit in commits
     | filter(attribute="scope")
     | sort(attribute="scope") %}
-        - *({{commit.scope}})* {{ commit.message | upper_first }}
-        {%- if commit.breaking %}
-        {% raw %}  {% endraw %}- **BREAKING**: {{commit.breaking_description}}
-        {%- endif -%}
+        - *({{commit.scope}})* {{ commit.message | upper_first }}{% if commit.breaking %} [**breaking**]{% endif %}
     {%- endfor -%}
+    {% raw %}\n{% endraw %}\
     {%- for commit in commits %}
         {%- if commit.scope -%}
         {% else -%}
-            - *(no category)* {{ commit.message | upper_first }}
-            {% if commit.breaking -%}
-            {% raw %}  {% endraw %}- **BREAKING**: {{commit.breaking_description}}
-            {% endif -%}
+            - *(no category)* {{ commit.message | upper_first }}{% if commit.breaking %} [**breaking**]{% endif %}
         {% endif -%}
     {% endfor -%}
-    {% raw %}\n{% endraw %}\
 {% endfor %}\n
 """
 # remove the leading and trailing whitespace from the template
