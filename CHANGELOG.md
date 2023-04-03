@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.5] - 2023-04-03
+
+### ⚙️ Miscellaneous Tasks
+
+- *(changelog)* Update git-cliff template about breaking changes
+- *(deps)* Bump dependencies
+- *(deps)* Bump clap_complete from 4.1.5 to 4.2.0
+- *(deps)* Bump serde from 1.0.158 to 1.0.159
+- *(deps)* Bump serde from 1.0.156 to 1.0.158
+- *(deps)* Bump clap from 4.1.9 to 4.1.11
+- *(deps)* Bump thiserror from 1.0.39 to 1.0.40
+- *(deps)* Bump dirs from 4.0.0 to 5.0.0
+
 ## [0.1.4] - 2023-03-17
 
 ### 🐛 Bug Fixes
