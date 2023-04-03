@@ -118,7 +118,7 @@ jobs:
         run: cargo build --bin halp-test
 
       - name: Generate code coverage
-        run: cargo llvm-cov --lcov --output-path lcov.info
+        run: cargo llvm-cov --codecov --output-path codecov.json
         env:
           NO_COLOR: 1
           OUT_DIR: target
@@ -127,7 +127,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: code-coverage-report
-          files: lcov.info
+          files: codecov.json
           fail_ci_if_error: true
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
