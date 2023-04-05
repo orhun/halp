@@ -345,6 +345,8 @@ See our [Contribution Guide](./CONTRIBUTING.md) and please follow the [Code of C
 
 Licensed under either of [Apache License Version 2.0](./LICENSE-APACHE) or [The MIT License](./LICENSE-MIT) at your option.
 
+🦀 ノ( º \_ º ノ) - respect crables!
+
 ## Copyright
 
 Copyright © 2023, [Orhun Parmaksız](mailto:orhunparmaksiz@gmail.com)
