@@ -47,7 +47,9 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
                 "success".cyan().bold(),
                 arg.white().italic()
             )?;
+            println!("---");
             output.write_all(&cmd_out.stdout)?;
+            println!("---");
             break;
         } else {
             writeln!(
