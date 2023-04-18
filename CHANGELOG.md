@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.6] - 2023-04-18
+
+### 🐙 Features
+
+- *(docker)* Generate SBOM/provenance for the Docker image
+- *(output)* Add separators for command output ([#27](https://github.com/orhun/halp/issues/27))
+
+### 🎨 Styling
+
+- *(output)* Add color to the separator
+- *(readme)* Update license text
+
+### ⚙️ Miscellaneous Tasks
+
+- *(ci)* Switch back to line coverage
+- *(ci)* Use codecov format with cargo-llvm-cov
+- *(deps)* Bump transitive dependencies
+- *(deps)* Bump clap from 4.2.1 to 4.2.2
+- *(deps)* Bump serde from 1.0.159 to 1.0.160
+- *(deps)* Bump dialoguer from 0.10.3 to 0.10.4
+
 ## [0.1.5] - 2023-04-03
 
 ### ⚙️ Miscellaneous Tasks
