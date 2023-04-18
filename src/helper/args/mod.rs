@@ -18,6 +18,8 @@ const FOUND_EMOTICON: &str = "\\(^ヮ^)/";
 const FAIL_EMOTICON: &str = "(×﹏×)";
 /// Emoticon for debug messages.
 const DEBUG_EMOTICON: &str = "(o_O)";
+/// Separator for output.
+const OUTPUT_SEPARATOR: &str = "---";
 
 /// Checks if the given arguments exist.
 fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
@@ -47,9 +49,9 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
                 "success".cyan().bold(),
                 arg.white().italic()
             )?;
-            writeln!(output, "---")?;
+            writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
             output.write_all(&cmd_out.stdout)?;
-            writeln!(output, "---")?;
+            writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
             break;
         } else {
             writeln!(
@@ -68,15 +70,15 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
                 )?;
                 if !cmd_out.stdout.is_empty() {
                     writeln!(output, "{}:", "stdout".white().italic())?;
-                    writeln!(output, "---")?;
+                    writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
                     output.write_all(&cmd_out.stdout)?;
-                    writeln!(output, "---")?;
+                    writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
                 }
                 if !cmd_out.stderr.is_empty() {
                     writeln!(output, "{}:", "stderr".white().italic())?;
-                    writeln!(output, "---")?;
+                    writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
                     output.write_all(&cmd_out.stderr)?;
-                    writeln!(output, "---")?;
+                    writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
                 }
             }
         }
