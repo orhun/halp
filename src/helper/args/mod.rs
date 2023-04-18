@@ -47,7 +47,9 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
                 "success".cyan().bold(),
                 arg.white().italic()
             )?;
+            writeln!(output, "---")?;
             output.write_all(&cmd_out.stdout)?;
+            writeln!(output, "---")?;
             break;
         } else {
             writeln!(
@@ -66,11 +68,15 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
                 )?;
                 if !cmd_out.stdout.is_empty() {
                     writeln!(output, "{}:", "stdout".white().italic())?;
+                    writeln!(output, "---")?;
                     output.write_all(&cmd_out.stdout)?;
+                    writeln!(output, "---")?;
                 }
                 if !cmd_out.stderr.is_empty() {
                     writeln!(output, "{}:", "stderr".white().italic())?;
+                    writeln!(output, "---")?;
                     output.write_all(&cmd_out.stderr)?;
+                    writeln!(output, "---")?;
                 }
             }
         }
@@ -153,7 +159,9 @@ mod tests {
 (×﹏×)      fail '-v' argument not found.
 (°ロ°)  checking 'test -V'
 \(^ヮ^)/ success '-V' argument found!
-halp 0.1.0"#,
+---
+halp 0.1.0
+---"#,
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
@@ -178,27 +186,33 @@ halp 0.1.0"#,
 (×﹏×)      fail '-H' argument not found.
 (o_O)      debug
 stdout:
+---
 error: unexpected argument '-H' found
 
 Usage: test
 
 For more information, try '--help'.
+---
 (°ロ°)  checking 'test help'
 (×﹏×)      fail 'help' argument not found.
 (o_O)      debug
 stdout:
+---
 error: unexpected argument 'help' found
 
 Usage: test
 
 For more information, try '--help'.
+---
 (°ロ°)  checking 'test --help'
 \(^ヮ^)/ success '--help' argument found!
+---
 Usage: test
 
 Options:
   -h, --help     Print help
-  -V, --version  Print version"#,
+  -V, --version  Print version
+---"#,
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
@@ -219,14 +233,18 @@ Options:
 (×﹏×)      fail '-v' argument not found.
 (°ロ°)  checking 'test -V'
 \(^ヮ^)/ success '-V' argument found!
+---
 halp 0.1.0
+---
 (°ロ°)  checking 'test -h'
 \(^ヮ^)/ success '-h' argument found!
+---
 Usage: test
 
 Options:
   -h, --help     Print help
-  -V, --version  Print version"#,
+  -V, --version  Print version
+---"#,
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
@@ -250,7 +268,9 @@ Options:
 (×﹏×)      fail '-x' argument not found.
 (°ロ°)  checking 'test -V'
 \(^ヮ^)/ success '-V' argument found!
-halp 0.1.0"#,
+---
+halp 0.1.0
+---"#,
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
@@ -275,11 +295,13 @@ halp 0.1.0"#,
 (×﹏×)      fail '-y' argument not found.
 (°ロ°)  checking 'test --help'
 \(^ヮ^)/ success '--help' argument found!
+---
 Usage: test
 
 Options:
   -h, --help     Print help
-  -V, --version  Print version"#,
+  -V, --version  Print version
+---"#,
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
