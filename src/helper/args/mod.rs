@@ -68,11 +68,15 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
                 )?;
                 if !cmd_out.stdout.is_empty() {
                     writeln!(output, "{}:", "stdout".white().italic())?;
+                    println!("---");
                     output.write_all(&cmd_out.stdout)?;
+                    println!("---");
                 }
                 if !cmd_out.stderr.is_empty() {
                     writeln!(output, "{}:", "stderr".white().italic())?;
+                    println!("---");
                     output.write_all(&cmd_out.stderr)?;
+                    println!("---");
                 }
             }
         }
