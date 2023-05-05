@@ -32,7 +32,7 @@ colored = "2.0.0"
 console = "0.15.5"
 dialoguer = { version = "0.10.4", default-features = false }
 dirs = "5.0.1"
-serde = { version = "1.0.160", features = ["derive"] }
+serde = { version = "1.0.162", features = ["derive"] }
 thiserror = "1.0.40"
 toml = "0.7.3"
 ureq = "2.6.2"
