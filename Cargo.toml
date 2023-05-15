@@ -26,7 +26,7 @@ path = "src/bin/test.rs"
 
 [dependencies]
 clap = { version = "4.2.7", features =["derive", "env", "wrap_help"] }
-clap_complete = "4.2.2"
+clap_complete = "4.2.3"
 clap_mangen = "0.2.10"
 colored = "2.0.0"
 console = "0.15.5"
