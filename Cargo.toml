@@ -29,7 +29,7 @@ clap = { version = "4.3.0", features =["derive", "env", "wrap_help"] }
 clap_complete = "4.2.3"
 clap_mangen = "0.2.10"
 colored = "2.0.0"
-console = "0.15.6"
+console = "0.15.7"
 dialoguer = { version = "0.10.4", default-features = false }
 dirs = "5.0.1"
 serde = { version = "1.0.163", features = ["derive"] }
