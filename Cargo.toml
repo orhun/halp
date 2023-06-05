@@ -27,7 +27,7 @@ path = "src/bin/test.rs"
 [dependencies]
 clap = { version = "4.3.0", features =["derive", "env", "wrap_help"] }
 clap_complete = "4.3.0"
-clap_mangen = "0.2.11"
+clap_mangen = "0.2.12"
 colored = "2.0.0"
 console = "0.15.7"
 dialoguer = { version = "0.10.4", default-features = false }
