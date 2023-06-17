@@ -10,9 +10,9 @@ use std::path::PathBuf;
     about,
     subcommand_negates_reqs = true,
     disable_help_subcommand = true,
-    override_usage = "
-  halp [OPTIONS] <CMD>
-  halp [OPTIONS] <COMMAND> <CMD>"
+    override_usage = format!("
+  {bin} [OPTIONS] <CMD>
+  {bin} [OPTIONS] <COMMAND> <CMD>", bin = env!("CARGO_PKG_NAME"))
 )]
 pub struct CliArgs {
     /// Command or binary name.
