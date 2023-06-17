@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.7] - 2023-06-17
+
+### 🚜 Refactor
+
+- *(cli)* Use formatted usage text
+
+### 🎨 Styling
+
+- *(cli)* Override the help usage ([#30](https://github.com/orhun/halp/issues/30))
+
+### ⚙️ Miscellaneous Tasks
+
+- *(deps)* Bump transitive dependencies
+- *(deps)* Bump ureq from 2.6.2 to 2.7.0
+- *(deps)* Bump clap from 4.3.3 to 4.3.4
+- *(deps)* Bump clap from 4.3.2 to 4.3.3
+- *(deps)* Bump serde from 1.0.163 to 1.0.164
+- *(deps)* Bump clap from 4.3.1 to 4.3.2
+- *(deps)* Bump clap dependencies
+- *(deps)* Bump clap_mangen from 0.2.10 to 0.2.11
+- *(deps)* Bump clap_complete from 4.2.3 to 4.3.0
+- *(deps)* Bump console from 0.15.6 to 0.15.7
+- *(deps)* Bump clap from 4.2.7 to 4.3.0
+- *(deps)* Bump console from 0.15.5 to 0.15.6
+- *(deps)* Bump toml from 0.7.3 to 0.7.4
+- *(deps)* Bump clap_complete from 4.2.2 to 4.2.3
+- *(deps)* Bump serde from 1.0.162 to 1.0.163
+- *(deps)* Bump clap_complete from 4.2.1 to 4.2.2
+- *(deps)* Bump serde from 1.0.160 to 1.0.162
+- *(deps)* Bump clap from 4.2.5 to 4.2.7
+- *(deps)* Bump dirs from 5.0.0 to 5.0.1
+- *(deps)* Bump clap from 4.2.4 to 4.2.5
+- *(deps)* Bump clap_complete from 4.2.0 to 4.2.1
+- *(deps)* Bump clap from 4.2.3 to 4.2.4
+- *(deps)* Bump clap from 4.2.2 to 4.2.3
+
 ## [0.1.6] - 2023-04-18
 
 ### 🐙 Features
