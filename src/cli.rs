@@ -9,7 +9,10 @@ use std::path::PathBuf;
     author,
     about,
     subcommand_negates_reqs = true,
-    disable_help_subcommand = true
+    disable_help_subcommand = true,
+    override_usage = "
+  halp [OPTIONS] <CMD>
+  halp [OPTIONS] <COMMAND> <CMD>"
 )]
 pub struct CliArgs {
     /// Command or binary name.
