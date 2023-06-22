@@ -3,6 +3,8 @@ pub mod man;
 
 /// Cheat sheet helper.
 pub mod cheat;
+/// eg page helper.
+mod eg;
 
 use crate::error::Result;
 use crate::helper::docs::cheat::show_cheat_sheet;
@@ -11,6 +13,7 @@ use console::{style, Style, Term};
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
 use std::io::Write;
+use crate::helper::docs::eg::show_eg_page;
 
 /// Shows documentation/usage help about the given command.
 pub fn get_docs_help<Output: Write>(
@@ -24,11 +27,12 @@ pub fn get_docs_help<Output: Write>(
         selection = Select::with_theme(&get_selection_theme())
             .with_prompt("Select operation")
             .default(selection.unwrap_or_default())
-            .items(&["Show man page", "Show cheat sheet", "Exit"])
+            .items(&["Show man page", "Show cheat sheet", "Show the eg page", "Exit"])
             .interact_on_opt(&Term::stderr())?;
         match selection {
             Some(0) => show_man_page(man_cmd, cmd)?,
             Some(1) => show_cheat_sheet(cmd, &pager, output)?,
+            Some(2) => show_eg_page(cmd, &pager, output)?,
             _ => return Ok(()),
         };
     }
