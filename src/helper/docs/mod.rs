@@ -2,12 +2,12 @@
 pub mod man;
 
 /// Cheat sheet helper.
-pub mod cheat;
+pub mod cheat_sh;
 /// eg page helper.
 mod eg;
 
 use crate::error::Result;
-use crate::helper::docs::cheat::show_cheat_sheet;
+use crate::helper::docs::cheat_sh::show_cheat_sheet;
 use crate::helper::docs::man::show_man_page;
 use console::{style, Style, Term};
 use dialoguer::theme::ColorfulTheme;
