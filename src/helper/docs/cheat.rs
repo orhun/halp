@@ -3,8 +3,8 @@ use std::io::Write;
 use std::process::{Command, Stdio};
 use ureq::AgentBuilder;
 
-/// Cheat sheet provider URL.
-const CHEAT_SHEET_PROVIDER: &str = "https://cheat.sh";
+/// Default cheat sheet provider URL.
+const DEFAULT_CHEAT_SHEET_PROVIDER: &str = "https://cheat.sh";
 
 /// User agent for the cheat sheet provider.
 ///
@@ -14,14 +14,16 @@ const CHEAT_SHEET_USER_AGENT: &str = "fetch";
 /// Shows the cheat sheet for the given command.
 pub fn show_cheat_sheet<Output: Write>(
     cmd: &str,
+    url: &Option<String>,
     pager: &Option<String>,
     output: &mut Output,
 ) -> Result<()> {
     let client = AgentBuilder::new()
         .user_agent(CHEAT_SHEET_USER_AGENT)
         .build();
+    let default_url = DEFAULT_CHEAT_SHEET_PROVIDER.to_string();
     let cheat_sheet = client
-        .get(&format!("{}/{}", CHEAT_SHEET_PROVIDER, cmd))
+        .get(&format!("{}/{}", url.clone().unwrap_or(default_url), cmd))
         .call()
         .map_err(|e| Error::from(Box::new(e)))?
         .into_string()?;
@@ -58,7 +60,7 @@ mod tests {
     #[test]
     fn test_fetch_cheat_sheet() -> Result<()> {
         let mut output = Vec::new();
-        show_cheat_sheet("ls", &None, &mut output)?;
+        show_cheat_sheet("ls", None, &None, &mut output)?;
         let output = String::from_utf8_lossy(&output);
         assert!(output.contains(
             "# To display all files, along with the size (with unit suffixes) and timestamp:"

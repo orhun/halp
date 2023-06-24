@@ -20,6 +20,8 @@ pub struct Config {
     pub man_command: Option<String>,
     /// Pager to use for command outputs.
     pub pager_command: Option<String>,
+    /// Cheat.sh URL.
+    pub cheat_sh_url: Option<String>,
 }
 
 impl Config {
@@ -68,6 +70,13 @@ impl Config {
         if let Some(pager_command) = &self.pager_command {
             if let Some(CliCommands::Plz { ref mut pager, .. }) = cli_args.subcommand {
                 *pager = Some(pager_command.clone());
+            }
+        }
+        if let Some(cheat_sh_url_conf) = &self.cheat_sh_url {
+            if let Some(CliCommands::Plz { ref mut cheat_sh_url, .. }) = cli_args.subcommand {
+                if cheat_sh_url.is_none() {
+                    *cheat_sh_url = Some(cheat_sh_url_conf.clone());
+                }
             }
         }
     }
