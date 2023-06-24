@@ -53,10 +53,10 @@ pub enum CliCommands {
         cheat_sh_url: Option<String>,
         /// Sets the pager to use.
         #[arg(
-        short,
-        long,
-        default_value = "less -R",
-        default_value_if("no_pager", ArgPredicate::IsPresent, None)
+            short,
+            long,
+            default_value = "less -R",
+            default_value_if("no_pager", ArgPredicate::IsPresent, None)
         )]
         pager: Option<String>,
         /// Disables the pager.

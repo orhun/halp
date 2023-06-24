@@ -73,7 +73,11 @@ impl Config {
             }
         }
         if let Some(cheat_sh_url_conf) = &self.cheat_sh_url {
-            if let Some(CliCommands::Plz { ref mut cheat_sh_url, .. }) = cli_args.subcommand {
+            if let Some(CliCommands::Plz {
+                ref mut cheat_sh_url,
+                ..
+            }) = cli_args.subcommand
+            {
                 if cheat_sh_url.is_none() {
                     *cheat_sh_url = Some(cheat_sh_url_conf.clone());
                 }
