@@ -10,3 +10,5 @@ check = [ [ "-v", "-V", "--version" ], [ "-h", "--help", "help", "-H" ] ]
 man_command = "man"
 # pager to use for command outputs
 pager_command = "less -R"
+# Cheat.sh URL
+cheat_sh_url = "https://cheat.sh"

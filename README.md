@@ -235,9 +235,11 @@ halp [OPTIONS] plz <CMD>
 
 ```
 Options:
-  -m, --man-cmd <MAN_CMD>  Sets the manual page command to run [default: man]
-  -p, --pager <PAGER>      Sets the pager to use [default: "less -R"]
-      --no-pager           Disables the pager
+  -m, --man-cmd <MAN_CMD>   Sets the manual page command to run [default: man]
+      --cheat-sh-url <URL>  Use a custom URL for cheat.sh [env: CHEAT_SH_URL=]
+  -p, --pager <PAGER>       Sets the pager to use [default: "less -R"]
+      --no-pager            Disables the pager
+  -h, --help                Print help
 ```
 
 ## Examples
@@ -309,6 +311,12 @@ To disable the pager:
 
 ```sh
 halp plz --no-pager bat vim
+```
+
+##### Custom cheat.sh host URL
+
+```sh
+halp plz --cheat-sh-url https://cht.sh vim
 ```
 
 ## Configuration

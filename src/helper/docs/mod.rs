@@ -19,6 +19,7 @@ use crate::helper::docs::eg::show_eg_page;
 pub fn get_docs_help<Output: Write>(
     cmd: &str,
     man_cmd: &str,
+    cheat_sh_url: Option<String>,
     pager: Option<String>,
     output: &mut Output,
 ) -> Result<()> {
@@ -31,7 +32,7 @@ pub fn get_docs_help<Output: Write>(
             .interact_on_opt(&Term::stderr())?;
         match selection {
             Some(0) => show_man_page(man_cmd, cmd)?,
-            Some(1) => show_cheat_sheet(cmd, &pager, output)?,
+            Some(1) => show_cheat_sheet(cmd, &cheat_sh_url, &pager, output)?,
             Some(2) => show_eg_page(cmd, &pager, output)?,
             _ => return Ok(()),
         };
