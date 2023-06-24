@@ -313,6 +313,12 @@ To disable the pager:
 halp plz --no-pager bat vim
 ```
 
+##### Custom cheat.sh host URL
+
+```sh
+halp plz --cheat-sh-url https://cht.sh vim
+```
+
 ## Configuration
 
 `halp` can be configured with a configuration file that uses the [TOML](https://en.wikipedia.org/wiki/INI_file) format. It can be specified via `--config` or `HALP_CONFIG` environment variable. It can also be placed in one of the following global locations:
