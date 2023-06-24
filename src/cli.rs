@@ -48,7 +48,7 @@ pub enum CliCommands {
         /// Sets the manual page command to run.
         #[arg(short, long, default_value = "man")]
         man_cmd: String,
-        /// Cheat.sh URL.
+        /// Use a custom URL for cheat.sh.
         #[arg(long, env = "CHEAT_SH_URL", value_name = "URL")]
         cheat_sh_url: Option<String>,
         /// Sets the pager to use.
