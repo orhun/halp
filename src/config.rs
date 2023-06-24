@@ -20,7 +20,7 @@ pub struct Config {
     pub man_command: Option<String>,
     /// Pager to use for command outputs.
     pub pager_command: Option<String>,
-    /// Cheat.sh URL.
+    /// Use a custom URL for cheat.sh.
     pub cheat_sh_url: Option<String>,
 }
 
