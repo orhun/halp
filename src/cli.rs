@@ -5,12 +5,12 @@ use std::path::PathBuf;
 /// Command-line arguments.
 #[derive(Debug, Default, Parser)]
 #[command(
-    version,
-    author,
-    about,
-    subcommand_negates_reqs = true,
-    disable_help_subcommand = true,
-    override_usage = format!("
+version,
+author,
+about,
+subcommand_negates_reqs = true,
+disable_help_subcommand = true,
+override_usage = format!("
   {bin} [OPTIONS] <CMD>
   {bin} [OPTIONS] <COMMAND> <CMD>", bin = env!("CARGO_PKG_NAME"))
 )]
@@ -48,6 +48,9 @@ pub enum CliCommands {
         /// Sets the manual page command to run.
         #[arg(short, long, default_value = "man")]
         man_cmd: String,
+        /// Use a custom URL for cheat.sh.
+        #[arg(long, env = "CHEAT_SH_URL", value_name = "URL")]
+        cheat_sh_url: Option<String>,
         /// Sets the pager to use.
         #[arg(
             short,
@@ -67,6 +70,7 @@ impl Default for CliCommands {
         CliCommands::Plz {
             cmd: String::new(),
             man_cmd: String::from("man"),
+            cheat_sh_url: None,
             pager: Some(String::from("less")),
             no_pager: false,
         }
