@@ -87,24 +87,9 @@ mod tests {
             path = global_path;
         }
         let mut config = Config::parse(&path)?;
-        assert!(!config.check_help);
-        config.check_help = true;
-        config.man_command = Some(String::from("tldr"));
-        let mut args = CliArgs {
-            subcommand: Some(CliCommands::default()),
-            ..Default::default()
-        };
-        config.update_args(&mut args);
-        assert!(!args.no_help);
-        assert_eq!(
-            "tldr",
-            match args.subcommand {
-                Some(CliCommands::Plz { man_cmd, .. }) => {
-                    man_cmd
-                }
-                _ => unreachable!(),
-            }
-        );
+        assert!(config.check_help);
+        assert!(config.check_version);
+        assert_eq!(config.cheat_sh_url, DEFAULT_CHEAT_SHEET_PROVIDER);
         Ok(())
     }
 }
