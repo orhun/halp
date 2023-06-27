@@ -1,10 +1,10 @@
 use crate::error::Result;
+use crate::helper::docs::cheat::DEFAULT_CHEAT_SHEET_PROVIDER;
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
-use crate::helper::docs::cheat::DEFAULT_CHEAT_SHEET_PROVIDER;
 
 /// Configuration.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -63,7 +63,12 @@ impl Default for Config {
             check_help: true,
             check_args: Some(vec![
                 vec!["-v".to_string(), "-V".to_string(), "--version".to_string()],
-                vec!["-h".to_string(), "--help".to_string(), "help".to_string(), "-H".to_string()]
+                vec![
+                    "-h".to_string(),
+                    "--help".to_string(),
+                    "help".to_string(),
+                    "-H".to_string(),
+                ],
             ]),
             man_command: "man".to_string(),
             pager_command: Some("less -R".to_string()),
