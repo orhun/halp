@@ -23,7 +23,7 @@ use helper::docs::get_docs_help;
 use std::io::Write;
 
 /// Runs `halp`.
-pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<()> {
+pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> {
     let mut config = if let Some(config_file) = cli_args
         .config
         .to_owned()
