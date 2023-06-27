@@ -95,39 +95,25 @@ pub fn get_args_help<Output: Write>(
     if cmd.trim().is_empty() {
         return Ok(());
     }
-    if let Some(ref config_args) = config.check_args {
-        for args in config_args {
+
+    if let Some(ref args) = config.check_args {
+        if args.is_empty() {
+            return Ok(());
+        }
+        for arg_variants in [
+            (config.check_version).then(|| &args[0]),
+            (config.check_help && args.len() >= 2).then(|| &args[1]),
+        ]
+            .iter()
+            .flatten()
+        {
             check_args(
                 cmd,
-                args.iter().map(|v| v.as_str()),
+                arg_variants.iter().map(|v| v.as_str()),
                 verbose,
                 output,
             )?;
         }
-        return Ok(());
-    }
-    /*if let Some(ref args) = config.check_args {
-        check_args(
-            cmd,
-            args.iter().map(|v| v.as_str()),
-            verbose,
-            output,
-        )?;
-        return Ok(());
-    }*/
-    for arg_variants in [
-        (config.check_version).then(VersionArg::variants),
-        (config.check_help).then(HelpArg::variants),
-    ]
-    .iter()
-    .flatten()
-    {
-        check_args(
-            cmd,
-            arg_variants.iter().map(|v| v.as_str()),
-            verbose,
-            output,
-        )?;
     }
     Ok(())
 }
