@@ -259,7 +259,7 @@ Options:
     #[test]
     fn test_get_args_help() -> Result<()> {
         let config = Config {
-            check_args: Some(vec![vec![String::from("-x")], String::from("-V").into()]),
+            check_args: Some(vec![vec![String::from("-x")], vec![String::from("-V")]]),
             ..Default::default()
         };
         let mut output = Vec::new();
