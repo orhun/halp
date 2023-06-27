@@ -1,9 +1,8 @@
-/// Common command-line arguments.
-pub mod common;
+#[cfg(test)]
+mod common;
 
 use crate::config::Config;
 use crate::error::Result;
-use crate::helper::args::common::{HelpArg, VersionArg};
 use crate::helper::tty::TtyCommand;
 use colored::*;
 use std::io::Write;
@@ -124,6 +123,7 @@ mod tests {
     use pretty_assertions::assert_eq;
     use std::path::PathBuf;
     use std::vec;
+    use crate::helper::args::common::{HelpArg, VersionArg};
 
     /// Returns the path of the test binary.
     fn get_test_bin() -> String {
