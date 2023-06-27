@@ -91,7 +91,7 @@ mod tests {
         if let Some(global_path) = Config::get_default_location() {
             path = global_path;
         }
-        let mut config = Config::parse(&path)?;
+        let config = Config::parse(&path)?;
         assert!(config.check_help);
         assert!(config.check_version);
         assert_eq!(config.cheat_sh_url, DEFAULT_CHEAT_SHEET_PROVIDER);
