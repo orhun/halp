@@ -108,7 +108,7 @@ mod tests {
     #[test]
     fn test_update_conf() {
         let mut config = Config::default();
-        let mut args = CliArgs {
+        let args = CliArgs {
             subcommand: Some(CliCommands::Plz {
                 cmd: "ps".to_string(),
                 pager: Some("bat".to_string()),
