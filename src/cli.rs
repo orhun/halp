@@ -1,6 +1,6 @@
+use crate::config::Config;
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
-use crate::config::Config;
 
 /// Command-line arguments.
 #[derive(Debug, Default, Parser)]
@@ -71,12 +71,12 @@ impl CliArgs {
         config.check_help = !self.no_help;
         config.check_version = !self.no_version;
         if let Some(CliCommands::Plz {
-                        ref man_cmd,
-                        ref cheat_sh_url,
-                        no_pager,
-                        ref pager,
-                        ..
-                    }) = self.subcommand
+            ref man_cmd,
+            ref cheat_sh_url,
+            no_pager,
+            ref pager,
+            ..
+        }) = self.subcommand
         {
             if let Some(man_cmd) = man_cmd {
                 config.man_command = man_cmd.clone();

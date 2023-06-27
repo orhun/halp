@@ -25,25 +25,21 @@ use std::io::Write;
 /// Runs `halp`.
 pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<()> {
     let mut config = if let Some(config_file) = cli_args
-            .config
-            .to_owned()
-            .or_else(Config::get_default_location)
-        {
-            Config::parse(&config_file)?
-        } else {
-            Config::default()
-            //  TODO: Create a default config file.
-        };
+        .config
+        .to_owned()
+        .or_else(Config::get_default_location)
+    {
+        Config::parse(&config_file)?
+    } else {
+        Config::default()
+        //  TODO: Create a default config file.
+    };
 
     cli_args.update_conf(&mut config);
 
     if let Some(ref cmd) = cli_args.cmd {
         get_args_help(cmd, &config, cli_args.verbose, output)?;
-    } else if let Some(CliCommands::Plz {
-        ref cmd,
-        ..
-    }) = cli_args.subcommand
-    {
+    } else if let Some(CliCommands::Plz { ref cmd, .. }) = cli_args.subcommand {
         get_docs_help(cmd, &config, output)?;
     }
     Ok(())
