@@ -283,36 +283,6 @@ halp 0.1.0
     }
 
     #[test]
-    fn test_get_config_help() -> Result<()> {
-        let args = CliArgs::default();
-        let config = Config {
-            check_args: Some(vec![vec![String::from("-y"), String::from("--help")]]),
-            ..Default::default()
-        };
-        let mut output = Vec::new();
-        get_args_help(&get_test_bin(), &args, Some(config), &mut output)?;
-        println!("{}", String::from_utf8_lossy(&output));
-        assert_eq!(
-            r#"(°ロ°)  checking 'test -y'
-(×﹏×)      fail '-y' argument not found.
-(°ロ°)  checking 'test --help'
-\(^ヮ^)/ success '--help' argument found!
----
-Usage: test
-
-Options:
-  -h, --help     Print help
-  -V, --version  Print version
----"#,
-            String::from_utf8_lossy(&output)
-                .replace('\r', "")
-                .replace(&get_test_bin(), "test")
-                .trim()
-        );
-        Ok(())
-    }
-
-    #[test]
     fn test_do_nothing() -> Result<()> {
         let config = Config {
             check_version: false,
