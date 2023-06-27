@@ -1,7 +1,6 @@
 /// Common command-line arguments.
 pub mod common;
 
-use crate::cli::CliArgs;
 use crate::config::Config;
 use crate::error::Result;
 use crate::helper::args::common::{HelpArg, VersionArg};
@@ -89,33 +88,33 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
 /// Shows command-line help about the given command.
 pub fn get_args_help<Output: Write>(
     cmd: &str,
-    cli_args: &CliArgs,
-    config: Option<Config>,
+    config: &Config,
+    verbose: bool,
     output: &mut Output,
 ) -> Result<()> {
-    if let Some(config_args) = config.and_then(|v| v.check_args) {
+    /*if let Some(ref config_args) = config.check_args {
         for args in config_args {
             check_args(
                 cmd,
                 args.iter().map(|v| v.as_str()),
-                cli_args.verbose,
+                verbose,
                 output,
             )?;
         }
         return Ok(());
-    }
-    if let Some(ref args) = cli_args.check_args {
+    }*/
+    /*if let Some(ref args) = config.check_args {
         check_args(
             cmd,
             args.iter().map(|v| v.as_str()),
-            cli_args.verbose,
+            verbose,
             output,
         )?;
         return Ok(());
-    }
+    }*/
     for arg_variants in [
-        (!cli_args.no_version).then(VersionArg::variants),
-        (!cli_args.no_help).then(HelpArg::variants),
+        (config.check_version).then(VersionArg::variants),
+        (config.check_help).then(HelpArg::variants),
     ]
     .iter()
     .flatten()
@@ -123,7 +122,7 @@ pub fn get_args_help<Output: Write>(
         check_args(
             cmd,
             arg_variants.iter().map(|v| v.as_str()),
-            cli_args.verbose,
+            verbose,
             output,
         )?;
     }

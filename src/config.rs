@@ -1,13 +1,13 @@
-use crate::cli::{CliArgs, CliCommands};
 use crate::error::Result;
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
+use crate::helper::docs::cheat::DEFAULT_CHEAT_SHEET_PROVIDER;
 
 /// Configuration.
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Config {
     /// Check the version flag.
     pub check_version: bool,
@@ -17,11 +17,11 @@ pub struct Config {
     #[serde(rename = "check")]
     pub check_args: Option<Vec<Vec<String>>>,
     /// Command to run for manual pages.
-    pub man_command: Option<String>,
-    /// Pager to use for command outputs.
+    pub man_command: String,
+    /// Pager to use for command outputs, None to disable.
     pub pager_command: Option<String>,
     /// Use a custom URL for cheat.sh.
-    pub cheat_sh_url: Option<String>,
+    pub cheat_sh_url: String,
 }
 
 impl Config {
@@ -54,34 +54,20 @@ impl Config {
         let config: Config = toml::from_str(&contents)?;
         Ok(config)
     }
+}
 
-    /// Update the command-line arguments based on configuration.
-    pub fn update_args(&self, cli_args: &mut CliArgs) {
-        cli_args.no_help = !self.check_help;
-        cli_args.no_version = !self.check_version;
-        if let Some(man_command) = &self.man_command {
-            if let Some(CliCommands::Plz {
-                ref mut man_cmd, ..
-            }) = cli_args.subcommand
-            {
-                *man_cmd = man_command.clone();
-            }
-        }
-        if let Some(pager_command) = &self.pager_command {
-            if let Some(CliCommands::Plz { ref mut pager, .. }) = cli_args.subcommand {
-                *pager = Some(pager_command.clone());
-            }
-        }
-        if let Some(cheat_sh_url_conf) = &self.cheat_sh_url {
-            if let Some(CliCommands::Plz {
-                ref mut cheat_sh_url,
-                ..
-            }) = cli_args.subcommand
-            {
-                if cheat_sh_url.is_none() {
-                    *cheat_sh_url = Some(cheat_sh_url_conf.clone());
-                }
-            }
+impl Default for Config {
+    fn default() -> Self {
+        Config {
+            check_version: true,
+            check_help: true,
+            check_args: Some(vec![
+                vec!["-v".to_string(), "-V".to_string(), "--version".to_string()],
+                vec!["-h".to_string(), "--help".to_string(), "help".to_string(), "-H".to_string()]
+            ]),
+            man_command: "man".to_string(),
+            pager_command: Some("less -R".to_string()),
+            cheat_sh_url: DEFAULT_CHEAT_SHEET_PROVIDER.to_string(),
         }
     }
 }
