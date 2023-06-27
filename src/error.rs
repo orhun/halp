@@ -15,6 +15,9 @@ pub enum Error {
     /// Error that might occur when running on unsupported platforms.
     #[error("Unsupported platform.")]
     UnsupportedPlatformError,
+    /// Error that might occur while serializing the configuration into TOML.
+    #[error("TOML serialization error: `{0}`")]
+    TomlSerializeError(#[from] toml::ser::Error),
 }
 
 /// Type alias for the standard [`Result`] type.

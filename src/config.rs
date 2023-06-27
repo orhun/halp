@@ -33,17 +33,25 @@ impl Config {
     ///
     /// Returns the path if the configuration file is found.
     pub fn get_default_location() -> Option<PathBuf> {
-        if let Some(config_dir) = dirs::config_dir() {
-            let file_name = format!("{}.toml", env!("CARGO_PKG_NAME"));
-            for config_file in vec![
-                config_dir.join(&file_name),
-                config_dir.join(env!("CARGO_PKG_NAME")).join(&file_name),
-                config_dir.join(env!("CARGO_PKG_NAME")).join("config"),
-            ] {
-                if config_file.exists() {
-                    return Some(config_file);
+        if let Some(config_dirs) = Config::get_default_locations() {
+            for config_dir in config_dirs {
+                if config_dir.exists() {
+                    return Some(config_dir);
                 }
             }
+        }
+        None
+    }
+
+    #[inline(always)]
+    fn get_default_locations() -> Option<Vec<PathBuf>> {
+        if let Some(config_dir) = dirs::config_dir() {
+            let file_name = format!("{}.toml", env!("CARGO_PKG_NAME"));
+            return Some(vec![
+                config_dir.join(&file_name),
+                config_dir.join(env!("CARGO_PKG_NAME")).join(&file_name), // XDG style
+                config_dir.join(env!("CARGO_PKG_NAME")).join("config"),
+            ]);
         }
         None
     }
@@ -53,6 +61,21 @@ impl Config {
         let contents = fs::read_to_string(file)?;
         let config: Config = toml::from_str(&contents)?;
         Ok(config)
+    }
+
+    /// Writes the configuration file to the default location (XDG style).
+    pub fn write(&self) -> Result<()> {
+        if let Some(config_dirs) = Config::get_default_locations() {
+            let xdg_conf_path = &config_dirs[1];
+            if let Some(parent) = xdg_conf_path.parent() {
+                if !parent.exists() {
+                    fs::create_dir_all(parent)?;
+                }
+            }
+            let contents = toml::to_string(&self)?;
+            fs::write(xdg_conf_path, contents)?;
+        }
+        Ok(())
     }
 }
 
