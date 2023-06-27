@@ -35,7 +35,7 @@ pub fn run<Output: Write>(mut cli_args: CliArgs, output: &mut Output) -> Result<
             //  TODO: Create a default config file.
         };
 
-    cli_args.update_args(&mut config);
+    cli_args.update_conf(&mut config);
 
     if let Some(ref cmd) = cli_args.cmd {
         get_args_help(cmd, &config, cli_args.verbose, output)?;

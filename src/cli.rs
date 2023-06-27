@@ -67,7 +67,7 @@ impl CliArgs {
     }
 
     /// Update the configuration based on the command-line arguments (the command-line arguments will override the configuration).
-    pub fn update_args(&self, config: &mut Config) {
+    pub fn update_conf(&self, config: &mut Config) {
         config.check_help = !self.no_help;
         config.check_version = !self.no_version;
         if let Some(CliCommands::Plz {
