@@ -134,6 +134,7 @@ mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
     use std::path::PathBuf;
+    use std::vec;
 
     /// Returns the path of the test binary.
     fn get_test_bin() -> String {
@@ -225,9 +226,9 @@ Options:
 
     #[test]
     fn test_get_default_help() -> Result<()> {
-        let args = CliArgs::default();
+        let config = Config::default();
         let mut output = Vec::new();
-        get_args_help(&get_test_bin(), &args, None, &mut output)?;
+        get_args_help(&get_test_bin(), &config, true, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r#"(°ロ°)  checking 'test -v'
@@ -257,12 +258,12 @@ Options:
 
     #[test]
     fn test_get_args_help() -> Result<()> {
-        let args = CliArgs {
-            check_args: Some(vec![String::from("-x"), String::from("-V")]),
+        let config = Config {
+            check_args: Some(vec![vec![String::from("-x")], String::from("-V").into()]),
             ..Default::default()
         };
         let mut output = Vec::new();
-        get_args_help(&get_test_bin(), &args, None, &mut output)?;
+        get_args_help(&get_test_bin(), &config, true, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r#"(°ロ°)  checking 'test -x'
@@ -313,13 +314,13 @@ Options:
 
     #[test]
     fn test_do_nothing() -> Result<()> {
-        let args = CliArgs {
-            no_version: true,
-            no_help: true,
+        let config = Config {
+            check_version: false,
+            check_help: false,
             ..Default::default()
         };
         let mut output = Vec::new();
-        get_args_help("", &args, None, &mut output)?;
+        get_args_help("", &config, true, &mut output)?;
         assert!(String::from_utf8_lossy(&output).is_empty());
         Ok(())
     }
