@@ -103,8 +103,8 @@ pub fn get_args_help<Output: Write>(
             (config.check_version).then(|| &args[0]),
             (config.check_help && args.len() >= 2).then(|| &args[1]),
         ]
-            .iter()
-            .flatten()
+        .iter()
+        .flatten()
         {
             check_args(
                 cmd,
@@ -120,10 +120,10 @@ pub fn get_args_help<Output: Write>(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::helper::args::common::{HelpArg, VersionArg};
     use pretty_assertions::assert_eq;
     use std::path::PathBuf;
     use std::vec;
-    use crate::helper::args::common::{HelpArg, VersionArg};
 
     /// Returns the path of the test binary.
     fn get_test_bin() -> String {
