@@ -31,8 +31,11 @@ pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> 
     {
         Config::parse(&config_file)?
     } else {
-        Config::default()
-        //  TODO: Create a default config file.
+        let config = Config::default();
+        // write the default config into the disk & ignore the errors 'cause we don't want to crash
+        // the program if we can't write the config
+        let _ = config.write();
+        config
     };
 
     cli_args.update_conf(&mut config);
