@@ -92,7 +92,10 @@ pub fn get_args_help<Output: Write>(
     verbose: bool,
     output: &mut Output,
 ) -> Result<()> {
-    /*if let Some(ref config_args) = config.check_args {
+    if cmd.trim().is_empty() {
+        return Ok(());
+    }
+    if let Some(ref config_args) = config.check_args {
         for args in config_args {
             check_args(
                 cmd,
@@ -102,7 +105,7 @@ pub fn get_args_help<Output: Write>(
             )?;
         }
         return Ok(());
-    }*/
+    }
     /*if let Some(ref args) = config.check_args {
         check_args(
             cmd,
@@ -228,7 +231,7 @@ Options:
     fn test_get_default_help() -> Result<()> {
         let config = Config::default();
         let mut output = Vec::new();
-        get_args_help(&get_test_bin(), &config, true, &mut output)?;
+        get_args_help(&get_test_bin(), &config, false, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r#"(°ロ°)  checking 'test -v'
@@ -263,7 +266,7 @@ Options:
             ..Default::default()
         };
         let mut output = Vec::new();
-        get_args_help(&get_test_bin(), &config, true, &mut output)?;
+        get_args_help(&get_test_bin(), &config, false, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r#"(°ロ°)  checking 'test -x'
@@ -290,7 +293,7 @@ halp 0.1.0
             ..Default::default()
         };
         let mut output = Vec::new();
-        get_args_help("", &config, true, &mut output)?;
+        get_args_help("", &config, false, &mut output)?;
         assert!(String::from_utf8_lossy(&output).is_empty());
         Ok(())
     }
