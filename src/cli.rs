@@ -104,4 +104,22 @@ mod tests {
         CliArgs::command().debug_assert();
         assert_eq!(Ok("--help"), CliArgs::parse_arg("\\--help").as_deref());
     }
+
+    #[test]
+    fn test_update_conf() {
+        let mut config = Config::default();
+        let mut args = CliArgs {
+            subcommand: Some(CliCommands::Plz {
+                cmd: "ps".to_string(),
+                pager: Some("bat".to_string()),
+                cheat_sh_url: None,
+                man_cmd: None,
+                no_pager: false,
+            }),
+            ..Default::default()
+        };
+        args.update_conf(&mut config);
+        assert!(config.check_help);
+        assert_eq!(Some(String::from("bat")), config.pager_command);
+    }
 }
