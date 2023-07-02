@@ -16,13 +16,13 @@ pub mod config;
 
 use crate::cli::CliArgs;
 use crate::error::Result;
+use crate::helper::args::FAIL_EMOTICON;
 use cli::CliCommands;
 use config::Config;
+use console::style;
 use helper::args::get_args_help;
 use helper::docs::get_docs_help;
 use std::io::Write;
-use console::style;
-use crate::helper::args::FAIL_EMOTICON;
 
 /// Runs `halp`.
 pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> {
@@ -36,7 +36,11 @@ pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> 
         let config = Config::default();
 
         if let Err(e) = config.write() {
-            eprintln!("{} Failed to write default config: {}", style(FAIL_EMOTICON).for_stderr().yellow(), e);
+            eprintln!(
+                "{} Failed to write default config: {}",
+                style(FAIL_EMOTICON).for_stderr().yellow(),
+                e
+            );
         }
         config
     };
