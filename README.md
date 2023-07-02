@@ -235,9 +235,9 @@ halp [OPTIONS] plz <CMD>
 
 ```
 Options:
-  -m, --man-cmd <MAN_CMD>   Sets the manual page command to run [default: man]
+  -m, --man-cmd <MAN_CMD>   Sets the manual page command to run
       --cheat-sh-url <URL>  Use a custom URL for cheat.sh [env: CHEAT_SH_URL=]
-  -p, --pager <PAGER>       Sets the pager to use [default: "less -R"]
+  -p, --pager <PAGER>       Sets the pager to use
       --no-pager            Disables the pager
   -h, --help                Print help
 ```
