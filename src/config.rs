@@ -1,5 +1,6 @@
 use crate::error::Result;
 use crate::helper::docs::cheat::DEFAULT_CHEAT_SHEET_PROVIDER;
+use crate::helper::args::common::{HelpArg, VersionArg};
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::fs;
@@ -85,13 +86,8 @@ impl Default for Config {
             check_version: true,
             check_help: true,
             check_args: Some(vec![
-                vec!["-v".to_string(), "-V".to_string(), "--version".to_string()],
-                vec![
-                    "-h".to_string(),
-                    "--help".to_string(),
-                    "help".to_string(),
-                    "-H".to_string(),
-                ],
+                VersionArg::variants().iter().map(|s| s.as_str().to_string()).collect(),
+                HelpArg::variants().iter().map(|s| s.as_str().to_string()).collect(),
             ]),
             man_command: "man".to_string(),
             pager_command: Some("less -R".to_string()),

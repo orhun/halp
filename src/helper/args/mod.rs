@@ -1,5 +1,5 @@
-#[cfg(test)]
-mod common;
+/// Helper module for Help and Version checks variants.
+pub mod common;
 
 use crate::config::Config;
 use crate::error::Result;
