@@ -123,7 +123,6 @@ mod tests {
     use crate::helper::args::common::{HelpArg, VersionArg};
     use pretty_assertions::assert_eq;
     use std::path::PathBuf;
-    use std::vec;
 
     /// Returns the path of the test binary.
     fn get_test_bin() -> String {
