@@ -13,7 +13,7 @@ const CHECK_EMOTICON: &str = "(°ロ°)";
 /// Emoticon for "found" message.
 const FOUND_EMOTICON: &str = "\\(^ヮ^)/";
 /// Emoticon for "fail" message.
-const FAIL_EMOTICON: &str = "(×﹏×)";
+pub const FAIL_EMOTICON: &str = "(×﹏×)";
 /// Emoticon for debug messages.
 const DEBUG_EMOTICON: &str = "(o_O)";
 /// Separator for output.

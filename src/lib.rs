@@ -21,6 +21,8 @@ use config::Config;
 use helper::args::get_args_help;
 use helper::docs::get_docs_help;
 use std::io::Write;
+use console::style;
+use crate::helper::args::FAIL_EMOTICON;
 
 /// Runs `halp`.
 pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> {
@@ -32,9 +34,10 @@ pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> 
         Config::parse(&config_file)?
     } else {
         let config = Config::default();
-        // write the default config into the disk & ignore the errors 'cause we don't want to crash
-        // the program if we can't write the config
-        let _ = config.write();
+
+        if let Err(e) = config.write() {
+            eprintln!("{} Failed to write default config: {}", style(FAIL_EMOTICON).for_stderr().yellow(), e);
+        }
         config
     };
 
