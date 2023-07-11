@@ -1,10 +1,8 @@
-/// Common command-line arguments.
+/// Helper module for Help and Version checks variants.
 pub mod common;
 
-use crate::cli::CliArgs;
 use crate::config::Config;
 use crate::error::Result;
-use crate::helper::args::common::{HelpArg, VersionArg};
 use crate::helper::tty::TtyCommand;
 use colored::*;
 use std::io::Write;
@@ -15,7 +13,7 @@ const CHECK_EMOTICON: &str = "(°ロ°)";
 /// Emoticon for "found" message.
 const FOUND_EMOTICON: &str = "\\(^ヮ^)/";
 /// Emoticon for "fail" message.
-const FAIL_EMOTICON: &str = "(×﹏×)";
+pub const FAIL_EMOTICON: &str = "(×﹏×)";
 /// Emoticon for debug messages.
 const DEBUG_EMOTICON: &str = "(o_O)";
 /// Separator for output.
@@ -89,43 +87,32 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
 /// Shows command-line help about the given command.
 pub fn get_args_help<Output: Write>(
     cmd: &str,
-    cli_args: &CliArgs,
-    config: Option<Config>,
+    config: &Config,
+    verbose: bool,
     output: &mut Output,
 ) -> Result<()> {
-    if let Some(config_args) = config.and_then(|v| v.check_args) {
-        for args in config_args {
+    if cmd.trim().is_empty() {
+        return Ok(());
+    }
+
+    if let Some(ref args) = config.check_args {
+        if args.is_empty() {
+            return Ok(());
+        }
+        for arg_variants in [
+            (config.check_version).then(|| &args[0]),
+            (config.check_help && args.len() >= 2).then(|| &args[1]),
+        ]
+        .iter()
+        .flatten()
+        {
             check_args(
                 cmd,
-                args.iter().map(|v| v.as_str()),
-                cli_args.verbose,
+                arg_variants.iter().map(|v| v.as_str()),
+                verbose,
                 output,
             )?;
         }
-        return Ok(());
-    }
-    if let Some(ref args) = cli_args.check_args {
-        check_args(
-            cmd,
-            args.iter().map(|v| v.as_str()),
-            cli_args.verbose,
-            output,
-        )?;
-        return Ok(());
-    }
-    for arg_variants in [
-        (!cli_args.no_version).then(VersionArg::variants),
-        (!cli_args.no_help).then(HelpArg::variants),
-    ]
-    .iter()
-    .flatten()
-    {
-        check_args(
-            cmd,
-            arg_variants.iter().map(|v| v.as_str()),
-            cli_args.verbose,
-            output,
-        )?;
     }
     Ok(())
 }
@@ -133,6 +120,7 @@ pub fn get_args_help<Output: Write>(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::helper::args::common::{HelpArg, VersionArg};
     use pretty_assertions::assert_eq;
     use std::path::PathBuf;
 
@@ -226,9 +214,9 @@ Options:
 
     #[test]
     fn test_get_default_help() -> Result<()> {
-        let args = CliArgs::default();
+        let config = Config::default();
         let mut output = Vec::new();
-        get_args_help(&get_test_bin(), &args, None, &mut output)?;
+        get_args_help(&get_test_bin(), &config, false, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r#"(°ロ°)  checking 'test -v'
@@ -258,12 +246,12 @@ Options:
 
     #[test]
     fn test_get_args_help() -> Result<()> {
-        let args = CliArgs {
-            check_args: Some(vec![String::from("-x"), String::from("-V")]),
+        let config = Config {
+            check_args: Some(vec![vec![String::from("-x")], vec![String::from("-V")]]),
             ..Default::default()
         };
         let mut output = Vec::new();
-        get_args_help(&get_test_bin(), &args, None, &mut output)?;
+        get_args_help(&get_test_bin(), &config, false, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r#"(°ロ°)  checking 'test -x'
@@ -283,44 +271,14 @@ halp 0.1.0
     }
 
     #[test]
-    fn test_get_config_help() -> Result<()> {
-        let args = CliArgs::default();
-        let config = Config {
-            check_args: Some(vec![vec![String::from("-y"), String::from("--help")]]),
-            ..Default::default()
-        };
-        let mut output = Vec::new();
-        get_args_help(&get_test_bin(), &args, Some(config), &mut output)?;
-        println!("{}", String::from_utf8_lossy(&output));
-        assert_eq!(
-            r#"(°ロ°)  checking 'test -y'
-(×﹏×)      fail '-y' argument not found.
-(°ロ°)  checking 'test --help'
-\(^ヮ^)/ success '--help' argument found!
----
-Usage: test
-
-Options:
-  -h, --help     Print help
-  -V, --version  Print version
----"#,
-            String::from_utf8_lossy(&output)
-                .replace('\r', "")
-                .replace(&get_test_bin(), "test")
-                .trim()
-        );
-        Ok(())
-    }
-
-    #[test]
     fn test_do_nothing() -> Result<()> {
-        let args = CliArgs {
-            no_version: true,
-            no_help: true,
+        let config = Config {
+            check_version: false,
+            check_help: false,
             ..Default::default()
         };
         let mut output = Vec::new();
-        get_args_help("", &args, None, &mut output)?;
+        get_args_help("", &config, false, &mut output)?;
         assert!(String::from_utf8_lossy(&output).is_empty());
         Ok(())
     }
