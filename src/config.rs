@@ -27,6 +27,28 @@ pub struct Config {
     pub cheat_sh_url: String,
 }
 
+impl Default for Config {
+    fn default() -> Self {
+        Config {
+            check_version: true,
+            check_help: true,
+            check_args: Some(vec![
+                VersionArg::variants()
+                    .iter()
+                    .map(|s| s.as_str().to_string())
+                    .collect(),
+                HelpArg::variants()
+                    .iter()
+                    .map(|s| s.as_str().to_string())
+                    .collect(),
+            ]),
+            man_command: "man".to_string(),
+            pager_command: Some("less -R".to_string()),
+            cheat_sh_url: DEFAULT_CHEAT_SHEET_PROVIDER.to_string(),
+        }
+    }
+}
+
 impl Config {
     /// Checks the possible locations for the configuration file.
     ///
@@ -86,28 +108,6 @@ impl Config {
             fs::write(xdg_conf_path, contents)?;
         }
         Ok(())
-    }
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Config {
-            check_version: true,
-            check_help: true,
-            check_args: Some(vec![
-                VersionArg::variants()
-                    .iter()
-                    .map(|s| s.as_str().to_string())
-                    .collect(),
-                HelpArg::variants()
-                    .iter()
-                    .map(|s| s.as_str().to_string())
-                    .collect(),
-            ]),
-            man_command: "man".to_string(),
-            pager_command: Some("less -R".to_string()),
-            cheat_sh_url: DEFAULT_CHEAT_SHEET_PROVIDER.to_string(),
-        }
     }
 }
 

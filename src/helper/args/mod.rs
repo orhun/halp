@@ -94,7 +94,6 @@ pub fn get_args_help<Output: Write>(
     if cmd.trim().is_empty() {
         return Ok(());
     }
-
     if let Some(ref args) = config.check_args {
         if args.is_empty() {
             return Ok(());

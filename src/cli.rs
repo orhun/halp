@@ -67,7 +67,7 @@ impl CliArgs {
     }
 
     /// Update the configuration based on the command-line arguments (the command-line arguments will override the configuration).
-    pub fn update_conf(&self, config: &mut Config) {
+    pub fn update_config(&self, config: &mut Config) {
         config.check_help = !self.no_help;
         config.check_version = !self.no_version;
         if let Some(CliCommands::Plz {
@@ -118,7 +118,7 @@ mod tests {
             }),
             ..Default::default()
         };
-        args.update_conf(&mut config);
+        args.update_config(&mut config);
         assert!(config.check_help);
         assert_eq!(Some(String::from("bat")), config.pager_command);
     }
