@@ -1,11 +1,13 @@
 use crate::error::Result;
 use crate::helper::args::common::{HelpArg, VersionArg};
+use crate::helper::args::FOUND_EMOTICON;
 use crate::helper::docs::cheat::DEFAULT_CHEAT_SHEET_PROVIDER;
+use colored::*;
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::fs;
-use std::path::Path;
-use std::path::PathBuf;
+use std::io::Write;
+use std::path::{Path, PathBuf};
 
 /// Configuration.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -65,7 +67,7 @@ impl Config {
     }
 
     /// Writes the configuration file to the default location (XDG style).
-    pub fn write(&self) -> Result<()> {
+    pub fn write<Output: Write>(&self, output: &mut Output) -> Result<()> {
         if let Some(config_dirs) = Config::get_default_locations() {
             let xdg_conf_path = &config_dirs[1];
             if let Some(parent) = xdg_conf_path.parent() {
@@ -74,6 +76,13 @@ impl Config {
                 }
             }
             let contents = toml::to_string(&self)?;
+            writeln!(
+                output,
+                "{} {} {}",
+                FOUND_EMOTICON.magenta(),
+                "writing the default configuration to".green().bold(),
+                format!("{:?}", xdg_conf_path).white().italic()
+            )?;
             fs::write(xdg_conf_path, contents)?;
         }
         Ok(())

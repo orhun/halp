@@ -11,7 +11,7 @@ use std::process::Stdio;
 /// Emoticon for "checking" message.
 const CHECK_EMOTICON: &str = "(°ロ°)";
 /// Emoticon for "found" message.
-const FOUND_EMOTICON: &str = "\\(^ヮ^)/";
+pub const FOUND_EMOTICON: &str = "\\(^ヮ^)/";
 /// Emoticon for "fail" message.
 pub const FAIL_EMOTICON: &str = "(×﹏×)";
 /// Emoticon for debug messages.

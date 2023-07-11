@@ -18,8 +18,8 @@ use crate::cli::CliArgs;
 use crate::error::Result;
 use crate::helper::args::FAIL_EMOTICON;
 use cli::CliCommands;
+use colored::*;
 use config::Config;
-use console::style;
 use helper::args::get_args_help;
 use helper::docs::get_docs_help;
 use std::io::Write;
@@ -34,19 +34,17 @@ pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> 
         Config::parse(&config_file)?
     } else {
         let config = Config::default();
-
-        if let Err(e) = config.write() {
+        if let Err(e) = config.write(output) {
             eprintln!(
-                "{} Failed to write default config: {}",
-                style(FAIL_EMOTICON).for_stderr().yellow(),
-                e
+                "{}   {}: {}",
+                FAIL_EMOTICON.magenta(),
+                "failed to write default config".red().bold(),
+                e.to_string().white().italic()
             );
         }
         config
     };
-
     cli_args.update_conf(&mut config);
-
     if let Some(ref cmd) = cli_args.cmd {
         get_args_help(cmd, &config, cli_args.verbose, output)?;
     } else if let Some(CliCommands::Plz { ref cmd, .. }) = cli_args.subcommand {
