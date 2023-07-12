@@ -4,6 +4,7 @@ pub mod man;
 /// Cheat sheet helper.
 pub mod cheat;
 
+use crate::config::Config;
 use crate::error::Result;
 use crate::helper::docs::cheat::show_cheat_sheet;
 use crate::helper::docs::man::show_man_page;
@@ -13,13 +14,7 @@ use dialoguer::Select;
 use std::io::Write;
 
 /// Shows documentation/usage help about the given command.
-pub fn get_docs_help<Output: Write>(
-    cmd: &str,
-    man_cmd: &str,
-    cheat_sh_url: Option<String>,
-    pager: Option<String>,
-    output: &mut Output,
-) -> Result<()> {
+pub fn get_docs_help<Output: Write>(cmd: &str, config: &Config, output: &mut Output) -> Result<()> {
     let mut selection = Some(0);
     loop {
         selection = Select::with_theme(&get_selection_theme())
@@ -28,8 +23,8 @@ pub fn get_docs_help<Output: Write>(
             .items(&["Show man page", "Show cheat sheet", "Exit"])
             .interact_on_opt(&Term::stderr())?;
         match selection {
-            Some(0) => show_man_page(man_cmd, cmd)?,
-            Some(1) => show_cheat_sheet(cmd, &cheat_sh_url, &pager, output)?,
+            Some(0) => show_man_page(&config.man_command, cmd)?,
+            Some(1) => show_cheat_sheet(cmd, &config.cheat_sh_url, &config.pager_command, output)?,
             _ => return Ok(()),
         };
     }
