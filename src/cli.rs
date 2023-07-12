@@ -70,6 +70,20 @@ impl CliArgs {
     pub fn update_config(&self, config: &mut Config) {
         config.check_help = !self.no_help;
         config.check_version = !self.no_version;
+        // --check="-h -v" or --check="-h,-v" -> ["-h", "-v"]
+        // --check="-V,-v, --version" --check="-h, --help" -> [["-V", "-v", "--version"], ["-h", "--help"]]
+        if let Some(ref check_args) = self.check_args {
+            config.check_args = Some(
+                check_args
+                    .iter()
+                    .map(|arg| {
+                        arg.split(',')
+                            .map(|arg| arg.trim().to_string())
+                            .collect::<Vec<_>>()
+                    })
+                    .collect::<Vec<_>>(),
+            );
+        }
         if let Some(CliCommands::Plz {
             ref man_cmd,
             ref cheat_sh_url,
