@@ -143,10 +143,60 @@ mod tests {
             .to_string()
     }
 
+        #[test]
+    fn test_check_arg_not_found() -> Result<()> {
+        let mut output = Vec::new();
+        check_arg(
+            &get_test_bin(),
+            "-v",
+            false,
+            &mut output,
+        )?;
+        println!("{}", String::from_utf8_lossy(&output));
+        assert_eq!(
+            r#"(°ロ°)  checking 'test -v'
+(×﹏×)      fail '-v' argument not found.
+---"#,
+            String::from_utf8_lossy(&output)
+                .replace('\r', "")
+                .replace(&get_test_bin(), "test")
+                .replace(env!("CARGO_PKG_VERSION"), "0.1.0")
+                .trim()
+        );
+
+        Ok(())
+    }
+
+        #[test]
+    fn test_check_arg_suddess() -> Result<()> {
+        let mut output = Vec::new();
+        check_arg(
+            &get_test_bin(),
+            "-V"
+            false,
+            &mut output,
+        )?;
+        println!("{}", String::from_utf8_lossy(&output));
+        assert_eq!(
+            r#"(°ロ°)  checking 'test -V'
+\(^ヮ^)/ success '-V' argument found!
+---
+halp 0.1.0
+---"#,
+            String::from_utf8_lossy(&output)
+                .replace('\r', "")
+                .replace(&get_test_bin(), "test")
+                .replace(env!("CARGO_PKG_VERSION"), "0.1.0")
+                .trim()
+        );
+
+        Ok(())
+    }
+
     #[test]
     fn test_check_version_args() -> Result<()> {
         let mut output = Vec::new();
-        check_args(
+        get_args_help(
             &get_test_bin(),
             VersionArg::variants().iter().map(|v| v.as_str()),
             false,
