@@ -73,7 +73,11 @@ impl CliArgs {
         // --check="-h -v" or --check="-h,-v" -> ["-h", "-v"]
         // --check="-V,-v, --version" --check="-h, --help" -> [["-V", "-v", "--version"], ["-h", "--help"]]
         if let Some(ref check_args) = self.check_args {
-            config.check_args = Some(
+            let mut args = Vec::with_capacity(2);
+            // Sets the first element to an empty vector to indicate that the all arguments should be checked.
+            args.push(Vec::new());
+            // Extend the vector with the arguments.
+            args.extend(
                 check_args
                     .iter()
                     .map(|arg| {
@@ -83,6 +87,8 @@ impl CliArgs {
                     })
                     .collect::<Vec<_>>(),
             );
+            // Update the configuration.
+            config.check_args = Some(args);
         }
         if let Some(CliCommands::Plz {
             ref man_cmd,

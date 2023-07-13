@@ -2,7 +2,7 @@
 pub mod common;
 
 use crate::config::Config;
-use crate::error::Result;
+use crate::error::{Error, Result};
 use crate::helper::tty::TtyCommand;
 use colored::*;
 use std::io::Write;
@@ -19,14 +19,13 @@ const DEBUG_EMOTICON: &str = "(o_O)";
 /// Separator for output.
 const OUTPUT_SEPARATOR: &str = "---";
 
-/// Checks if the given arguments exist.
-fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
+/// Checks if the given argument exist.
+fn check_arg<Output: Write>(
     cmd: &str,
-    args: ArgsIter,
+    arg: &str,
     verbose: bool,
     output: &mut Output,
 ) -> Result<()> {
-    for arg in args {
         let command = format!("{} {}", cmd, arg);
         writeln!(
             output,
@@ -50,7 +49,7 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
             writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
             output.write_all(&cmd_out.stdout)?;
             writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
-            break;
+            return Ok(());
         } else {
             writeln!(
                 output,
@@ -80,8 +79,7 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
                 }
             }
         }
-    }
-    Ok(())
+    Err(Error::ArgumentNotFoundError)
 }
 
 /// Shows command-line help about the given command.
@@ -98,19 +96,34 @@ pub fn get_args_help<Output: Write>(
         if args.is_empty() {
             return Ok(());
         }
-        for arg_variants in [
-            (config.check_version).then(|| &args[0]),
-            (config.check_help && args.len() >= 2).then(|| &args[1]),
-        ]
+        for arg_variants in
+            if args[0].is_empty() {
+                [(args.len() > 1).then(|| &args[1..]), None]
+
+            } else {
+                let x = [
+                    (config.check_version).then(|| &args[..1]),
+                    (config.check_help && args.len() >= 2).then(|| &args[1..]),
+                ];
+                x
+            }
         .iter()
         .flatten()
         {
-            check_args(
-                cmd,
-                arg_variants.iter().map(|v| v.as_str()),
-                verbose,
-                output,
-            )?;
+            if args[0].is_empty() {
+                // If the user uses the `--check` option then we check all the arguments.
+                arg_variants.iter().flatten().for_each(|arg| {
+                    let _ = check_arg(cmd, arg, verbose, output);
+                });
+
+            } else {
+                // otherwise we check only the first argument found.
+                for arg in arg_variants.iter().flatten() {
+                    if let Ok(()) = check_arg(cmd, arg, verbose, output) {
+                        break;
+                    }
+                }
+            }
         }
     }
     Ok(())

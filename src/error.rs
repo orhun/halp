@@ -18,6 +18,9 @@ pub enum Error {
     /// Error that might occur while serializing the configuration into TOML.
     #[error("TOML serialization error: `{0}`")]
     TomlSerializeError(#[from] toml::ser::Error),
+    /// Error that might if the argument is not found.
+    #[error("Argument not found.")]
+    ArgumentNotFoundError,
 }
 
 /// Type alias for the standard [`Result`] type.
