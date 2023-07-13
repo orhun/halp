@@ -99,11 +99,10 @@ pub fn get_args_help<Output: Write>(
         for arg_variants in if args[0].is_empty() {
             [(args.len() > 1).then(|| &args[1..]), None]
         } else {
-            let x = [
+            [
                 (config.check_version).then(|| &args[..1]),
                 (config.check_help && args.len() >= 2).then(|| &args[1..]),
-            ];
-            x
+            ]
         }
         .iter()
         .flatten()
