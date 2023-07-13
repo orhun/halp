@@ -148,8 +148,7 @@ mod tests {
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r#"(°ロ°)  checking 'test -v'
-(×﹏×)      fail '-v' argument not found.
----"#,
+(×﹏×)      fail '-v' argument not found."#,
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
@@ -215,6 +214,7 @@ halp 0.1.0
         let config = Config {
             check_version: false,
             check_help: true,
+            check_args: Some(vec![vec!["-H".to_string(), "help".to_string(), "--help".to_string()]]),
             ..Default::default()
         };
         get_args_help(&get_test_bin(), &config, true, &mut output)?;
