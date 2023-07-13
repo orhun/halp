@@ -129,7 +129,6 @@ pub fn get_args_help<Output: Write>(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helper::args::common::{HelpArg, VersionArg};
     use pretty_assertions::assert_eq;
     use std::path::PathBuf;
 
@@ -146,12 +145,12 @@ mod tests {
         #[test]
     fn test_check_arg_not_found() -> Result<()> {
         let mut output = Vec::new();
-        check_arg(
+        assert!(check_arg(
             &get_test_bin(),
             "-v",
             false,
             &mut output,
-        )?;
+        ).is_err());
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r#"(°ロ°)  checking 'test -v'
@@ -168,14 +167,14 @@ mod tests {
     }
 
         #[test]
-    fn test_check_arg_suddess() -> Result<()> {
+    fn test_check_arg_success() -> Result<()> {
         let mut output = Vec::new();
-        check_arg(
+        assert!(check_arg(
             &get_test_bin(),
             "-V",
             false,
             &mut output,
-        )?;
+        ).is_ok());
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r#"(°ロ°)  checking 'test -V'
