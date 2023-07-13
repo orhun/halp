@@ -172,7 +172,7 @@ mod tests {
         let mut output = Vec::new();
         check_arg(
             &get_test_bin(),
-            "-V"
+            "-V",
             false,
             &mut output,
         )?;
@@ -196,9 +196,14 @@ halp 0.1.0
     #[test]
     fn test_check_version_args() -> Result<()> {
         let mut output = Vec::new();
+        let config = Config {
+            check_version: true,
+            check_help: false,
+        ..Default::default()
+        };
         get_args_help(
             &get_test_bin(),
-            VersionArg::variants().iter().map(|v| v.as_str()),
+            &config,
             false,
             &mut output,
         )?;
@@ -224,9 +229,14 @@ halp 0.1.0
     #[test]
     fn test_check_help_args() -> Result<()> {
         let mut output = Vec::new();
-        check_args(
+        let config = Config {
+            check_version: false,
+            check_help: true,
+        ..Default::default()
+        };
+        get_args_help(
             &get_test_bin(),
-            HelpArg::variants().iter().rev().map(|v| v.as_str()),
+            &config,
             true,
             &mut output,
         )?;
