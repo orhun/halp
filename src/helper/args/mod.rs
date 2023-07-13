@@ -142,15 +142,10 @@ mod tests {
             .to_string()
     }
 
-        #[test]
+    #[test]
     fn test_check_arg_not_found() -> Result<()> {
         let mut output = Vec::new();
-        assert!(check_arg(
-            &get_test_bin(),
-            "-v",
-            false,
-            &mut output,
-        ).is_err());
+        assert!(check_arg(&get_test_bin(), "-v", false, &mut output,).is_err());
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r#"(°ロ°)  checking 'test -v'
@@ -166,15 +161,10 @@ mod tests {
         Ok(())
     }
 
-        #[test]
+    #[test]
     fn test_check_arg_success() -> Result<()> {
         let mut output = Vec::new();
-        assert!(check_arg(
-            &get_test_bin(),
-            "-V",
-            false,
-            &mut output,
-        ).is_ok());
+        assert!(check_arg(&get_test_bin(), "-V", false, &mut output,).is_ok());
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r#"(°ロ°)  checking 'test -V'
@@ -198,14 +188,9 @@ halp 0.1.0
         let config = Config {
             check_version: true,
             check_help: false,
-        ..Default::default()
+            ..Default::default()
         };
-        get_args_help(
-            &get_test_bin(),
-            &config,
-            false,
-            &mut output,
-        )?;
+        get_args_help(&get_test_bin(), &config, false, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r#"(°ロ°)  checking 'test -v'
@@ -231,14 +216,9 @@ halp 0.1.0
         let config = Config {
             check_version: false,
             check_help: true,
-        ..Default::default()
+            ..Default::default()
         };
-        get_args_help(
-            &get_test_bin(),
-            &config,
-            true,
-            &mut output,
-        )?;
+        get_args_help(&get_test_bin(), &config, true, &mut output)?;
         assert_eq!(
             r#"(°ロ°)  checking 'test -H'
 (×﹏×)      fail '-H' argument not found.
