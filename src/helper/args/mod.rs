@@ -214,7 +214,11 @@ halp 0.1.0
         let config = Config {
             check_version: false,
             check_help: true,
-            check_args: Some(vec![vec!["-H".to_string(), "help".to_string(), "--help".to_string()]]),
+            check_args: Some(vec![vec![
+                "-H".to_string(),
+                "help".to_string(),
+                "--help".to_string(),
+            ]]),
             ..Default::default()
         };
         get_args_help(&get_test_bin(), &config, true, &mut output)?;
