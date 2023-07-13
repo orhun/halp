@@ -26,59 +26,59 @@ fn check_arg<Output: Write>(
     verbose: bool,
     output: &mut Output,
 ) -> Result<()> {
-        let command = format!("{} {}", cmd, arg);
+    let command = format!("{} {}", cmd, arg);
+    writeln!(
+        output,
+        "{}  {} '{}'",
+        CHECK_EMOTICON.magenta(),
+        "checking".green().bold(),
+        command.white().italic()
+    )?;
+    let cmd_out = TtyCommand::new(&command)?
+        .env("PAGER", "")
+        .stderr(Stdio::inherit())
+        .output()?;
+    if cmd_out.status.success() {
         writeln!(
             output,
-            "{}  {} '{}'",
-            CHECK_EMOTICON.magenta(),
-            "checking".green().bold(),
-            command.white().italic()
+            "{} {} '{}' argument found!",
+            FOUND_EMOTICON.magenta(),
+            "success".cyan().bold(),
+            arg.white().italic()
         )?;
-        let cmd_out = TtyCommand::new(&command)?
-            .env("PAGER", "")
-            .stderr(Stdio::inherit())
-            .output()?;
-        if cmd_out.status.success() {
+        writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
+        output.write_all(&cmd_out.stdout)?;
+        writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
+        return Ok(());
+    } else {
+        writeln!(
+            output,
+            "{}      {} '{}' argument not found.",
+            FAIL_EMOTICON.magenta(),
+            "fail".red().bold(),
+            arg.white().italic()
+        )?;
+        if verbose {
             writeln!(
                 output,
-                "{} {} '{}' argument found!",
-                FOUND_EMOTICON.magenta(),
-                "success".cyan().bold(),
-                arg.white().italic()
+                "{}      {}",
+                DEBUG_EMOTICON.magenta(),
+                "debug".yellow().bold(),
             )?;
-            writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
-            output.write_all(&cmd_out.stdout)?;
-            writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
-            return Ok(());
-        } else {
-            writeln!(
-                output,
-                "{}      {} '{}' argument not found.",
-                FAIL_EMOTICON.magenta(),
-                "fail".red().bold(),
-                arg.white().italic()
-            )?;
-            if verbose {
-                writeln!(
-                    output,
-                    "{}      {}",
-                    DEBUG_EMOTICON.magenta(),
-                    "debug".yellow().bold(),
-                )?;
-                if !cmd_out.stdout.is_empty() {
-                    writeln!(output, "{}:", "stdout".white().italic())?;
-                    writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
-                    output.write_all(&cmd_out.stdout)?;
-                    writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
-                }
-                if !cmd_out.stderr.is_empty() {
-                    writeln!(output, "{}:", "stderr".white().italic())?;
-                    writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
-                    output.write_all(&cmd_out.stderr)?;
-                    writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
-                }
+            if !cmd_out.stdout.is_empty() {
+                writeln!(output, "{}:", "stdout".white().italic())?;
+                writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
+                output.write_all(&cmd_out.stdout)?;
+                writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
+            }
+            if !cmd_out.stderr.is_empty() {
+                writeln!(output, "{}:", "stderr".white().italic())?;
+                writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
+                output.write_all(&cmd_out.stderr)?;
+                writeln!(output, "{}", OUTPUT_SEPARATOR.bright_black())?;
             }
         }
+    }
     Err(Error::ArgumentNotFoundError)
 }
 
@@ -96,17 +96,15 @@ pub fn get_args_help<Output: Write>(
         if args.is_empty() {
             return Ok(());
         }
-        for arg_variants in
-            if args[0].is_empty() {
-                [(args.len() > 1).then(|| &args[1..]), None]
-
-            } else {
-                let x = [
-                    (config.check_version).then(|| &args[..1]),
-                    (config.check_help && args.len() >= 2).then(|| &args[1..]),
-                ];
-                x
-            }
+        for arg_variants in if args[0].is_empty() {
+            [(args.len() > 1).then(|| &args[1..]), None]
+        } else {
+            let x = [
+                (config.check_version).then(|| &args[..1]),
+                (config.check_help && args.len() >= 2).then(|| &args[1..]),
+            ];
+            x
+        }
         .iter()
         .flatten()
         {
@@ -115,7 +113,6 @@ pub fn get_args_help<Output: Write>(
                 arg_variants.iter().flatten().for_each(|arg| {
                     let _ = check_arg(cmd, arg, verbose, output);
                 });
-
             } else {
                 // otherwise we check only the first argument found.
                 for arg in arg_variants.iter().flatten() {
