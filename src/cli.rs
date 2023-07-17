@@ -70,6 +70,9 @@ impl CliArgs {
     pub fn update_config(&self, config: &mut Config) {
         config.check_help = !self.no_help;
         config.check_version = !self.no_version;
+        if let Some(ref args) = self.check_args {
+            config.check_args = Some(args.iter().map(|s| vec![s.to_string()]).collect());
+        }
         if let Some(CliCommands::Plz {
             ref man_cmd,
             ref cheat_sh_url,
