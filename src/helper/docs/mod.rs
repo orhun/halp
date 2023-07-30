@@ -14,7 +14,61 @@ use console::{style, Style, Term};
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
 use std::io::Write;
+use std::process::{Command, Output, Stdio};
+use ureq::{AgentBuilder, Request};
 use crate::helper::docs::eg::show_eg_page;
+
+trait HelpProvider {
+    /// Return the default provider URL
+    fn url(&self) -> &'static str;
+
+    /// Build the request
+    ///
+    fn build_req(&self, cmd: &str, url: &str) -> Request {
+         AgentBuilder::new().build().get(&format!("{}/{}.md", url, cmd))
+    }
+
+    fn fetch(&self, cmd: &str, custom_url: Option<&str>, output: &mut Output) -> Result<()> {
+        let response = self.build_req(cmd, custom_url.unwrap_or(self.url())).call();
+
+        let page = match response {
+            Ok(page) => page.into_string()?,
+            Err(e) => {
+                if e.kind() == ureq::ErrorKind::HTTP {
+                    "Unknown topic.\nThis topic/command has no eg page yet.".to_string()
+                } else {
+                    return Err(Error::from(Box::new(e)));
+                }
+            }
+        };
+
+        // Don't use a pager when the topic is not found.
+        if let Some(pager) = pager
+            .as_ref()
+            .filter(|_| !page.starts_with("Unknown topic."))
+        {
+            let mut process = if cfg!(target_os = "windows") {
+                Command::new("cmd")
+                    .args(["/C", pager])
+                    .stdin(Stdio::piped())
+                    .spawn()
+            } else {
+                Command::new("sh")
+                    .args(["-c", pager])
+                    .stdin(Stdio::piped())
+                    .spawn()
+            }?;
+            if let Some(stdin) = process.stdin.as_mut() {
+                writeln!(stdin, "{}", page)?;
+                process.wait()?;
+            }
+        } else {
+            writeln!(output, "{}", page)?;
+        }
+
+        Ok(())
+    }
+}
 
 /// Shows documentation/usage help about the given command.
 pub fn get_docs_help<Output: Write>(cmd: &str, config: &Config, output: &mut Output) -> Result<()> {
