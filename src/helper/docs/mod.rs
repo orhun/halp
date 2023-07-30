@@ -8,7 +8,7 @@ mod eg;
 
 use crate::config::Config;
 use crate::error::{Error, Result};
-use crate::helper::docs::cheat_sh::show_cheat_sheet;
+use crate::helper::docs::cheat_sh::CheatDotSh;
 use crate::helper::docs::man::show_man_page;
 use console::{style, Style, Term};
 use dialoguer::theme::ColorfulTheme;
@@ -128,7 +128,7 @@ pub fn get_docs_help<Output: Write>(cmd: &str, config: &Config, output: &mut Out
             show_man_page(&config.man_command, cmd)?
         } else {
             let page = match selection {
-                Some(CHEAT_SHEET) => show_cheat_sheet(cmd, &config.cheat_sh_url)?,
+                Some(CHEAT_SHEET) => CheatDotSh.fetch(cmd, &config.cheat_sh_url)?,
                 Some(EG_PAGE) => show_eg_page(cmd)?,
                 _ => return Ok(()),
             };

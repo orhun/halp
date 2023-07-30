@@ -12,7 +12,7 @@ pub const DEFAULT_CHEAT_SHEET_PROVIDER: &str = "https://cheat.sh";
 /// See <https://github.com/chubin/cheat.sh/blob/83bffa587b6c1048cbcc40ea8fa6af675203fd5f/bin/app.py#L76>
 const CHEAT_SHEET_USER_AGENT: &str = "fetch";
 
-struct CheatDotSh;
+pub struct CheatDotSh;
 
 impl HelpProvider for CheatDotSh {
     fn url(&self) -> &'static str {
@@ -26,8 +26,8 @@ impl HelpProvider for CheatDotSh {
         .get(&format!("{}/{}", url, cmd))
     }
 
-    fn fetch(&self, cmd: &str, custom_url: Option<&str>) -> Result<String> {
-        let response = HelpProvider::fetch(self, cmd, custom_url);
+   fn fetch(&self, cmd: &str, custom_url: &Option<String>) -> Result<String> {
+        let response = self._fetch(cmd, custom_url);
         if let Ok(page) = &response {
             if page.starts_with("Unknown topic.") {
                 return Err(Error::ProviderError(page.to_owned()))
@@ -37,22 +37,6 @@ impl HelpProvider for CheatDotSh {
     }
 }
 
-/// Shows the cheat sheet for the given command.
-pub fn show_cheat_sheet(
-    cmd: &str,
-    url: &str,
-) -> Result<String> {
-    let client = AgentBuilder::new()
-        .user_agent(CHEAT_SHEET_USER_AGENT)
-        .build();
-    let cheat_sheet = client
-        .get(&format!("{}/{}", url, cmd))
-        .call()
-        .map_err(|e| Error::from(Box::new(e)))?
-        .into_string()?;
-
-    Ok(cheat_sheet)
-}
 
 #[cfg(test)]
 mod tests {
