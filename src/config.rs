@@ -8,6 +8,7 @@ use std::env;
 use std::fs;
 use std::io::Write;
 use std::path::{Path, PathBuf};
+use crate::helper::docs::eg::DEFAULT_EG_PAGES_PROVIDER;
 
 /// Configuration.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -25,6 +26,8 @@ pub struct Config {
     pub pager_command: Option<String>,
     /// Use a custom URL for cheat.sh.
     pub cheat_sh_url: Option<String>,
+    /// Use a custom URL for `eg` pages provider.
+    pub eg_url: Option<String>,
 }
 
 impl Default for Config {
@@ -45,6 +48,7 @@ impl Default for Config {
             man_command: "man".to_string(),
             pager_command: Some("less -R".to_string()),
             cheat_sh_url: Some(DEFAULT_CHEAT_SHEET_PROVIDER.to_string()),
+            eg_url: Some(DEFAULT_EG_PAGES_PROVIDER.to_string()),
         }
     }
 }
