@@ -2,13 +2,13 @@ use crate::error::Result;
 use crate::helper::args::common::{HelpArg, VersionArg};
 use crate::helper::args::FOUND_EMOTICON;
 use crate::helper::docs::cheat_sh::DEFAULT_CHEAT_SHEET_PROVIDER;
+use crate::helper::docs::eg::DEFAULT_EG_PAGES_PROVIDER;
 use colored::*;
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::fs;
 use std::io::Write;
 use std::path::{Path, PathBuf};
-use crate::helper::docs::eg::DEFAULT_EG_PAGES_PROVIDER;
 
 /// Configuration.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -132,7 +132,10 @@ mod tests {
         let config = Config::parse(&path)?;
         assert!(config.check_help);
         assert!(config.check_version);
-        assert_eq!(config.cheat_sh_url, Some(DEFAULT_CHEAT_SHEET_PROVIDER.to_string()));
+        assert_eq!(
+            config.cheat_sh_url,
+            Some(DEFAULT_CHEAT_SHEET_PROVIDER.to_string())
+        );
         Ok(())
     }
 }

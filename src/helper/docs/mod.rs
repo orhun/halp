@@ -9,6 +9,7 @@ pub mod eg;
 use crate::config::Config;
 use crate::error::{Error, Result};
 use crate::helper::docs::cheat_sh::CheatDotSh;
+use crate::helper::docs::eg::Eg;
 use crate::helper::docs::man::show_man_page;
 use console::{style, Style, Term};
 use dialoguer::theme::ColorfulTheme;
@@ -16,7 +17,6 @@ use dialoguer::Select;
 use std::io::Write;
 use std::process::{Command, Stdio};
 use ureq::{AgentBuilder, Request};
-use crate::helper::docs::eg::Eg;
 
 /// The `HelpProvider` trait defines essential methods for fetching help content related to commands from a provider.
 ///
@@ -56,7 +56,10 @@ trait HelpProvider {
     /// aka return a custom message if the error means that **provider** doesn't have a page for the command
     fn err_handle(&self, e: ureq::Error) -> Error {
         if e.kind() == ureq::ErrorKind::HTTP {
-            Error::ProviderError("Unknown topic, This topic/command might has no page in this provider yet.".to_string())
+            Error::ProviderError(
+                "Unknown topic, This topic/command might has no page in this provider yet."
+                    .to_string(),
+            )
         } else {
             Error::from(Box::new(e))
         }
@@ -82,7 +85,7 @@ trait HelpProvider {
 
         match response {
             Ok(response) => Ok(response.into_string()?),
-            Err(e) => Err(e)
+            Err(e) => Err(e),
         }
     }
 
@@ -109,7 +112,12 @@ pub fn get_docs_help<Output: Write>(cmd: &str, config: &Config, output: &mut Out
     const CHEAT_SHEET: usize = 1;
     const EG_PAGE: usize = 2;
 
-    let menu_options = ["Show man page", "Show cheat sheet", "Show the eg page", "Exit"];
+    let menu_options = [
+        "Show man page",
+        "Show cheat sheet",
+        "Show the eg page",
+        "Exit",
+    ];
     let mut selection = Some(MAN_PAGE);
 
     loop {

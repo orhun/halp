@@ -1,6 +1,6 @@
 use crate::error::{Error, Result};
-use ureq::{AgentBuilder, Request};
 use crate::helper::docs::HelpProvider;
+use ureq::{AgentBuilder, Request};
 
 /// Default cheat sheet provider URL.
 pub const DEFAULT_CHEAT_SHEET_PROVIDER: &str = "https://cheat.sh";
@@ -20,22 +20,21 @@ impl HelpProvider for CheatDotSh {
 
     fn build_req(&self, cmd: &str, url: &str) -> Request {
         AgentBuilder::new()
-        .user_agent(CHEAT_SHEET_USER_AGENT)
-        .build()
-        .get(&format!("{}/{}", url, cmd))
+            .user_agent(CHEAT_SHEET_USER_AGENT)
+            .build()
+            .get(&format!("{}/{}", url, cmd))
     }
 
-   fn fetch(&self, cmd: &str, custom_url: &Option<String>) -> Result<String> {
+    fn fetch(&self, cmd: &str, custom_url: &Option<String>) -> Result<String> {
         let response = self._fetch(cmd, custom_url);
         if let Ok(page) = &response {
             if page.starts_with("Unknown topic.") {
-                return Err(Error::ProviderError(page.to_owned()))
+                return Err(Error::ProviderError(page.to_owned()));
             }
         }
         response
     }
 }
-
 
 #[cfg(test)]
 mod tests {
