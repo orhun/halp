@@ -1,6 +1,4 @@
 use crate::error::{Error, Result};
-use std::io::Write;
-use std::process::{Command, Stdio};
 use ureq::{AgentBuilder, Request};
 use crate::helper::docs::HelpProvider;
 
@@ -12,6 +10,7 @@ pub const DEFAULT_CHEAT_SHEET_PROVIDER: &str = "https://cheat.sh";
 /// See <https://github.com/chubin/cheat.sh/blob/83bffa587b6c1048cbcc40ea8fa6af675203fd5f/bin/app.py#L76>
 const CHEAT_SHEET_USER_AGENT: &str = "fetch";
 
+/// The `cheat.sh` provider
 pub struct CheatDotSh;
 
 impl HelpProvider for CheatDotSh {
