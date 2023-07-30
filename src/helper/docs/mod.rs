@@ -7,7 +7,7 @@ pub mod cheat_sh;
 mod eg;
 
 use crate::config::Config;
-use crate::error::{ Result};
+use crate::error::{Error, Result};
 use crate::helper::docs::cheat_sh::show_cheat_sheet;
 use crate::helper::docs::man::show_man_page;
 use console::{style, Style, Term};
@@ -59,7 +59,13 @@ trait HelpProvider {
 
     /// Handle the request error.
     /// aka return a custom message if the error means that **provider** doesn't have a page for the command
-    fn err_handle(&self, e: ureq::Error) -> Result<String>;
+    fn err_handle(&self, e: ureq::Error) -> Error {
+        if e.kind() == ureq::ErrorKind::HTTP {
+            Error::ProviderError("Unknown topic.\nThis topic/command has no page in this provider yet.".to_string())
+        } else {
+            Error::from(Box::new(e))
+        }
+    }
 
     /// Fetches the command page from the provider.
     ///
@@ -84,7 +90,7 @@ trait HelpProvider {
 
         match response {
             Ok(response) => Ok(response.into_string()?),
-            Err(e) => e
+            Err(e) => Err(e)
         }
     }
 }
