@@ -28,7 +28,7 @@ pub fn get_docs_help<Output: Write>(cmd: &str, config: &Config, output: &mut Out
         match selection {
             Some(0) => show_man_page(&config.man_command, cmd)?,
             Some(1) => show_cheat_sheet(cmd, &config.cheat_sh_url, &config.pager_command, output)?,
-            Some(2) => show_eg_page(cmd, &pager, output)?,
+            Some(2) => show_eg_page(cmd, &config.pager_command, output)?,
             _ => return Ok(()),
         };
     }
