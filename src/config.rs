@@ -1,7 +1,7 @@
 use crate::error::Result;
 use crate::helper::args::common::{HelpArg, VersionArg};
 use crate::helper::args::FOUND_EMOTICON;
-use crate::helper::docs::cheat::DEFAULT_CHEAT_SHEET_PROVIDER;
+use crate::helper::docs::cheat_sh::DEFAULT_CHEAT_SHEET_PROVIDER;
 use colored::*;
 use serde::{Deserialize, Serialize};
 use std::env;
