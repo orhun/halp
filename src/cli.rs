@@ -123,6 +123,7 @@ mod tests {
                 cmd: "ps".to_string(),
                 pager: Some("bat".to_string()),
                 cheat_sh_url: None,
+                eg_url: None,
                 man_cmd: None,
                 no_pager: false,
             }),
