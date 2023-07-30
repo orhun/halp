@@ -50,15 +50,13 @@ trait HelpProvider {
     ///
     /// # Returns
     /// This method returns a new `Request` instance configured with the `GET` method and the formatted URL.
-    fn build_req(&self, cmd: &str, url: &str) -> Request {
-        AgentBuilder::new().build().get(&format!("{}/{}.md", url, cmd))
-    }
+    fn build_req(&self, cmd: &str, url: &str) -> Request;
 
     /// Handle the request error.
     /// aka return a custom message if the error means that **provider** doesn't have a page for the command
     fn err_handle(&self, e: ureq::Error) -> Error {
         if e.kind() == ureq::ErrorKind::HTTP {
-            Error::ProviderError("Unknown topic.\nThis topic/command has no page in this provider yet.".to_string())
+            Error::ProviderError("Unknown topic, This topic/command might has no page in this provider yet.".to_string())
         } else {
             Error::from(Box::new(e))
         }
