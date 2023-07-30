@@ -51,6 +51,9 @@ pub enum CliCommands {
         /// Use a custom URL for cheat.sh.
         #[arg(long, env = "CHEAT_SH_URL", value_name = "URL")]
         cheat_sh_url: Option<String>,
+        /// Use a custom provider URL for `eg` pages.
+        #[arg(long, env = "EG_PAGES_URL", value_name = "URL")]
+        eg_url: Option<String>,
         /// Sets the pager to use.
         #[arg(short, long)]
         pager: Option<String>,
@@ -76,6 +79,7 @@ impl CliArgs {
         if let Some(CliCommands::Plz {
             ref man_cmd,
             ref cheat_sh_url,
+            ref eg_url,
             no_pager,
             ref pager,
             ..
@@ -86,6 +90,9 @@ impl CliArgs {
             }
             if let Some(cheat_sh_url) = cheat_sh_url {
                 config.cheat_sh_url = Some(cheat_sh_url.clone());
+            }
+            if let Some(eg_url) = eg_url {
+                config.eg_url = Some(eg_url.to_owned());
             }
             if no_pager {
                 config.pager_command = None;
