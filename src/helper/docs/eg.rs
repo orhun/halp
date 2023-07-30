@@ -7,11 +7,7 @@ use crate::error::{Result, Error};
 const EG_PAGES_PROVIDER: &str = "https://raw.githubusercontent.com/srsudar/eg/master/eg/examples";
 
 /// Shows the EG page for the given command.
-pub fn show_eg_page<Output: Write>(
-    cmd: &str,
-    pager: &Option<String>,
-    output: &mut Output,
-) -> Result<()> {
+pub fn show_eg_page(cmd: &str) -> Result<String> {
     let client = AgentBuilder::new().build();
     let eg_page = client
         .get(&format!("{}/{}.md", EG_PAGES_PROVIDER, cmd))
@@ -28,7 +24,7 @@ pub fn show_eg_page<Output: Write>(
         }
     };
 
-    // Don't use a pager when the topic is not found.
+/*    // Don't use a pager when the topic is not found.
     if let Some(pager) = pager
         .as_ref()
         .filter(|_| !eg_page.starts_with("Unknown topic."))
@@ -50,7 +46,7 @@ pub fn show_eg_page<Output: Write>(
         }
     } else {
         writeln!(output, "{}", eg_page)?;
-    }
+    }*/
 
-    Ok(())
+    Ok(eg_page)
 }

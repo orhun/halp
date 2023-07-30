@@ -7,7 +7,7 @@ pub mod cheat_sh;
 mod eg;
 
 use crate::config::Config;
-use crate::error::Result;
+use crate::error::{Error, Result};
 use crate::helper::docs::cheat_sh::show_cheat_sheet;
 use crate::helper::docs::man::show_man_page;
 use console::{style, Style, Term};
@@ -25,7 +25,7 @@ trait HelpProvider {
     /// Build the request
     ///
     fn build_req(&self, cmd: &str, url: &str) -> Request {
-         AgentBuilder::new().build().get(&format!("{}/{}.md", url, cmd))
+        AgentBuilder::new().build().get(&format!("{}/{}.md", url, cmd))
     }
 
     fn fetch(&self, cmd: &str, custom_url: Option<&str>, output: &mut Output) -> Result<()> {
@@ -42,29 +42,6 @@ trait HelpProvider {
             }
         };
 
-        // Don't use a pager when the topic is not found.
-        if let Some(pager) = pager
-            .as_ref()
-            .filter(|_| !page.starts_with("Unknown topic."))
-        {
-            let mut process = if cfg!(target_os = "windows") {
-                Command::new("cmd")
-                    .args(["/C", pager])
-                    .stdin(Stdio::piped())
-                    .spawn()
-            } else {
-                Command::new("sh")
-                    .args(["-c", pager])
-                    .stdin(Stdio::piped())
-                    .spawn()
-            }?;
-            if let Some(stdin) = process.stdin.as_mut() {
-                writeln!(stdin, "{}", page)?;
-                process.wait()?;
-            }
-        } else {
-            writeln!(output, "{}", page)?;
-        }
 
         Ok(())
     }
@@ -72,19 +49,50 @@ trait HelpProvider {
 
 /// Shows documentation/usage help about the given command.
 pub fn get_docs_help<Output: Write>(cmd: &str, config: &Config, output: &mut Output) -> Result<()> {
-    let mut selection = Some(0);
+    const MAN_PAGE: usize = 0;
+    const CHEAT_SHEET: usize = 1;
+    const EG_PAGE: usize = 2;
+
+    let menu_options = ["Show man page", "Show cheat sheet", "Show the eg page", "Exit"];
+    let mut selection = Some(MAN_PAGE);
+
     loop {
         selection = Select::with_theme(&get_selection_theme())
             .with_prompt("Select operation")
             .default(selection.unwrap_or_default())
-            .items(&["Show man page", "Show cheat sheet", "Show the eg page", "Exit"])
+            .items(&menu_options)
             .interact_on_opt(&Term::stderr())?;
-        match selection {
-            Some(0) => show_man_page(&config.man_command, cmd)?,
-            Some(1) => show_cheat_sheet(cmd, &config.cheat_sh_url, &config.pager_command, output)?,
-            Some(2) => show_eg_page(cmd, &config.pager_command, output)?,
-            _ => return Ok(()),
-        };
+
+        if let Some(MAN_PAGE) = selection {
+            show_man_page(&config.man_command, cmd)?
+        } else {
+            let page = match selection {
+                Some(CHEAT_SHEET) => show_cheat_sheet(cmd, &config.cheat_sh_url)?,
+                Some(EG_PAGE) => show_eg_page(cmd)?,
+                _ => return Ok(()),
+            };
+
+            // Show the page using the user selected pager or write it directly into the output
+            if let Some(pager) = config.pager_command.as_ref() {
+                let mut process = if cfg!(target_os = "windows") {
+                    Command::new("cmd")
+                        .args(["/C", pager])
+                        .stdin(Stdio::piped())
+                        .spawn()
+                } else {
+                    Command::new("sh")
+                        .args(["-c", pager])
+                        .stdin(Stdio::piped())
+                        .spawn()
+                }?;
+                if let Some(stdin) = process.stdin.as_mut() {
+                    writeln!(stdin, "{}", page)?;
+                    process.wait()?;
+                }
+            } else {
+                writeln!(output, "{}", page)?;
+            }
+        }
     }
 }
 

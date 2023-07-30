@@ -12,12 +12,10 @@ pub const DEFAULT_CHEAT_SHEET_PROVIDER: &str = "https://cheat.sh";
 const CHEAT_SHEET_USER_AGENT: &str = "fetch";
 
 /// Shows the cheat sheet for the given command.
-pub fn show_cheat_sheet<Output: Write>(
+pub fn show_cheat_sheet(
     cmd: &str,
     url: &str,
-    pager: &Option<String>,
-    output: &mut Output,
-) -> Result<()> {
+) -> Result<String> {
     let client = AgentBuilder::new()
         .user_agent(CHEAT_SHEET_USER_AGENT)
         .build();
@@ -27,7 +25,7 @@ pub fn show_cheat_sheet<Output: Write>(
         .map_err(|e| Error::from(Box::new(e)))?
         .into_string()?;
     // Don't use a pager when the topic is not found.
-    if let Some(pager) = pager
+/*    if let Some(pager) = pager
         .as_ref()
         .filter(|_| !cheat_sheet.starts_with("Unknown topic."))
     {
@@ -48,8 +46,8 @@ pub fn show_cheat_sheet<Output: Write>(
         }
     } else {
         writeln!(output, "{}", cheat_sheet)?;
-    }
-    Ok(())
+    }*/
+    Ok(cheat_sheet)
 }
 
 #[cfg(test)]
