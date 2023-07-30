@@ -16,7 +16,7 @@ use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
 use std::io::Write;
 use std::process::{Command, Stdio};
-use ureq::{AgentBuilder, Request};
+use ureq::Request;
 
 /// The `HelpProvider` trait defines essential methods for fetching help content related to commands from a provider.
 ///
