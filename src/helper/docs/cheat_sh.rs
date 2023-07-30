@@ -43,9 +43,7 @@ mod tests {
 
     #[test]
     fn test_fetch_cheat_sheet() -> Result<()> {
-        let mut output = Vec::new();
-        show_cheat_sheet("ls", DEFAULT_CHEAT_SHEET_PROVIDER, &None, &mut output)?;
-        let output = String::from_utf8_lossy(&output);
+        let output = CheatDotSh.fetch("ls", &None)?;
         assert!(output.contains(
             "# To display all files, along with the size (with unit suffixes) and timestamp:"
         ));
