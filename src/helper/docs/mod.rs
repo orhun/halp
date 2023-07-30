@@ -4,7 +4,7 @@ pub mod man;
 /// Cheat sheet helper.
 pub mod cheat_sh;
 /// eg page helper.
-mod eg;
+pub mod eg;
 
 use crate::config::Config;
 use crate::error::{Error, Result};
@@ -16,7 +16,7 @@ use dialoguer::Select;
 use std::io::Write;
 use std::process::{Command, Stdio};
 use ureq::{AgentBuilder, Request};
-use crate::helper::docs::eg::show_eg_page;
+use crate::helper::docs::eg::Eg;
 
 /// The `HelpProvider` trait defines essential methods for fetching help content related to commands from a provider.
 ///
@@ -43,9 +43,6 @@ trait HelpProvider {
     fn url(&self) -> &'static str;
 
     /// Builds an HTTP request using the given `cmd` and `url`.
-    ///
-    /// The default implementation formats a GET request for a Markdown (*.md*) file at the
-    /// specified `url` with a file name that matches the `cmd` name.
     ///
     /// # Parameters
     /// - `cmd`: The name of the command to be included in the request.
@@ -129,7 +126,7 @@ pub fn get_docs_help<Output: Write>(cmd: &str, config: &Config, output: &mut Out
         } else {
             let page = match selection {
                 Some(CHEAT_SHEET) => CheatDotSh.fetch(cmd, &config.cheat_sh_url)?,
-                Some(EG_PAGE) => show_eg_page(cmd)?,
+                Some(EG_PAGE) => Eg.fetch(cmd, &config.eg_url)?,
                 _ => return Ok(()),
             };
 
