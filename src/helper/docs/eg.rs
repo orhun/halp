@@ -16,3 +16,22 @@ impl HelpProvider for Eg {
         AgentBuilder::new().build().get(&format!("{}/{}.md", url, cmd))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::error::Result;
+
+    #[test]
+    fn test_eg_page_fetch() -> Result<()> {
+        let output = Eg.fetch("ls", &None)?;
+
+        assert!(output.contains("show contents of current directory"));
+        assert!(output.contains("ls -alh"));
+        assert!(output.contains(r##"`ls` is often aliased to make the defaults a bit more useful. Here are three
+basic aliases. The second two can be remembered by "list long" and "list all":
+"##));
+        Ok(())
+
+    }
+}
