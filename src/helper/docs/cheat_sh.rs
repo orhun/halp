@@ -1,7 +1,8 @@
 use crate::error::{Error, Result};
 use std::io::Write;
 use std::process::{Command, Stdio};
-use ureq::AgentBuilder;
+use ureq::{AgentBuilder, Request};
+use crate::helper::docs::HelpProvider;
 
 /// Default cheat sheet provider URL.
 pub const DEFAULT_CHEAT_SHEET_PROVIDER: &str = "https://cheat.sh";
@@ -10,6 +11,31 @@ pub const DEFAULT_CHEAT_SHEET_PROVIDER: &str = "https://cheat.sh";
 ///
 /// See <https://github.com/chubin/cheat.sh/blob/83bffa587b6c1048cbcc40ea8fa6af675203fd5f/bin/app.py#L76>
 const CHEAT_SHEET_USER_AGENT: &str = "fetch";
+
+struct CheatDotSh;
+
+impl HelpProvider for CheatDotSh {
+    fn url(&self) -> &'static str {
+        DEFAULT_CHEAT_SHEET_PROVIDER
+    }
+
+    fn build_req(&self, cmd: &str, url: &str) -> Request {
+        AgentBuilder::new()
+        .user_agent(CHEAT_SHEET_USER_AGENT)
+        .build()
+        .get(&format!("{}/{}", url, cmd))
+    }
+
+    fn fetch(&self, cmd: &str, custom_url: Option<&str>) -> Result<String> {
+        let response = HelpProvider::fetch(self, cmd, custom_url);
+        if let Ok(page) = &response {
+            if page.starts_with("Unknown topic.") {
+                return Err(Error::ProviderError(page.to_owned()))
+            }
+        }
+        response
+    }
+}
 
 /// Shows the cheat sheet for the given command.
 pub fn show_cheat_sheet(
@@ -24,29 +50,7 @@ pub fn show_cheat_sheet(
         .call()
         .map_err(|e| Error::from(Box::new(e)))?
         .into_string()?;
-    // Don't use a pager when the topic is not found.
-/*    if let Some(pager) = pager
-        .as_ref()
-        .filter(|_| !cheat_sheet.starts_with("Unknown topic."))
-    {
-        let mut process = if cfg!(target_os = "windows") {
-            Command::new("cmd")
-                .args(["/C", pager])
-                .stdin(Stdio::piped())
-                .spawn()
-        } else {
-            Command::new("sh")
-                .args(["-c", pager])
-                .stdin(Stdio::piped())
-                .spawn()
-        }?;
-        if let Some(stdin) = process.stdin.as_mut() {
-            writeln!(stdin, "{}", cheat_sheet)?;
-            process.wait()?;
-        }
-    } else {
-        writeln!(output, "{}", cheat_sheet)?;
-    }*/
+
     Ok(cheat_sheet)
 }
 
