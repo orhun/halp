@@ -67,11 +67,31 @@ trait HelpProvider {
         }
     }
 
-    /// Fetches the command page from the provider.
+    /// **The default** fetch implementation
     ///
     /// This method attempts to retrieve the specified command page from the given provider.
     /// If a `custom_url` is provided, this URL is used instead of the default URL.
     /// The method will return the content of the command page if the fetch operation is successful.
+    #[inline(always)]
+    fn _fetch(&self, cmd: &str, custom_url: &Option<String>) -> Result<String> {
+        let url = {
+            if let Some(u) = custom_url {
+                u.as_str()
+            } else {
+                self.url()
+            }
+        };
+        let response = self.build_req(cmd, url).call();
+
+        let response = response.map_err(|e| self.err_handle(e));
+
+        match response {
+            Ok(response) => Ok(response.into_string()?),
+            Err(e) => Err(e)
+        }
+    }
+
+    /// Fetches the command page from the provider.
     ///
     /// # Parameters
     /// - `cmd`: The name of the command for which the page should be fetched.
@@ -83,15 +103,8 @@ trait HelpProvider {
     ///
     /// # Errors
     /// This method will return an error if the fetch operation fails.
-    fn fetch(&self, cmd: &str, custom_url: Option<&str>) -> Result<String> {
-        let response = self.build_req(cmd, custom_url.unwrap_or(self.url())).call();
-
-        let response = response.map_err(|e| self.err_handle(e));
-
-        match response {
-            Ok(response) => Ok(response.into_string()?),
-            Err(e) => Err(e)
-        }
+    fn fetch(&self, cmd: &str, custom_url: &Option<String>) -> Result<String> {
+        self._fetch(cmd, custom_url)
     }
 }
 
