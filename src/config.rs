@@ -132,7 +132,7 @@ mod tests {
         let config = Config::parse(&path)?;
         assert!(config.check_help);
         assert!(config.check_version);
-        assert_eq!(config.cheat_sh_url, DEFAULT_CHEAT_SHEET_PROVIDER);
+        assert_eq!(config.cheat_sh_url, Some(DEFAULT_CHEAT_SHEET_PROVIDER.to_string()));
         Ok(())
     }
 }
