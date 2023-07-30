@@ -85,7 +85,7 @@ impl CliArgs {
                 config.man_command = man_cmd.clone();
             }
             if let Some(cheat_sh_url) = cheat_sh_url {
-                config.cheat_sh_url = cheat_sh_url.clone();
+                config.cheat_sh_url = Some(cheat_sh_url.clone());
             }
             if no_pager {
                 config.pager_command = None;

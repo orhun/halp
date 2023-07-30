@@ -24,7 +24,7 @@ pub struct Config {
     /// Pager to use for command outputs, None to disable.
     pub pager_command: Option<String>,
     /// Use a custom URL for cheat.sh.
-    pub cheat_sh_url: String,
+    pub cheat_sh_url: Option<String>,
 }
 
 impl Default for Config {
@@ -44,7 +44,7 @@ impl Default for Config {
             ]),
             man_command: "man".to_string(),
             pager_command: Some("less -R".to_string()),
-            cheat_sh_url: DEFAULT_CHEAT_SHEET_PROVIDER.to_string(),
+            cheat_sh_url: Some(DEFAULT_CHEAT_SHEET_PROVIDER.to_string()),
         }
     }
 }
