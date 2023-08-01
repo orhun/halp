@@ -1,6 +1,7 @@
 use ureq::{AgentBuilder, Request};
 use crate::helper::docs::HelpProvider;
 
+/// The default cheatsheets provider URL.
 pub const DEFAULT_CHEATSHEETS_PROVIDER: &str =
     "https://raw.githubusercontent.com/cheat/cheatsheets/master";
 
