@@ -9,6 +9,7 @@ use std::env;
 use std::fs;
 use std::io::Write;
 use std::path::{Path, PathBuf};
+use crate::helper::docs::cheatsheets::DEFAULT_CHEATSHEETS_PROVIDER;
 
 /// Configuration.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -28,6 +29,8 @@ pub struct Config {
     pub cheat_sh_url: Option<String>,
     /// Use a custom URL for `eg` pages provider.
     pub eg_url: Option<String>,
+    /// Use a custom URL for cheatsheets provider.
+    pub cheatsheets_url: Option<String>,
 }
 
 impl Default for Config {
@@ -49,6 +52,7 @@ impl Default for Config {
             pager_command: Some("less -R".to_string()),
             cheat_sh_url: Some(DEFAULT_CHEAT_SHEET_PROVIDER.to_string()),
             eg_url: Some(DEFAULT_EG_PAGES_PROVIDER.to_string()),
+            cheatsheets_url: Some(DEFAULT_CHEATSHEETS_PROVIDER.to_string()),
         }
     }
 }
