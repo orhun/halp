@@ -3,14 +3,15 @@ pub mod man;
 
 /// Cheat sheet helper.
 pub mod cheat_sh;
-/// eg page helper.
-pub mod eg;
 /// cheat helper.
 pub mod cheatsheets;
+/// eg page helper.
+pub mod eg;
 
 use crate::config::Config;
 use crate::error::{Error, Result};
 use crate::helper::docs::cheat_sh::CheatDotSh;
+use crate::helper::docs::cheatsheets::Cheatsheets;
 use crate::helper::docs::eg::Eg;
 use crate::helper::docs::man::show_man_page;
 use console::{style, Style, Term};
@@ -19,7 +20,6 @@ use dialoguer::Select;
 use std::io::Write;
 use std::process::{Command, Stdio};
 use ureq::Request;
-use crate::helper::docs::cheatsheets::Cheatsheets;
 
 /// The `HelpProvider` trait defines essential methods for fetching help content related to commands from a provider.
 ///
