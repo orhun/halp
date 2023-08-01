@@ -54,6 +54,9 @@ pub enum CliCommands {
         /// Use a custom provider URL for `eg` pages.
         #[arg(long, env = "EG_PAGES_URL", value_name = "URL")]
         eg_url: Option<String>,
+        /// Use a custom URL for cheat sheets.
+        #[arg(long, env = "CHEATSHEETS_URL", value_name = "URL")]
+        cheat_url: Option<String>,
         /// Sets the pager to use.
         #[arg(short, long)]
         pager: Option<String>,
@@ -123,6 +126,7 @@ mod tests {
                 cmd: "ps".to_string(),
                 pager: Some("bat".to_string()),
                 cheat_sh_url: None,
+                cheat_url: None,
                 eg_url: None,
                 man_cmd: None,
                 no_pager: false,

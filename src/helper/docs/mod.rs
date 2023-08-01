@@ -3,12 +3,15 @@ pub mod man;
 
 /// Cheat sheet helper.
 pub mod cheat_sh;
+/// cheat helper.
+pub mod cheatsheets;
 /// eg page helper.
 pub mod eg;
 
 use crate::config::Config;
 use crate::error::{Error, Result};
 use crate::helper::docs::cheat_sh::CheatDotSh;
+use crate::helper::docs::cheatsheets::Cheatsheets;
 use crate::helper::docs::eg::Eg;
 use crate::helper::docs::man::show_man_page;
 use console::{style, Style, Term};
@@ -111,11 +114,13 @@ pub fn get_docs_help<Output: Write>(cmd: &str, config: &Config, output: &mut Out
     const MAN_PAGE: usize = 0;
     const CHEAT_SHEET: usize = 1;
     const EG_PAGE: usize = 2;
+    const CHEATSHEETS: usize = 3;
 
     let menu_options = [
         "Show man page",
-        "Show cheat sheet",
+        "Show cheat.sh page",
         "Show the eg page",
+        "Show the cheatsheet page",
         "Exit",
     ];
     let mut selection = Some(MAN_PAGE);
@@ -133,6 +138,7 @@ pub fn get_docs_help<Output: Write>(cmd: &str, config: &Config, output: &mut Out
             let page = match selection {
                 Some(CHEAT_SHEET) => CheatDotSh.fetch(cmd, &config.cheat_sh_url)?,
                 Some(EG_PAGE) => Eg.fetch(cmd, &config.eg_url)?,
+                Some(CHEATSHEETS) => Cheatsheets.fetch(cmd, &config.cheatsheets_url)?,
                 _ => return Ok(()),
             };
 
