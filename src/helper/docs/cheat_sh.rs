@@ -18,7 +18,7 @@ impl HelpProvider for CheatDotSh {
         DEFAULT_CHEAT_SHEET_PROVIDER
     }
 
-    fn build_req(&self, cmd: &str, url: &str) -> Request {
+    fn build_request(&self, cmd: &str, url: &str) -> Request {
         AgentBuilder::new()
             .user_agent(CHEAT_SHEET_USER_AGENT)
             .build()

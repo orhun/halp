@@ -35,8 +35,8 @@ use ureq::Request;
 /// # Example
 /// An implementation could be created for a provider that supplies help pages in Markdown format.
 /// The `url` method would return the base URL of this provider.
-/// The `build_req` method could construct a GET request for `{base_url}/{command}.md`.
-/// The `err_handle` could interpret a 404 status code as 'Command page not found'.
+/// The `build_request` method could construct a GET request for `{base_url}/{command}.md`.
+/// The `handle_error` could interpret a 404 status code as 'Command page not found'.
 /// The `fetch` would handle fetching the specified command page using the constructed request.
 trait HelpProvider {
     /// Return the default provider URL
@@ -50,11 +50,11 @@ trait HelpProvider {
     ///
     /// # Returns
     /// This method returns a new `Request` instance configured with the `GET` method and the formatted URL.
-    fn build_req(&self, cmd: &str, url: &str) -> Request;
+    fn build_request(&self, cmd: &str, url: &str) -> Request;
 
     /// Handle the request error.
     /// aka return a custom message if the error means that **provider** doesn't have a page for the command
-    fn err_handle(&self, e: ureq::Error) -> Error {
+    fn handle_error(&self, e: ureq::Error) -> Error {
         if e.kind() == ureq::ErrorKind::HTTP {
             Error::ProviderError(
                 "Unknown topic, This topic/command might has no page in this provider yet."
@@ -79,9 +79,9 @@ trait HelpProvider {
                 self.url()
             }
         };
-        let response = self.build_req(cmd, url).call();
+        let response = self.build_request(cmd, url).call();
 
-        let response = response.map_err(|e| self.err_handle(e));
+        let response = response.map_err(|e| self.handle_error(e));
 
         match response {
             Ok(response) => Ok(response.into_string()?),

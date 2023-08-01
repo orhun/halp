@@ -13,7 +13,7 @@ impl HelpProvider for Eg {
         DEFAULT_EG_PAGES_PROVIDER
     }
 
-    fn build_req(&self, cmd: &str, url: &str) -> Request {
+    fn build_request(&self, cmd: &str, url: &str) -> Request {
         AgentBuilder::new()
             .build()
             .get(&format!("{}/{}.md", url, cmd))
