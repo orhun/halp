@@ -19,3 +19,23 @@ impl HelpProvider for Cheatsheets {
             .get(&format!("{}/{}", url, cmd))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::error::Result;
+
+    #[test]
+    fn test_fetch_cheatsheets() -> Result<()> {
+        let output = Cheatsheets.fetch("ls", &None)?;
+
+        assert!(output.contains(r##"# To display everything in <dir>, including hidden files:
+ls -a <dir>
+"##));
+assert!(output.contains(r##"# To display directories only, include hidden:
+ls -d .*/ */ <dir>
+"##));
+
+        Ok(())
+    }
+}
