@@ -1,7 +1,9 @@
 use crate::error::Result;
 use crate::helper::args::common::{HelpArg, VersionArg};
 use crate::helper::args::FOUND_EMOTICON;
-use crate::helper::docs::cheat::DEFAULT_CHEAT_SHEET_PROVIDER;
+use crate::helper::docs::cheat_sh::DEFAULT_CHEAT_SHEET_PROVIDER;
+use crate::helper::docs::cheatsheets::DEFAULT_CHEATSHEETS_PROVIDER;
+use crate::helper::docs::eg::DEFAULT_EG_PAGES_PROVIDER;
 use colored::*;
 use serde::{Deserialize, Serialize};
 use std::env;
@@ -24,7 +26,11 @@ pub struct Config {
     /// Pager to use for command outputs, None to disable.
     pub pager_command: Option<String>,
     /// Use a custom URL for cheat.sh.
-    pub cheat_sh_url: String,
+    pub cheat_sh_url: Option<String>,
+    /// Use a custom URL for `eg` pages provider.
+    pub eg_url: Option<String>,
+    /// Use a custom URL for cheatsheets provider.
+    pub cheatsheets_url: Option<String>,
 }
 
 impl Default for Config {
@@ -44,7 +50,9 @@ impl Default for Config {
             ]),
             man_command: "man".to_string(),
             pager_command: Some("less -R".to_string()),
-            cheat_sh_url: DEFAULT_CHEAT_SHEET_PROVIDER.to_string(),
+            cheat_sh_url: Some(DEFAULT_CHEAT_SHEET_PROVIDER.to_string()),
+            eg_url: Some(DEFAULT_EG_PAGES_PROVIDER.to_string()),
+            cheatsheets_url: Some(DEFAULT_CHEATSHEETS_PROVIDER.to_string()),
         }
     }
 }
@@ -128,7 +136,10 @@ mod tests {
         let config = Config::parse(&path)?;
         assert!(config.check_help);
         assert!(config.check_version);
-        assert_eq!(config.cheat_sh_url, DEFAULT_CHEAT_SHEET_PROVIDER);
+        assert_eq!(
+            config.cheat_sh_url,
+            Some(DEFAULT_CHEAT_SHEET_PROVIDER.to_string())
+        );
         Ok(())
     }
 }
