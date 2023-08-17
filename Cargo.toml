@@ -33,7 +33,7 @@ console = "0.15.7"
 dialoguer = { version = "0.10.4", default-features = false }
 dirs = "5.0.1"
 serde = { version = "1.0.183", features = ["derive"] }
-thiserror = "1.0.46"
+thiserror = "1.0.47"
 toml = "0.7.6"
 ureq = "2.7.1"
 
