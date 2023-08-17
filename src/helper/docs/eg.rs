@@ -28,7 +28,6 @@ mod tests {
     #[test]
     fn test_eg_page_fetch() -> Result<()> {
         let output = Eg.fetch("ls", &None)?;
-
         assert!(output.contains("show contents of current directory"));
         assert!(output.contains("ls -alh"));
         assert!(output.contains(

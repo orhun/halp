@@ -26,7 +26,6 @@ mod tests {
     #[test]
     fn test_fetch_cheatsheets() -> Result<()> {
         let output = Cheatsheets.fetch("ls", &None)?;
-
         assert!(output.contains(
             r##"# To display everything in <dir>, including hidden files:
 ls -a <dir>
@@ -37,7 +36,6 @@ ls -a <dir>
 ls -d .*/ */ <dir>
 "##
         ));
-
         Ok(())
     }
 }
