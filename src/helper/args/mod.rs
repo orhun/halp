@@ -144,13 +144,13 @@ mod tests {
         )?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
-            r#"(°ロ°)  checking 'test -v'
+            r"(°ロ°)  checking 'test -v'
 (×﹏×)      fail '-v' argument not found.
 (°ロ°)  checking 'test -V'
 \(^ヮ^)/ success '-V' argument found!
 ---
 halp 0.1.0
----"#,
+---",
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
@@ -171,7 +171,7 @@ halp 0.1.0
             &mut output,
         )?;
         assert_eq!(
-            r#"(°ロ°)  checking 'test -H'
+            r"(°ロ°)  checking 'test -H'
 (×﹏×)      fail '-H' argument not found.
 (o_O)      debug
 stdout:
@@ -201,7 +201,7 @@ Usage: test
 Options:
   -h, --help     Print help
   -V, --version  Print version
----"#,
+---",
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
@@ -218,7 +218,7 @@ Options:
         get_args_help(&get_test_bin(), &config, false, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
-            r#"(°ロ°)  checking 'test -v'
+            r"(°ロ°)  checking 'test -v'
 (×﹏×)      fail '-v' argument not found.
 (°ロ°)  checking 'test -V'
 \(^ヮ^)/ success '-V' argument found!
@@ -233,7 +233,7 @@ Usage: test
 Options:
   -h, --help     Print help
   -V, --version  Print version
----"#,
+---",
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")
@@ -253,13 +253,13 @@ Options:
         get_args_help(&get_test_bin(), &config, false, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
-            r#"(°ロ°)  checking 'test -x'
+            r"(°ロ°)  checking 'test -x'
 (×﹏×)      fail '-x' argument not found.
 (°ロ°)  checking 'test -V'
 \(^ヮ^)/ success '-V' argument found!
 ---
 halp 0.1.0
----"#,
+---",
             String::from_utf8_lossy(&output)
                 .replace('\r', "")
                 .replace(&get_test_bin(), "test")

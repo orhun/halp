@@ -21,7 +21,7 @@ fn get_argument_help() -> Result<()> {
     halp::run(args, &mut output)?;
     println!("{}", String::from_utf8_lossy(&output));
     assert_eq!(
-        r#"(°ロ°)  checking 'test -v'
+        r"(°ロ°)  checking 'test -v'
 (×﹏×)      fail '-v' argument not found.
 (°ロ°)  checking 'test -V'
 \(^ヮ^)/ success '-V' argument found!
@@ -36,7 +36,7 @@ Usage: test
 Options:
   -h, --help     Print help
   -V, --version  Print version
----"#,
+---",
         String::from_utf8_lossy(&output)
             .replace('\r', "")
             .replace(BIN, "test")
