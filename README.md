@@ -134,7 +134,7 @@ Usage:
 cargo install halp
 ```
 
-The minimum supported Rust version is `1.64.0`.
+The minimum supported Rust version is `1.70.0`.
 
 ### Arch Linux
 

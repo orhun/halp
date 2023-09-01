@@ -10,7 +10,7 @@ repository = "https://github.com/orhun/halp"
 categories = ["command-line-utilities"]
 default-run = "halp"
 edition = "2021"
-rust-version = "1.64.0"
+rust-version = "1.70.0"
 
 [[bin]]
 name = "halp-completions"
