@@ -1,14 +1,33 @@
-# configuration for https://github.com/orhun/halp
-
-# check the version flag
 check_version = true
-# check the help flag
 check_help = true
-# arguments to check
-check = [ [ "-v", "-V", "--version" ], [ "-h", "--help", "help", "-H" ] ]
-# command to run for manual pages
+check = [["-v", "-V", "--version", "version"], ["-h", "--help", "help", "-H"]]
 man_command = "man"
-# pager to use for command outputs
 pager_command = "less -R"
-# Cheat.sh URL
-cheat_sh_url = "https://cheat.sh"
+
+[plz_menu]
+selected_pos = "Center"
+
+[[plz_menu.entries]]
+display_msg = "Show man page"
+
+[plz_menu.entries.operation]
+run = "man {cmd}"
+
+[[plz_menu.entries]]
+display_msg = "Show cheat.sh page"
+
+[plz_menu.entries.operation]
+user-agent = "fetch"
+fetch = "https://cheat.sh/{cmd}{?/{subcommand}}{? {args}}"
+
+[[plz_menu.entries]]
+display_msg = "Show eg page"
+
+[plz_menu.entries.operation]
+fetch = "https://raw.githubusercontent.com/srsudar/eg/master/eg/examples/{cmd}.md"
+
+[[plz_menu.entries]]
+display_msg = "Show cheatsheets page"
+
+[plz_menu.entries.operation]
+fetch = "https://raw.githubusercontent.com/cheat/cheatsheets/master/{cmd}"
