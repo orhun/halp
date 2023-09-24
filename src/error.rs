@@ -21,6 +21,9 @@ pub enum Error {
     /// Error that might occur when tray to get help from an external provider.
     #[error("External help provider error: `{0}`")]
     ProviderError(String),
+    /// Error that might occur during showing dialogues.
+    #[error("Dialogue error: `{0}`")]
+    DialogueError(#[from] dialoguer::Error),
 }
 
 /// Type alias for the standard [`Result`] type.

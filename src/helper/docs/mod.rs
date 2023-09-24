@@ -189,6 +189,5 @@ fn get_selection_theme() -> ColorfulTheme {
         unchecked_item_prefix: style("❤".to_string()).for_stderr().black(),
         picked_item_prefix: style("❯".to_string()).for_stderr().green(),
         unpicked_item_prefix: style(" ".to_string()).for_stderr(),
-        inline_selections: true,
     }
 }
