@@ -235,11 +235,22 @@ halp [OPTIONS] plz <CMD>
 
 ```
 Options:
-  -m, --man-cmd <MAN_CMD>   Sets the manual page command to run
-      --cheat-sh-url <URL>  Use a custom URL for cheat.sh [env: CHEAT_SH_URL=]
-  -p, --pager <PAGER>       Sets the pager to use
-      --no-pager            Disables the pager
-  -h, --help                Print help
+  -p, --pager <PAGER>
+          Sets the pager to use
+
+      --no-pager
+          Disables the pager
+
+  -s, --selected-position <SELECTED_POSITION>
+          Sets the default selected position
+
+          Possible values:
+          - start:  The first item in the menu
+          - center: The middle item in the menu (in case of even number of items, the first item in the second half)
+          - end:    The last item in the menu
+
+  -h, --help
+          Print help (see a summary with '-h')
 ```
 
 ## Examples
@@ -313,12 +324,6 @@ To disable the pager:
 halp plz --no-pager bat vim
 ```
 
-##### Custom cheat.sh host URL
-
-```sh
-halp plz --cheat-sh-url https://cht.sh vim
-```
-
 ## Configuration
 
 `halp` can be configured with a configuration file that uses the [TOML](https://en.wikipedia.org/wiki/INI_file) format. It can be specified via `--config` or `HALP_CONFIG` environment variable. It can also be placed in one of the following global locations:
@@ -330,7 +335,7 @@ halp plz --cheat-sh-url https://cht.sh vim
 `<config_dir>` depends on the platform as shown in the following table:
 
 | Platform | Value                                 | Example                                  |
-| -------- | ------------------------------------- | ---------------------------------------- |
+|----------|---------------------------------------|------------------------------------------|
 | Linux    | `$XDG_CONFIG_HOME` or `$HOME`/.config | /home/orhun/.config                      |
 | macOS    | `$HOME`/Library/Application Support   | /Users/Orhun/Library/Application Support |
 | Windows  | `{FOLDERID_RoamingAppData}`           | C:\Users\Orhun\AppData\Roaming           |

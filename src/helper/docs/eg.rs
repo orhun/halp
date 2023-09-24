@@ -31,9 +31,9 @@ mod tests {
         assert!(output.contains("show contents of current directory"));
         assert!(output.contains("ls -alh"));
         assert!(output.contains(
-            r#"`ls` is often aliased to make the defaults a bit more useful. Here are three
+            r##"`ls` is often aliased to make the defaults a bit more useful. Here are three
 basic aliases. The second two can be remembered by "list long" and "list all":
-"#
+"##
         ));
         Ok(())
     }

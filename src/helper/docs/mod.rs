@@ -1,171 +1,123 @@
-/// Man page helper.
-pub mod man;
+use std::collections::HashMap;
+use std::io::Write;
+use std::process::{Command, Stdio};
 
-/// Cheat sheet helper.
-pub mod cheat_sh;
-/// cheat helper.
-pub mod cheatsheets;
-/// eg page helper.
-pub mod eg;
-
-use crate::config::Config;
-use crate::error::{Error, Result};
-use crate::helper::docs::cheat_sh::CheatDotSh;
-use crate::helper::docs::cheatsheets::Cheatsheets;
-use crate::helper::docs::eg::Eg;
-use crate::helper::docs::man::show_man_page;
+use colored::Colorize;
 use console::{style, Style, Term};
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
-use std::io::Write;
-use std::process::{Command, Stdio};
-use ureq::Request;
 
-/// The `HelpProvider` trait defines essential methods for fetching help content related to commands from a provider.
-///
-/// Each provider that implements this trait should provide a default URL used to retrieve the command help content.
-/// However, it also allows specifying a custom URL to override the default one.
-///
-/// This trait is generic and not tied to any specific command help system such as man pages or POSIX documentation,
-/// instead it relies on the implementation to define how to fetch and mark up the content.
-///
-/// # Methods
-///
-/// - `url`: Returns the default URL of the provider.
-/// - `build_req`: Uses the given command and URL to create an HTTP GET request.
-/// - `err_handle`: Handles possible request errors, such as a non-existent command page on the provider.
-/// - `fetch`: Attempts to retrieve the command page from the provider, optionally from a custom URL.
-///
-/// # Example
-///
-/// An implementation could be created for a provider that supplies help pages in Markdown format.
-/// The `url` method would return the base URL of this provider.
-/// The `build_request` method could construct a GET request for `{base_url}/{command}.md`.
-/// The `handle_error` could interpret a 404 status code as 'Command page not found'.
-/// The `fetch` would handle fetching the specified command page using the constructed request.
-pub trait HelpProvider {
-    /// Return the default provider URL.
-    fn url(&self) -> &'static str;
+use crate::config::{plz_menu::PlzMenuSelection, Config};
+use crate::error::{Error, Result};
+use crate::helper::args::FAIL_EMOTICON;
+use crate::helper::docs::cmd_parse::parse_cmd;
+use crate::helper::docs::handlers::{command::CommandHandler, fetch::FetchHandler, Handler};
+use crate::helper::docs::template::parse_template;
 
-    /// Builds an HTTP request using the given `cmd` and `url`.
-    ///
-    /// # Parameters
-    ///
-    /// - `cmd`: The name of the command to be included in the request.
-    /// - `url`: The root URL.
-    ///
-    /// # Returns
-    /// This method returns a new `Request` instance configured with the `GET` method and the formatted URL.
-    fn build_request(&self, cmd: &str, url: &str) -> Request;
-
-    /// Handle the request error.
-    /// aka return a custom message if the error means that **provider** doesn't have a page for the command.
-    fn handle_error(&self, e: ureq::Error) -> Error {
-        if e.kind() == ureq::ErrorKind::HTTP {
-            Error::ProviderError(
-                "Unknown topic, This topic/command might has no page in this provider yet."
-                    .to_string(),
-            )
-        } else {
-            Error::from(Box::new(e))
-        }
-    }
-
-    /// **The default** fetch implementation.
-    ///
-    /// This method attempts to retrieve the specified command page from the given provider.
-    /// If a `custom_url` is provided, this URL is used instead of the default URL.
-    /// The method will return the content of the command page if the fetch operation is successful.
-    #[inline(always)]
-    fn _fetch(&self, cmd: &str, custom_url: &Option<String>) -> Result<String> {
-        let url = {
-            if let Some(u) = custom_url {
-                u.as_str()
-            } else {
-                self.url()
-            }
-        };
-        let response = self.build_request(cmd, url).call();
-
-        let response = response.map_err(|e| self.handle_error(e));
-
-        match response {
-            Ok(response) => Ok(response.into_string()?),
-            Err(e) => Err(e),
-        }
-    }
-
-    /// Fetches the command page from the provider.
-    ///
-    /// # Parameters
-    ///
-    /// - `cmd`: The name of the command for which the page should be fetched.
-    /// - `custom_url`: Optional parameter that, if supplied, specifies a custom URL from which to fetch the command page.
-    ///
-    /// # Returns
-    ///
-    /// This method returns a Result type. On successful fetch, it contains a `String` with the content of the fetched page.
-    /// In case of failure, it contains an error that provides further details about the issue encountered during the fetch operation.
-    ///
-    /// # Errors
-    ///
-    /// This method will return an error if the fetch operation fails.
-    fn fetch(&self, cmd: &str, custom_url: &Option<String>) -> Result<String> {
-        self._fetch(cmd, custom_url)
-    }
-}
+/// Command parser.
+pub mod cmd_parse;
+/// Plz menu operation handlers.
+pub mod handlers;
+/// Plz menu template parser.
+pub mod template;
 
 /// Shows documentation/usage help about the given command.
-pub fn get_docs_help<Output: Write>(cmd: &str, config: &Config, output: &mut Output) -> Result<()> {
-    const MAN_PAGE: usize = 0;
-    const CHEAT_SHEET: usize = 1;
-    const EG_PAGE: usize = 2;
-    const CHEATSHEETS: usize = 3;
-    let menu_options = [
-        "Show man page",
-        "Show cheat.sh page",
-        "Show the eg page",
-        "Show the cheatsheet page",
-        "Exit",
-    ];
-    let mut selection = Some(MAN_PAGE);
+pub fn get_docs_help<Output: Write>(cmd: &str, config: Config, output: &mut Output) -> Result<()> {
+    let mut menu_options = config
+        .plz_menu
+        .entries
+        .iter()
+        .map(|e| e.display_msg.as_str())
+        .collect::<Vec<&str>>();
+    use PlzMenuSelection as Selection;
+    let mut selection = match config.plz_menu.selected_pos {
+        Selection::Start => Some(0),
+        Selection::Center => Some(menu_options.len() / 2),
+        Selection::End => Some(menu_options.len() - 1),
+    };
+    menu_options.push("Exit");
+    let values_map = build_the_values_map(cmd);
     loop {
         selection = Select::with_theme(&get_selection_theme())
             .with_prompt("Select operation")
             .default(selection.unwrap_or_default())
             .items(&menu_options)
             .interact_on_opt(&Term::stderr())?;
-        if let Some(MAN_PAGE) = selection {
-            show_man_page(&config.man_command, cmd)?
-        } else {
-            let page = match selection {
-                Some(CHEAT_SHEET) => CheatDotSh.fetch(cmd, &config.cheat_sh_url)?,
-                Some(EG_PAGE) => Eg.fetch(cmd, &config.eg_url)?,
-                Some(CHEATSHEETS) => Cheatsheets.fetch(cmd, &config.cheatsheets_url)?,
-                _ => return Ok(()),
-            };
-            // Show the page using the user selected pager or write it directly into the output
-            if let Some(pager) = config.pager_command.as_ref() {
-                let mut process = if cfg!(target_os = "windows") {
-                    Command::new("cmd")
-                        .args(["/C", pager])
-                        .stdin(Stdio::piped())
-                        .spawn()
-                } else {
-                    Command::new("sh")
-                        .args(["-c", pager])
-                        .stdin(Stdio::piped())
-                        .spawn()
-                }?;
-                if let Some(stdin) = process.stdin.as_mut() {
-                    writeln!(stdin, "{}", page)?;
-                    process.wait()?;
-                }
-            } else {
-                writeln!(output, "{}", page)?;
+        // Exit conditions
+        let Some(selection) = selection else { break Ok(()); };
+        let Some(entry) = config.plz_menu.entries.get(selection) else { break Ok(()); };
+        let operation_iter = entry.operation.iter();
+        // if there is no key, then return an error, the operation key is required.
+        let (mut op_key, mut op_value) = (None, None);
+        // Create a new map with the capacity of the values map minus the first entry, to contain the parsed values.
+        let mut parsed_map = HashMap::with_capacity(values_map.len() - 1);
+        for (key, value) in operation_iter {
+            // If the operation key is not set, then check if the key is a valid operation key.
+            if op_key.is_none()
+                && (key == "fetch"
+                    || key == "url"
+                    || key == "command"
+                    || key == "run"
+                    || key == "file")
+            {
+                op_key = Some(key.clone());
+                op_value = Some(value.clone());
+                continue;
             }
+            parsed_map.insert(key.as_str(), parse_template(value, &values_map)?);
+        }
+        // If the operation key is not set, then return an error, the operation key is required.
+        let (Some(op_key), Some(op_value)) = (op_key, op_value) else {return Err(Error::PlzMenuNoOperation)};
+        let op_value = parse_template(&op_value, &values_map)?;
+        let result = match op_key.as_str() {
+            "fetch" | "url" => FetchHandler.handle(op_value, &entry.operation),
+            "command" | "run" => CommandHandler.handle(op_value, &entry.operation),
+            "file" => FetchHandler.handle(op_value, &entry.operation),
+            _ => break Err(Error::PlzMenuInvalidOperation(op_key.to_string())),
+        };
+        let Ok(result) = result else {
+            writeln!(output, "{} {}", FAIL_EMOTICON.magenta(),
+                     result.expect_err("error").to_string().red().bold())?;
+            continue;
+        };
+        let Some(page) = result else { continue; };
+        // Show the page using the user selected pager or write it directly into the output
+        if let Some(pager) = config.pager_command.as_ref() {
+            let mut process = if cfg!(target_os = "windows") {
+                Command::new("cmd")
+                    .args(["/C", pager])
+                    .stdin(Stdio::piped())
+                    .spawn()
+            } else {
+                Command::new("sh")
+                    .args(["-c", pager])
+                    .stdin(Stdio::piped())
+                    .spawn()
+            }?;
+            if let Some(stdin) = process.stdin.as_mut() {
+                writeln!(stdin, "{}", page)?;
+                process.wait()?;
+            }
+        } else {
+            writeln!(output, "{}", page)?;
         }
     }
+}
+
+/// Builds the values map for the template engine.
+#[inline(always)]
+fn build_the_values_map(cmd: &str) -> HashMap<String, String> {
+    let mut map = HashMap::with_capacity(5);
+    parse_cmd(cmd, &mut map); // This will add at least one entry and at most 3 entries
+    if map.capacity() < 3 {
+        map.shrink_to(map.capacity() + 2);
+    }
+    map.insert(
+        "halp-version".to_string(),
+        env!("CARGO_PKG_VERSION").to_string(),
+    );
+    map.insert("os".to_string(), std::env::consts::OS.to_string());
+    map
 }
 
 /// Returns the theme for selection prompt.

@@ -15,11 +15,11 @@ pub mod error;
 pub mod config;
 
 use crate::cli::CliArgs;
+use crate::config::Config;
 use crate::error::Result;
 use crate::helper::args::FAIL_EMOTICON;
 use cli::CliCommands;
 use colored::*;
-use config::Config;
 use helper::args::get_args_help;
 use helper::docs::get_docs_help;
 use std::io::Write;
@@ -46,9 +46,9 @@ pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> 
     };
     cli_args.update_config(&mut config);
     if let Some(ref cmd) = cli_args.cmd {
-        get_args_help(cmd, &config, cli_args.verbose, output)?;
+        get_args_help(cmd, config, cli_args.verbose, output)?;
     } else if let Some(CliCommands::Plz { ref cmd, .. }) = cli_args.subcommand {
-        get_docs_help(cmd, &config, output)?;
+        get_docs_help(cmd, config, output)?;
     }
     Ok(())
 }
