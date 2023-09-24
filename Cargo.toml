@@ -8,6 +8,7 @@ readme = "README.md"
 homepage = "https://github.com/orhun/halp"
 repository = "https://github.com/orhun/halp"
 categories = ["command-line-utilities"]
+keywords = ["cli", "help"]
 default-run = "halp"
 edition = "2021"
 rust-version = "1.70.0"
