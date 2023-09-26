@@ -26,7 +26,7 @@ name = "halp-test"
 path = "src/bin/test.rs"
 
 [dependencies]
-clap = { version = "4.4.4", features =["derive", "env", "wrap_help"] }
+clap = { version = "4.4.5", features =["derive", "env", "wrap_help"] }
 clap_complete = "4.4.2"
 clap_mangen = "0.2.14"
 colored = "2.0.4"
