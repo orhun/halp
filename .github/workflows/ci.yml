@@ -207,5 +207,5 @@ jobs:
             select(.name | ascii_downcase | test(\"linux.*x86_64|x86_64.*linux\")).browser_download_url" | \
             wget -qi -
           tar -xvf cargo-msrv*.tar* -C  ~/.cargo/bin/ cargo-msrv
-          printf "%s" "Checking MSRV for $package..."
+          printf "%s" "Checking MSRV..."
           cargo msrv --output-format json verify | tail -n 1 | jq --exit-status '.success'
