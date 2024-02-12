@@ -36,7 +36,7 @@ dirs = "5.0.1"
 serde = { version = "1.0.196", features = ["derive"] }
 thiserror = "1.0.57"
 toml = "0.8.10"
-ureq = "2.9.4"
+ureq = "2.9.5"
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"
