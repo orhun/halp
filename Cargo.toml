@@ -35,7 +35,7 @@ dialoguer = { version = "0.11.0", default-features = false }
 dirs = "5.0.1"
 serde = { version = "1.0.197", features = ["derive"] }
 thiserror = "1.0.58"
-toml = "0.8.11"
+toml = "0.8.12"
 ureq = "2.9.6"
 
 [dev-dependencies]
