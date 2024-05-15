@@ -321,7 +321,7 @@ halp plz --cheat-sh-url https://cht.sh vim
 
 ## Configuration
 
-`halp` can be configured with a configuration file that uses the [TOML](https://en.wikipedia.org/wiki/INI_file) format. It can be specified via `--config` or `HALP_CONFIG` environment variable. It can also be placed in one of the following global locations:
+`halp` can be configured with a configuration file that uses the [TOML](https://en.wikipedia.org/wiki/TOML) format. It can be specified via `--config` or `HALP_CONFIG` environment variable. It can also be placed in one of the following global locations:
 
 - `<config_dir>` `/` `halp.toml`
 - `<config_dir>` `/` `halp/halp.toml`
