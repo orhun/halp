@@ -57,6 +57,7 @@ On the other hand, if you _really_ need help, you can use the `plz` subcommand w
   - [Verbose logging](#verbose-logging)
   - [Get additional help (via `plz`)](#get-additional-help-via-plz)
     - [Custom pager](#custom-pager)
+    - [Custom cheat.sh host URL](#custom-cheatsh-host-url)
 - [Configuration](#configuration)
 - [Funding](#funding)
 - [Contributing](#contributing)
@@ -134,7 +135,7 @@ Usage:
 cargo install halp
 ```
 
-The minimum supported Rust version is `1.70.0`.
+The minimum supported Rust version is `1.74.1`.
 
 ### Arch Linux
 

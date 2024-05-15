@@ -11,7 +11,7 @@ categories = ["command-line-utilities"]
 keywords = ["cli", "help"]
 default-run = "halp"
 edition = "2021"
-rust-version = "1.70.0"
+rust-version = "1.74.1"
 
 [[bin]]
 name = "halp-completions"
@@ -26,7 +26,7 @@ name = "halp-test"
 path = "src/bin/test.rs"
 
 [dependencies]
-clap = { version = "4.5.4", features =["derive", "env", "wrap_help"] }
+clap = { version = "4.5.4", features = ["derive", "env", "wrap_help"] }
 clap_complete = "4.5.2"
 clap_mangen = "0.2.20"
 colored = "2.1.0"
