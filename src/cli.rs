@@ -89,7 +89,7 @@ impl CliArgs {
         }) = self.subcommand
         {
             if let Some(man_cmd) = man_cmd {
-                config.man_command = man_cmd.clone();
+                config.man_command.clone_from(man_cmd);
             }
             if let Some(cheat_sh_url) = cheat_sh_url {
                 config.cheat_sh_url = Some(cheat_sh_url.clone());
