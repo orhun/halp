@@ -30,6 +30,9 @@ pub struct CliArgs {
     /// Sets the configuration file.
     #[arg(short, long, env = "HALP_CONFIG", value_name = "PATH")]
     pub config: Option<PathBuf>,
+    /// Sets the timeout for the command.
+    #[arg(short, long, value_name = "S", default_value_t = 5)]
+    pub timeout: u64,
     /// Enables verbose logging.
     #[arg(short, long)]
     pub verbose: bool,

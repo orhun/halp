@@ -223,6 +223,7 @@ Options:
       --no-version     Disable checking the version information
       --no-help        Disable checking the help information
   -c, --config <PATH>  Sets the configuration file [env: HALP_CONFIG=]
+  -t, --timeout <S>    Sets the timeout for the command [default: 5]
   -v, --verbose        Enables verbose logging
   -h, --help           Print help
   -V, --version        Print version

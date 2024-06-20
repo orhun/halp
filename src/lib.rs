@@ -46,7 +46,7 @@ pub fn run<Output: Write>(cli_args: CliArgs, output: &mut Output) -> Result<()> 
     };
     cli_args.update_config(&mut config);
     if let Some(ref cmd) = cli_args.cmd {
-        get_args_help(cmd, &config, cli_args.verbose, output)?;
+        get_args_help(cmd, &config, cli_args.verbose, cli_args.timeout, output)?;
     } else if let Some(CliCommands::Plz { ref cmd, .. }) = cli_args.subcommand {
         get_docs_help(cmd, &config, output)?;
     }

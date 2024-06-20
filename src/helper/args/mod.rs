@@ -2,11 +2,13 @@
 pub mod common;
 
 use crate::config::Config;
-use crate::error::Result;
+use crate::error::{Error, Result};
 use crate::helper::tty::TtyCommand;
 use colored::*;
+use process_control::{ChildExt, Control};
 use std::io::Write;
 use std::process::Stdio;
+use std::time::Duration;
 
 /// Emoticon for "checking" message.
 const CHECK_EMOTICON: &str = "(°ロ°)";
@@ -24,6 +26,7 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
     cmd: &str,
     args: ArgsIter,
     verbose: bool,
+    timeout: u64,
     output: &mut Output,
 ) -> Result<()> {
     for arg in args {
@@ -38,7 +41,13 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
         let cmd_out = TtyCommand::new(&command)?
             .env("PAGER", "")
             .stderr(Stdio::inherit())
-            .output()?;
+            .stdout(Stdio::piped())
+            .spawn()?
+            .controlled_with_output()
+            .time_limit(Duration::from_secs(timeout))
+            .terminate_for_timeout()
+            .wait()?
+            .ok_or_else(|| Error::TimeoutError(timeout))?;
         if cmd_out.status.success() {
             writeln!(
                 output,
@@ -89,6 +98,7 @@ pub fn get_args_help<Output: Write>(
     cmd: &str,
     config: &Config,
     verbose: bool,
+    timeout: u64,
     output: &mut Output,
 ) -> Result<()> {
     if cmd.trim().is_empty() {
@@ -109,6 +119,7 @@ pub fn get_args_help<Output: Write>(
                 cmd,
                 arg_variants.iter().map(|v| v.as_str()),
                 verbose,
+                timeout,
                 output,
             )?;
         }
@@ -140,6 +151,7 @@ mod tests {
             &get_test_bin(),
             VersionArg::variants().iter().map(|v| v.as_str()),
             false,
+            5,
             &mut output,
         )?;
         println!("{}", String::from_utf8_lossy(&output));
@@ -168,6 +180,7 @@ halp 0.1.0
             &get_test_bin(),
             HelpArg::variants().iter().rev().map(|v| v.as_str()),
             true,
+            5,
             &mut output,
         )?;
         assert_eq!(
@@ -215,7 +228,7 @@ Options:
     fn test_get_default_help() -> Result<()> {
         let config = Config::default();
         let mut output = Vec::new();
-        get_args_help(&get_test_bin(), &config, false, &mut output)?;
+        get_args_help(&get_test_bin(), &config, false, 5, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r"(°ロ°)  checking 'test -v'
@@ -250,7 +263,7 @@ Options:
             ..Default::default()
         };
         let mut output = Vec::new();
-        get_args_help(&get_test_bin(), &config, false, &mut output)?;
+        get_args_help(&get_test_bin(), &config, false, 5, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r"(°ロ°)  checking 'test -x'
@@ -277,7 +290,7 @@ halp 0.1.0
             ..Default::default()
         };
         let mut output = Vec::new();
-        get_args_help("", &config, false, &mut output)?;
+        get_args_help("", &config, false, 5, &mut output)?;
         assert!(String::from_utf8_lossy(&output).is_empty());
         Ok(())
     }
