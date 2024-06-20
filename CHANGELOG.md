@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2024-06-20
+
+### 🐙 Features
+
+- *(cheat)* Suport `cheat.sh` custom URL
+- *(command)* Add timeout for terminating process ([#227](https://github.com/orhun/halp/issues/227))
+- *(config)* Add defualt value for cheat.sh url
+- *(help)* Improve the `cheat-sh-url` help
+- *(help)* Improve the `cheat-sh-url` help
+- *(helper)* Add more external help providers to plz menu
+- *(log)* Show the path of the saved configuration file
+
+### 🐛 Bug Fixes
+
+- *(dialog)* Update usage according to the latest version of dialoguer
+
+### 🚜 Refactor
+
+- *(config)* Rename update_conf function to update_config
+- *(config)* Refactor the config system ([#62](https://github.com/orhun/halp/issues/62))
+- *(format)* Run cargo fmt
+- *(lint)* Apply clippy suggestions
+- *(lint)* Apply clippy suggestions
+- *(test)* Fix the `fetch_cheat_sheet` test
+
+### 📚 Documentation
+
+- *(coc)* Fix typo
+- *(license)* Update license copyright years
+- *(license)* Update MIT license
+- *(readme)* Update config format link
+- *(readme)* Add usage example with coutom cheat.sh host URL
+- *(readme)* Update `plz` subcommand usage
+- *(readme)* Update `plz` subcommand usage
+
+### ⚙️ Miscellaneous Tasks
+
+- *(bors)* Remove bors config
+- *(cargo)* Bump MSRV to 1.74.1
+- *(cargo)* Add keywords for the crates.io release
+- *(cargo)* Bump MSRV to 1.70.0
+- *(changelog)* Skip dependency updates in changelog
+- *(ci)* Update macos runner
+- *(ci)* Update message while checking for MSRV
+- *(docker)* Update the cargo-chef image
+- *(git)* Remove IDEA directory from .gitignore
+- *(mergify)* Add mergify config for automatic merges
+
+### Clean
+
+- *(docker)* Remove the duplicated `.gitignore` entry
+
 ## [0.1.7] - 2023-06-17
 
 ### 🚜 Refactor
@@ -11,32 +63,6 @@ All notable changes to this project will be documented in this file.
 ### 🎨 Styling
 
 - *(cli)* Override the help usage ([#30](https://github.com/orhun/halp/issues/30))
-
-### ⚙️ Miscellaneous Tasks
-
-- *(deps)* Bump transitive dependencies
-- *(deps)* Bump ureq from 2.6.2 to 2.7.0
-- *(deps)* Bump clap from 4.3.3 to 4.3.4
-- *(deps)* Bump clap from 4.3.2 to 4.3.3
-- *(deps)* Bump serde from 1.0.163 to 1.0.164
-- *(deps)* Bump clap from 4.3.1 to 4.3.2
-- *(deps)* Bump clap dependencies
-- *(deps)* Bump clap_mangen from 0.2.10 to 0.2.11
-- *(deps)* Bump clap_complete from 4.2.3 to 4.3.0
-- *(deps)* Bump console from 0.15.6 to 0.15.7
-- *(deps)* Bump clap from 4.2.7 to 4.3.0
-- *(deps)* Bump console from 0.15.5 to 0.15.6
-- *(deps)* Bump toml from 0.7.3 to 0.7.4
-- *(deps)* Bump clap_complete from 4.2.2 to 4.2.3
-- *(deps)* Bump serde from 1.0.162 to 1.0.163
-- *(deps)* Bump clap_complete from 4.2.1 to 4.2.2
-- *(deps)* Bump serde from 1.0.160 to 1.0.162
-- *(deps)* Bump clap from 4.2.5 to 4.2.7
-- *(deps)* Bump dirs from 5.0.0 to 5.0.1
-- *(deps)* Bump clap from 4.2.4 to 4.2.5
-- *(deps)* Bump clap_complete from 4.2.0 to 4.2.1
-- *(deps)* Bump clap from 4.2.3 to 4.2.4
-- *(deps)* Bump clap from 4.2.2 to 4.2.3
 
 ## [0.1.6] - 2023-04-18
 
@@ -54,23 +80,12 @@ All notable changes to this project will be documented in this file.
 
 - *(ci)* Switch back to line coverage
 - *(ci)* Use codecov format with cargo-llvm-cov
-- *(deps)* Bump transitive dependencies
-- *(deps)* Bump clap from 4.2.1 to 4.2.2
-- *(deps)* Bump serde from 1.0.159 to 1.0.160
-- *(deps)* Bump dialoguer from 0.10.3 to 0.10.4
 
 ## [0.1.5] - 2023-04-03
 
 ### ⚙️ Miscellaneous Tasks
 
 - *(changelog)* Update git-cliff template about breaking changes
-- *(deps)* Bump dependencies
-- *(deps)* Bump clap_complete from 4.1.5 to 4.2.0
-- *(deps)* Bump serde from 1.0.158 to 1.0.159
-- *(deps)* Bump serde from 1.0.156 to 1.0.158
-- *(deps)* Bump clap from 4.1.9 to 4.1.11
-- *(deps)* Bump thiserror from 1.0.39 to 1.0.40
-- *(deps)* Bump dirs from 4.0.0 to 5.0.0
 
 ## [0.1.4] - 2023-03-17
 
@@ -81,20 +96,12 @@ All notable changes to this project will be documented in this file.
 ### ⚙️ Miscellaneous Tasks
 
 - *(ci)* Specify token for codecov uploads
-- *(deps)* Bump transitive dependencies
-- *(deps)* Bump clap from 4.1.8 to 4.1.9
-- *(deps)* Bump clap_complete from 4.1.4 to 4.1.5
-- *(deps)* Bump clap_mangen from 0.2.9 to 0.2.10
 
 ## [0.1.3] - 2023-03-16
 
 ### 🐛 Bug Fixes
 
 - *(args)* Unset pager for command output ([#9](https://github.com/orhun/halp/issues/9))
-
-### ⚙️ Miscellaneous Tasks
-
-- *(deps)* Bump transitive dependencies
 
 ## [0.1.2] - 2023-03-14
 
@@ -109,8 +116,6 @@ All notable changes to this project will be documented in this file.
 ### ⚙️ Miscellaneous Tasks
 
 - *(changelog)* Skip PR related commits for changelog
-- *(deps)* Update serde dependency
-- *(deps)* Bump toml from 0.7.2 to 0.7.3
 - *(github)* Remove codeowner approval requirement from bors
 - *(github)* Remove approval requirement from bors config
 - *(github)* Remove docker status check from bors config
@@ -120,11 +125,6 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - *(readme)* Match up common "help" and "version" arguments ([#3](https://github.com/orhun/halp/issues/3))
-
-### ⚙️ Miscellaneous Tasks
-
-- *(deps)* Bump transitive dependencies
-- *(deps)* Bump serde from 1.0.154 to 1.0.155
 
 ## [0.1.0] - 2023-03-12
 
