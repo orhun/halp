@@ -10,7 +10,7 @@ const BIN: &str = env!("CARGO_BIN_EXE_halp-test");
 fn get_argument_help() -> Result<()> {
     let args = CliArgs {
         cmd: Some(BIN.to_string()),
-        timeout: 10,
+        timeout: Some(10),
         config: Some(
             PathBuf::from(env!("CARGO_MANIFEST_DIR"))
                 .join("config")

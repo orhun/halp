@@ -98,7 +98,6 @@ pub fn get_args_help<Output: Write>(
     cmd: &str,
     config: &Config,
     verbose: bool,
-    timeout: u64,
     output: &mut Output,
 ) -> Result<()> {
     if cmd.trim().is_empty() {
@@ -119,7 +118,9 @@ pub fn get_args_help<Output: Write>(
                 cmd,
                 arg_variants.iter().map(|v| v.as_str()),
                 verbose,
-                timeout,
+                config
+                    .timeout
+                    .unwrap_or_else(|| Config::default().timeout.unwrap_or_default()),
                 output,
             )?;
         }
@@ -228,7 +229,7 @@ Options:
     fn test_get_default_help() -> Result<()> {
         let config = Config::default();
         let mut output = Vec::new();
-        get_args_help(&get_test_bin(), &config, false, 5, &mut output)?;
+        get_args_help(&get_test_bin(), &config, false, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r"(°ロ°)  checking 'test -v'
@@ -263,7 +264,7 @@ Options:
             ..Default::default()
         };
         let mut output = Vec::new();
-        get_args_help(&get_test_bin(), &config, false, 5, &mut output)?;
+        get_args_help(&get_test_bin(), &config, false, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
             r"(°ロ°)  checking 'test -x'
@@ -290,7 +291,7 @@ halp 0.1.0
             ..Default::default()
         };
         let mut output = Vec::new();
-        get_args_help("", &config, false, 5, &mut output)?;
+        get_args_help("", &config, false, &mut output)?;
         assert!(String::from_utf8_lossy(&output).is_empty());
         Ok(())
     }

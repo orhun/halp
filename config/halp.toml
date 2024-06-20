@@ -5,10 +5,12 @@ check_version = true
 # check the help flag
 check_help = true
 # arguments to check
-check = [ [ "-v", "-V", "--version" ], [ "-h", "--help", "help", "-H" ] ]
+check = [["-v", "-V", "--version"], ["-h", "--help", "help", "-H"]]
 # command to run for manual pages
 man_command = "man"
 # pager to use for command outputs
 pager_command = "less -R"
 # Cheat.sh URL
 cheat_sh_url = "https://cheat.sh"
+# Timeout for the commands
+timeout = 5

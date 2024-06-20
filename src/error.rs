@@ -25,7 +25,7 @@ pub enum Error {
     #[error("Dialogue error: `{0}`")]
     DialogueError(#[from] dialoguer::Error),
     /// Error that might occur when the command times out.
-    #[error("Command timed out after {0} seconds")]
+    #[error("Command timed out after {0} seconds x_x")]
     TimeoutError(u64),
 }
 
