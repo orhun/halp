@@ -24,6 +24,9 @@ pub enum Error {
     /// Error that might occur during showing dialogues.
     #[error("Dialogue error: `{0}`")]
     DialogueError(#[from] dialoguer::Error),
+    /// Error that might occur when the command times out.
+    #[error("Command timed out after {0} seconds x_x")]
+    TimeoutError(u64),
 }
 
 /// Type alias for the standard [`Result`] type.

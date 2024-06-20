@@ -2,11 +2,13 @@
 pub mod common;
 
 use crate::config::Config;
-use crate::error::Result;
+use crate::error::{Error, Result};
 use crate::helper::tty::TtyCommand;
 use colored::*;
+use process_control::{ChildExt, Control};
 use std::io::Write;
 use std::process::Stdio;
+use std::time::Duration;
 
 /// Emoticon for "checking" message.
 const CHECK_EMOTICON: &str = "(°ロ°)";
@@ -24,6 +26,7 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
     cmd: &str,
     args: ArgsIter,
     verbose: bool,
+    timeout: u64,
     output: &mut Output,
 ) -> Result<()> {
     for arg in args {
@@ -38,7 +41,13 @@ fn check_args<'a, ArgsIter: Iterator<Item = &'a str>, Output: Write>(
         let cmd_out = TtyCommand::new(&command)?
             .env("PAGER", "")
             .stderr(Stdio::inherit())
-            .output()?;
+            .stdout(Stdio::piped())
+            .spawn()?
+            .controlled_with_output()
+            .time_limit(Duration::from_secs(timeout))
+            .terminate_for_timeout()
+            .wait()?
+            .ok_or_else(|| Error::TimeoutError(timeout))?;
         if cmd_out.status.success() {
             writeln!(
                 output,
@@ -109,6 +118,9 @@ pub fn get_args_help<Output: Write>(
                 cmd,
                 arg_variants.iter().map(|v| v.as_str()),
                 verbose,
+                config
+                    .timeout
+                    .unwrap_or_else(|| Config::default().timeout.unwrap_or_default()),
                 output,
             )?;
         }
@@ -140,6 +152,7 @@ mod tests {
             &get_test_bin(),
             VersionArg::variants().iter().map(|v| v.as_str()),
             false,
+            5,
             &mut output,
         )?;
         println!("{}", String::from_utf8_lossy(&output));
@@ -168,6 +181,7 @@ halp 0.1.0
             &get_test_bin(),
             HelpArg::variants().iter().rev().map(|v| v.as_str()),
             true,
+            5,
             &mut output,
         )?;
         assert_eq!(

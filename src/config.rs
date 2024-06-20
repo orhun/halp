@@ -31,6 +31,8 @@ pub struct Config {
     pub eg_url: Option<String>,
     /// Use a custom URL for cheatsheets provider.
     pub cheatsheets_url: Option<String>,
+    /// Timeout for running the commands.
+    pub timeout: Option<u64>,
 }
 
 impl Default for Config {
@@ -53,6 +55,7 @@ impl Default for Config {
             cheat_sh_url: Some(DEFAULT_CHEAT_SHEET_PROVIDER.to_string()),
             eg_url: Some(DEFAULT_EG_PAGES_PROVIDER.to_string()),
             cheatsheets_url: Some(DEFAULT_CHEATSHEETS_PROVIDER.to_string()),
+            timeout: Some(5),
         }
     }
 }

@@ -30,6 +30,9 @@ pub struct CliArgs {
     /// Sets the configuration file.
     #[arg(short, long, env = "HALP_CONFIG", value_name = "PATH")]
     pub config: Option<PathBuf>,
+    /// Sets the timeout for the command.
+    #[arg(short, long, value_name = "S")]
+    pub timeout: Option<u64>,
     /// Enables verbose logging.
     #[arg(short, long)]
     pub verbose: bool,
@@ -79,6 +82,9 @@ impl CliArgs {
         if let Some(ref args) = self.check_args {
             config.check_args = Some(args.iter().map(|s| vec![s.to_string()]).collect());
         }
+        if self.timeout.is_some() {
+            config.timeout = self.timeout;
+        }
         if let Some(CliCommands::Plz {
             ref man_cmd,
             ref cheat_sh_url,
@@ -119,7 +125,7 @@ mod tests {
     }
 
     #[test]
-    fn test_update_conf() {
+    fn test_update_config() {
         let mut config = Config::default();
         let args = CliArgs {
             subcommand: Some(CliCommands::Plz {
