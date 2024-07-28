@@ -6,9 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### 🐙 Features
 
-- *(cheat)* Suport `cheat.sh` custom URL
+- *(cheat)* Support `cheat.sh` custom URL
 - *(command)* Add timeout for terminating process ([#227](https://github.com/orhun/halp/issues/227))
-- *(config)* Add defualt value for cheat.sh url
+- *(config)* Add default value for cheat.sh url
 - *(help)* Improve the `cheat-sh-url` help
 - *(help)* Improve the `cheat-sh-url` help
 - *(helper)* Add more external help providers to plz menu
