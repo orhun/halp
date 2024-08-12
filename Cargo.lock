@@ -414,9 +414,9 @@ dependencies = [
 
 [[package]]
 name = "process_control"
-version = "4.2.0"
+version = "4.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "52a6e5a3a16f96120ae4c65bffa1be6825d51abc3c564d82d737c463d63f12cf"
+checksum = "17139892be8ee0f51485168e9bd626db6e7d1941d738d183e70e26017f573db0"
 dependencies = [
  "libc",
  "signal-hook",
