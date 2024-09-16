@@ -40,7 +40,7 @@ toml = "0.8.19"
 ureq = "2.10.1"
 
 [dev-dependencies]
-pretty_assertions = "1.4.0"
+pretty_assertions = "1.4.1"
 
 [profile.dev]
 opt-level = 0
