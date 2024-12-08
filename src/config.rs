@@ -82,7 +82,7 @@ impl Config {
     #[inline(always)]
     fn get_default_locations() -> Option<Vec<PathBuf>> {
         if let Some(config_dir) = dirs::config_dir() {
-            let file_name = format!("{}.toml", env!("CARGO_PKG_NAME"));
+            let file_name = concat!(env!("CARGO_PKG_NAME"), ".toml");
             return Some(vec![
                 config_dir.join(&file_name),
                 config_dir.join(env!("CARGO_PKG_NAME")).join(&file_name), // XDG style
@@ -132,7 +132,7 @@ mod tests {
     fn test_parse_config() -> Result<()> {
         let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .join("config")
-            .join(format!("{}.toml", env!("CARGO_PKG_NAME")));
+            .join(concat!(env!("CARGO_PKG_NAME"), ".toml"));
         if let Some(global_path) = Config::get_default_location() {
             path = global_path;
         }
