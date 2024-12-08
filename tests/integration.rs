@@ -14,7 +14,7 @@ fn get_argument_help() -> Result<()> {
         config: Some(
             PathBuf::from(env!("CARGO_MANIFEST_DIR"))
                 .join("config")
-                .join(format!("{}.toml", env!("CARGO_PKG_NAME"))),
+                .join(concat!(env!("CARGO_PKG_NAME"), ".toml")),
         ),
         ..Default::default()
     };

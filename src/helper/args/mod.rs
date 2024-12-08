@@ -140,7 +140,7 @@ mod tests {
         PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .join("target")
             .join("debug")
-            .join(format!("{}-test", env!("CARGO_PKG_NAME")))
+            .join(concat!(env!("CARGO_PKG_NAME"), "-test"))
             .to_string_lossy()
             .to_string()
     }
