@@ -35,7 +35,7 @@ dialoguer = { version = "0.11.0", default-features = false }
 dirs = "5.0.1"
 process_control = "5.0.0"
 serde = { version = "1.0.216", features = ["derive"] }
-thiserror = "2.0.7"
+thiserror = "2.0.8"
 toml = "0.8.19"
 ureq = "2.12.1"
 
