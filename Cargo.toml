@@ -37,7 +37,7 @@ process_control = "5.0.0"
 serde = { version = "1.0.218", features = ["derive"] }
 thiserror = "2.0.11"
 toml = "0.8.20"
-ureq = "3.0.8"
+ureq = "3.0.10"
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"
