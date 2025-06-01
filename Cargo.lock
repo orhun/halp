@@ -58,6 +58,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "attr_alias"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b9dcf97260bbb12df5bb782740a6c735244debba888a821cef4264c07bd11aa1"
+
+[[package]]
 name = "base64"
 version = "0.22.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -426,10 +432,11 @@ dependencies = [
 
 [[package]]
 name = "process_control"
-version = "5.0.0"
+version = "5.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f32c4eb5a227708adf07971a8b0da3d7c8f7fb3e54de64aaaedc9bef72f70b62"
+checksum = "de8e5a3876090fd5956330e2a0b10bda2ba2ccdaa1638e038daea361321d4353"
 dependencies = [
+ "attr_alias",
  "libc",
  "signal-hook",
  "windows-sys 0.59.0",
