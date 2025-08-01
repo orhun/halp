@@ -36,7 +36,7 @@ dirs = "6.0.0"
 process_control = "5.1.1"
 serde = { version = "1.0.219", features = ["derive"] }
 thiserror = "2.0.12"
-toml = "0.8.22"
+toml = "0.9.4"
 ureq = "3.0.12"
 
 [dev-dependencies]
