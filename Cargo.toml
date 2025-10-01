@@ -31,7 +31,7 @@ clap_complete = "4.5.55"
 clap_mangen = "0.2.29"
 colored = "3.0.0"
 console = "0.16.0"
-dialoguer = { version = "0.11.0", default-features = false }
+dialoguer = { version = "0.12.0", default-features = false }
 dirs = "6.0.0"
 process_control = "5.1.1"
 serde = { version = "1.0.219", features = ["derive"] }
