@@ -1,5 +1,5 @@
 use crate::helper::docs::HelpProvider;
-use ureq::{AgentBuilder, Request};
+use ureq::Agent;
 
 /// The default cheatsheets provider URL.
 pub const DEFAULT_CHEATSHEETS_PROVIDER: &str =
@@ -13,8 +13,13 @@ impl HelpProvider for Cheatsheets {
         DEFAULT_CHEATSHEETS_PROVIDER
     }
 
-    fn build_request(&self, cmd: &str, url: &str) -> Request {
-        AgentBuilder::new().build().get(&format!("{}/{}", url, cmd))
+    fn build_request(
+        &self,
+        cmd: &str,
+        url: &str,
+    ) -> ureq::RequestBuilder<ureq::typestate::WithoutBody> {
+        let agent: Agent = Agent::config_builder().build().into();
+        agent.get(&format!("{}/{}", url, cmd))
     }
 }
 
