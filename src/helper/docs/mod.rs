@@ -19,8 +19,6 @@ use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
 use std::io::Write;
 use std::process::{Command, Stdio};
-use ureq::Request;
-
 /// The `HelpProvider` trait defines essential methods for fetching help content related to commands from a provider.
 ///
 /// Each provider that implements this trait should provide a default URL used to retrieve the command help content.
@@ -55,13 +53,17 @@ pub trait HelpProvider {
     /// - `url`: The root URL.
     ///
     /// # Returns
-    /// This method returns a new `Request` instance configured with the `GET` method and the formatted URL.
-    fn build_request(&self, cmd: &str, url: &str) -> Request;
+    /// This method returns a new `RequestBuilder` configured with the `GET` method and the formatted URL.
+    fn build_request(
+        &self,
+        cmd: &str,
+        url: &str,
+    ) -> ureq::RequestBuilder<ureq::typestate::WithoutBody>;
 
     /// Handle the request error.
     /// aka return a custom message if the error means that **provider** doesn't have a page for the command.
     fn handle_error(&self, e: ureq::Error) -> Error {
-        if e.kind() == ureq::ErrorKind::HTTP {
+        if matches!(e, ureq::Error::StatusCode(_)) {
             Error::ProviderError(
                 "Unknown topic, This topic/command might has no page in this provider yet."
                     .to_string(),
@@ -90,7 +92,10 @@ pub trait HelpProvider {
         let response = response.map_err(|e| self.handle_error(e));
 
         match response {
-            Ok(response) => Ok(response.into_string()?),
+            Ok(mut response) => response
+                .body_mut()
+                .read_to_string()
+                .map_err(|e| Error::from(Box::new(e))),
             Err(e) => Err(e),
         }
     }

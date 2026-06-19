@@ -1,6 +1,6 @@
 use crate::error::{Error, Result};
 use crate::helper::docs::HelpProvider;
-use ureq::{AgentBuilder, Request};
+use ureq::Agent;
 
 /// Default cheat sheet provider URL.
 pub const DEFAULT_CHEAT_SHEET_PROVIDER: &str = "https://cheat.sh";
@@ -18,11 +18,16 @@ impl HelpProvider for CheatDotSh {
         DEFAULT_CHEAT_SHEET_PROVIDER
     }
 
-    fn build_request(&self, cmd: &str, url: &str) -> Request {
-        AgentBuilder::new()
+    fn build_request(
+        &self,
+        cmd: &str,
+        url: &str,
+    ) -> ureq::RequestBuilder<ureq::typestate::WithoutBody> {
+        let agent: Agent = Agent::config_builder()
             .user_agent(CHEAT_SHEET_USER_AGENT)
             .build()
-            .get(&format!("{}/{}", url, cmd))
+            .into();
+        agent.get(&format!("{}/{}", url, cmd))
     }
 
     fn fetch(&self, cmd: &str, custom_url: &Option<String>) -> Result<String> {

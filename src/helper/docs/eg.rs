@@ -1,5 +1,5 @@
 use crate::helper::docs::HelpProvider;
-use ureq::{AgentBuilder, Request};
+use ureq::Agent;
 
 /// EG page provider URL.
 pub const DEFAULT_EG_PAGES_PROVIDER: &str =
@@ -13,10 +13,13 @@ impl HelpProvider for Eg {
         DEFAULT_EG_PAGES_PROVIDER
     }
 
-    fn build_request(&self, cmd: &str, url: &str) -> Request {
-        AgentBuilder::new()
-            .build()
-            .get(&format!("{}/{}.md", url, cmd))
+    fn build_request(
+        &self,
+        cmd: &str,
+        url: &str,
+    ) -> ureq::RequestBuilder<ureq::typestate::WithoutBody> {
+        let agent: Agent = Agent::config_builder().build().into();
+        agent.get(&format!("{}/{}.md", url, cmd))
     }
 }
 
