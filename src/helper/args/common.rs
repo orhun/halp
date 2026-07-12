@@ -37,16 +37,18 @@ macro_rules! generate_argument {
 
 generate_argument!(
     VersionArg,
-    Version => "-v",
-    CapitalVersion => "-V",
+    // Prefer long forms first: some tools (e.g. `ps`) use `-v`/`-h` for other meaning.
     LongVersion => "--version",
+    Version => "-v",
     SubcommandVersion => "version",
+    CapitalVersion => "-V",
 );
 
 generate_argument!(
     HelpArg,
-    Help => "-h",
+    // Prefer `--help` before `-h` for the same reason as VersionArg.
     LongHelp => "--help",
+    Help => "-h",
     SubcommandHelp => "help",
     CapitalHelp => "-H",
 );
@@ -68,6 +70,24 @@ mod tests {
         assert_eq!(
             vec!["one", "two", "three"],
             Test::variants()
+                .iter()
+                .map(|v| v.as_str())
+                .collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn test_version_and_help_prefer_long_forms() {
+        assert_eq!(
+            vec!["--version", "-v", "version", "-V"],
+            VersionArg::variants()
+                .iter()
+                .map(|v| v.as_str())
+                .collect::<Vec<_>>()
+        );
+        assert_eq!(
+            vec!["--help", "-h", "help", "-H"],
+            HelpArg::variants()
                 .iter()
                 .map(|v| v.as_str())
                 .collect::<Vec<_>>()

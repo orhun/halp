@@ -157,10 +157,8 @@ mod tests {
         )?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
-            r"(°ロ°)  checking 'test -v'
-(×﹏×)      fail '-v' argument not found.
-(°ロ°)  checking 'test -V'
-\(^ヮ^)/ success '-V' argument found!
+            r"(°ロ°)  checking 'test --version'
+\(^ヮ^)/ success '--version' argument found!
 ---
 halp 0.1.0
 ---",
@@ -232,15 +230,13 @@ Options:
         get_args_help(&get_test_bin(), &config, false, &mut output)?;
         println!("{}", String::from_utf8_lossy(&output));
         assert_eq!(
-            r"(°ロ°)  checking 'test -v'
-(×﹏×)      fail '-v' argument not found.
-(°ロ°)  checking 'test -V'
-\(^ヮ^)/ success '-V' argument found!
+            r"(°ロ°)  checking 'test --version'
+\(^ヮ^)/ success '--version' argument found!
 ---
 halp 0.1.0
 ---
-(°ロ°)  checking 'test -h'
-\(^ヮ^)/ success '-h' argument found!
+(°ロ°)  checking 'test --help'
+\(^ヮ^)/ success '--help' argument found!
 ---
 Usage: test
 
