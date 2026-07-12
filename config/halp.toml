@@ -5,7 +5,7 @@ check_version = true
 # check the help flag
 check_help = true
 # arguments to check
-check = [["-v", "-V", "--version"], ["-h", "--help", "help", "-H"]]
+check = [["--version", "-v", "version", "-V"], ["--help", "-h", "help", "-H"]]
 # command to run for manual pages
 man_command = "man"
 # pager to use for command outputs

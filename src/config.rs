@@ -145,4 +145,26 @@ mod tests {
         );
         Ok(())
     }
+
+    #[test]
+    fn test_default_check_args_prefer_long_forms() {
+        let config = Config::default();
+        assert_eq!(
+            config.check_args,
+            Some(vec![
+                vec![
+                    "--version".to_string(),
+                    "-v".to_string(),
+                    "version".to_string(),
+                    "-V".to_string(),
+                ],
+                vec![
+                    "--help".to_string(),
+                    "-h".to_string(),
+                    "help".to_string(),
+                    "-H".to_string(),
+                ],
+            ])
+        );
+    }
 }
