@@ -66,6 +66,9 @@ pub enum CliCommands {
         /// Disables the pager.
         #[arg(long)]
         no_pager: bool,
+        /// Disables TLS certificate verification for HTTP requests.
+        #[arg(long)]
+        insecure: bool,
     },
 }
 
@@ -91,6 +94,7 @@ impl CliArgs {
             ref eg_url,
             no_pager,
             ref pager,
+            insecure,
             ..
         }) = self.subcommand
         {
@@ -107,6 +111,9 @@ impl CliArgs {
                 config.pager_command = None;
             } else if let Some(pager) = pager {
                 config.pager_command = Some(pager.clone());
+            }
+            if insecure {
+                config.insecure = true;
             }
         }
     }
@@ -136,6 +143,7 @@ mod tests {
                 eg_url: None,
                 man_cmd: None,
                 no_pager: false,
+                insecure: false,
             }),
             ..Default::default()
         };
