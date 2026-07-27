@@ -1,4 +1,4 @@
-use crate::helper::docs::HelpProvider;
+use crate::helper::docs::{apply_insecure, HelpProvider};
 use ureq::Agent;
 
 /// EG page provider URL.
@@ -17,8 +17,11 @@ impl HelpProvider for Eg {
         &self,
         cmd: &str,
         url: &str,
+        insecure: bool,
     ) -> ureq::RequestBuilder<ureq::typestate::WithoutBody> {
-        let agent: Agent = Agent::config_builder().build().into();
+        let agent: Agent = apply_insecure(Agent::config_builder(), insecure)
+            .build()
+            .into();
         agent.get(&format!("{}/{}.md", url, cmd))
     }
 }
@@ -30,7 +33,7 @@ mod tests {
 
     #[test]
     fn test_eg_page_fetch() -> Result<()> {
-        let output = Eg.fetch("ls", &None)?;
+        let output = Eg.fetch("ls", &None, false)?;
         assert!(output.contains("show contents of current directory"));
         assert!(output.contains("ls -alh"));
         assert!(output.contains(

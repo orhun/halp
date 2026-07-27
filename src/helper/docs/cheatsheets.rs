@@ -1,4 +1,4 @@
-use crate::helper::docs::HelpProvider;
+use crate::helper::docs::{apply_insecure, HelpProvider};
 use ureq::Agent;
 
 /// The default cheatsheets provider URL.
@@ -17,8 +17,11 @@ impl HelpProvider for Cheatsheets {
         &self,
         cmd: &str,
         url: &str,
+        insecure: bool,
     ) -> ureq::RequestBuilder<ureq::typestate::WithoutBody> {
-        let agent: Agent = Agent::config_builder().build().into();
+        let agent: Agent = apply_insecure(Agent::config_builder(), insecure)
+            .build()
+            .into();
         agent.get(&format!("{}/{}", url, cmd))
     }
 }
@@ -30,7 +33,7 @@ mod tests {
 
     #[test]
     fn test_fetch_cheatsheets() -> Result<()> {
-        let output = Cheatsheets.fetch("ls", &None)?;
+        let output = Cheatsheets.fetch("ls", &None, false)?;
         assert!(output.contains(
             r##"# To display everything in <dir>, including hidden files:
 ls -a <dir>

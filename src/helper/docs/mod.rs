@@ -19,6 +19,26 @@ use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
 use std::io::Write;
 use std::process::{Command, Stdio};
+use ureq::config::ConfigBuilder;
+use ureq::tls::TlsConfig;
+use ureq::typestate::AgentScope;
+
+/// Applies the `insecure` setting to an [`Agent`](ureq::Agent) config builder.
+///
+/// When `insecure` is `true`, TLS certificate verification is disabled for the
+/// resulting agent. Otherwise, the builder is returned unchanged and the default
+/// (verification on) behavior is preserved.
+pub(crate) fn apply_insecure(
+    builder: ConfigBuilder<AgentScope>,
+    insecure: bool,
+) -> ConfigBuilder<AgentScope> {
+    if insecure {
+        builder.tls_config(TlsConfig::builder().disable_verification(true).build())
+    } else {
+        builder
+    }
+}
+
 /// The `HelpProvider` trait defines essential methods for fetching help content related to commands from a provider.
 ///
 /// Each provider that implements this trait should provide a default URL used to retrieve the command help content.
@@ -51,6 +71,7 @@ pub trait HelpProvider {
     ///
     /// - `cmd`: The name of the command to be included in the request.
     /// - `url`: The root URL.
+    /// - `insecure`: Whether to disable TLS certificate verification for the request.
     ///
     /// # Returns
     /// This method returns a new `RequestBuilder` configured with the `GET` method and the formatted URL.
@@ -58,6 +79,7 @@ pub trait HelpProvider {
         &self,
         cmd: &str,
         url: &str,
+        insecure: bool,
     ) -> ureq::RequestBuilder<ureq::typestate::WithoutBody>;
 
     /// Handle the request error.
@@ -79,7 +101,7 @@ pub trait HelpProvider {
     /// If a `custom_url` is provided, this URL is used instead of the default URL.
     /// The method will return the content of the command page if the fetch operation is successful.
     #[inline(always)]
-    fn _fetch(&self, cmd: &str, custom_url: &Option<String>) -> Result<String> {
+    fn _fetch(&self, cmd: &str, custom_url: &Option<String>, insecure: bool) -> Result<String> {
         let url = {
             if let Some(u) = custom_url {
                 u.as_str()
@@ -87,7 +109,7 @@ pub trait HelpProvider {
                 self.url()
             }
         };
-        let response = self.build_request(cmd, url).call();
+        let response = self.build_request(cmd, url, insecure).call();
 
         let response = response.map_err(|e| self.handle_error(e));
 
@@ -106,6 +128,7 @@ pub trait HelpProvider {
     ///
     /// - `cmd`: The name of the command for which the page should be fetched.
     /// - `custom_url`: Optional parameter that, if supplied, specifies a custom URL from which to fetch the command page.
+    /// - `insecure`: Whether to disable TLS certificate verification for the request.
     ///
     /// # Returns
     ///
@@ -115,8 +138,8 @@ pub trait HelpProvider {
     /// # Errors
     ///
     /// This method will return an error if the fetch operation fails.
-    fn fetch(&self, cmd: &str, custom_url: &Option<String>) -> Result<String> {
-        self._fetch(cmd, custom_url)
+    fn fetch(&self, cmd: &str, custom_url: &Option<String>, insecure: bool) -> Result<String> {
+        self._fetch(cmd, custom_url, insecure)
     }
 }
 
@@ -144,9 +167,13 @@ pub fn get_docs_help<Output: Write>(cmd: &str, config: &Config, output: &mut Out
             show_man_page(&config.man_command, cmd)?
         } else {
             let page = match selection {
-                Some(CHEAT_SHEET) => CheatDotSh.fetch(cmd, &config.cheat_sh_url)?,
-                Some(EG_PAGE) => Eg.fetch(cmd, &config.eg_url)?,
-                Some(CHEATSHEETS) => Cheatsheets.fetch(cmd, &config.cheatsheets_url)?,
+                Some(CHEAT_SHEET) => {
+                    CheatDotSh.fetch(cmd, &config.cheat_sh_url, config.insecure)?
+                }
+                Some(EG_PAGE) => Eg.fetch(cmd, &config.eg_url, config.insecure)?,
+                Some(CHEATSHEETS) => {
+                    Cheatsheets.fetch(cmd, &config.cheatsheets_url, config.insecure)?
+                }
                 _ => return Ok(()),
             };
             // Show the page using the user selected pager or write it directly into the output
@@ -194,5 +221,22 @@ fn get_selection_theme() -> ColorfulTheme {
         unchecked_item_prefix: style("❤".to_string()).for_stderr().black(),
         picked_item_prefix: style("❯".to_string()).for_stderr().green(),
         unpicked_item_prefix: style(" ".to_string()).for_stderr(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ureq::Agent;
+
+    #[test]
+    fn test_apply_insecure_wires_disable_verification() {
+        let secure: Agent = apply_insecure(Agent::config_builder(), false)
+            .build()
+            .into();
+        assert!(!secure.config().tls_config().disable_verification());
+
+        let insecure: Agent = apply_insecure(Agent::config_builder(), true).build().into();
+        assert!(insecure.config().tls_config().disable_verification());
     }
 }

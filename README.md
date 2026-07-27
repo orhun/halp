@@ -241,6 +241,7 @@ Options:
       --cheat-sh-url <URL>  Use a custom URL for cheat.sh [env: CHEAT_SH_URL=]
   -p, --pager <PAGER>       Sets the pager to use
       --no-pager            Disables the pager
+      --insecure            Disables TLS certificate verification for HTTP requests
   -h, --help                Print help
 ```
 
@@ -320,6 +321,18 @@ halp plz --no-pager bat vim
 ```sh
 halp plz --cheat-sh-url https://cht.sh vim
 ```
+
+##### Skipping TLS certificate verification
+
+Behind a TLS-inspecting proxy the providers are reached through a certificate that is not in the
+system trust store, which fails with `invalid peer certificate: UnknownIssuer`. To skip
+verification:
+
+```sh
+halp plz --insecure vim
+```
+
+This disables certificate checking for the request, so only use it on networks you trust.
 
 ## Configuration
 

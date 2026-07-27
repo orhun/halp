@@ -1,5 +1,5 @@
 use crate::error::{Error, Result};
-use crate::helper::docs::HelpProvider;
+use crate::helper::docs::{apply_insecure, HelpProvider};
 use ureq::Agent;
 
 /// Default cheat sheet provider URL.
@@ -22,16 +22,19 @@ impl HelpProvider for CheatDotSh {
         &self,
         cmd: &str,
         url: &str,
+        insecure: bool,
     ) -> ureq::RequestBuilder<ureq::typestate::WithoutBody> {
-        let agent: Agent = Agent::config_builder()
-            .user_agent(CHEAT_SHEET_USER_AGENT)
-            .build()
-            .into();
+        let agent: Agent = apply_insecure(
+            Agent::config_builder().user_agent(CHEAT_SHEET_USER_AGENT),
+            insecure,
+        )
+        .build()
+        .into();
         agent.get(&format!("{}/{}", url, cmd))
     }
 
-    fn fetch(&self, cmd: &str, custom_url: &Option<String>) -> Result<String> {
-        let response = self._fetch(cmd, custom_url);
+    fn fetch(&self, cmd: &str, custom_url: &Option<String>, insecure: bool) -> Result<String> {
+        let response = self._fetch(cmd, custom_url, insecure);
         if let Ok(page) = &response {
             if page.starts_with("Unknown topic.") {
                 return Err(Error::ProviderError(page.to_owned()));
@@ -47,7 +50,7 @@ mod tests {
 
     #[test]
     fn test_fetch_cheat_sheet() -> Result<()> {
-        let output = CheatDotSh.fetch("ls", &None)?;
+        let output = CheatDotSh.fetch("ls", &None, false)?;
         assert!(output.contains(
             "# To display all files, along with the size (with unit suffixes) and timestamp:"
         ));

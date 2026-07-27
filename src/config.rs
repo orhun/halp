@@ -33,6 +33,9 @@ pub struct Config {
     pub cheatsheets_url: Option<String>,
     /// Timeout for running the commands.
     pub timeout: Option<u64>,
+    /// Disable TLS certificate verification for HTTP requests.
+    #[serde(default)]
+    pub insecure: bool,
 }
 
 impl Default for Config {
@@ -56,6 +59,7 @@ impl Default for Config {
             eg_url: Some(DEFAULT_EG_PAGES_PROVIDER.to_string()),
             cheatsheets_url: Some(DEFAULT_CHEATSHEETS_PROVIDER.to_string()),
             timeout: Some(5),
+            insecure: false,
         }
     }
 }

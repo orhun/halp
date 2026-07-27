@@ -14,3 +14,5 @@ pager_command = "less -R"
 cheat_sh_url = "https://cheat.sh"
 # Timeout for the commands
 timeout = 5
+# Disable TLS certificate verification for the help providers
+insecure = false
